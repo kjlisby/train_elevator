@@ -14,6 +14,7 @@ The hardware consist of:
   - SD card reader to store the HTML files, icons etc.
   - A tiny OLED display to show the status of the elevator
   - Stepper motors to drive the elevator
+  - An optocoupler and a few diodes and resistors to act as i CDD interface
   - 20 volt power supply to drive the stepper motors
   - 5 volt power supply for the control system
   - Micro switches to sense the position of the elevator
