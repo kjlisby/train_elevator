@@ -1,0 +1,40 @@
+#include "SDWebServer.h"
+#include "OTAHandler.h"
+#include "AjaxHandler.h"
+
+#define SD_CS_PIN       5
+#define SD_D1_MOSI_PIN 23
+#define SD_SCLK_PIN    18
+#define SD_D0_MISO_PIN 19
+#define I2C_SDA_PIN    21
+#define I2C_SCL_PIN    22
+
+SDWebServer   *WS;
+OTAHandler    *OH;
+AjaxHandler   *AH;
+
+void SDWebServer_handleNotFound() {
+	WS->loadFromSdCard(WS->getServer()->uri());
+}
+
+void setup(void) {
+	Serial.begin(115200);
+	Serial.setDebugOutput(true);
+	Serial.print("\n");
+	WS = new SDWebServer();
+	WS->Init(SD_CS_PIN);
+	WS->getServer()->onNotFound(SDWebServer_handleNotFound);
+	OH = new OTAHandler();
+	OH->Init();
+	AH = new AjaxHandler();
+	AH->Init(WS->getServer());
+	pinMode ( LED_BUILTIN, OUTPUT );
+	analogWrite ( LED_BUILTIN, 0 );
+}
+
+void loop(void) {
+	WS->getServer()->handleClient();
+	WS->Loop();
+	OH->Loop();
+	AH->Loop();
+}
