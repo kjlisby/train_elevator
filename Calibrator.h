@@ -13,7 +13,7 @@ class Calibrator {
                 void    ReadFromSD();
                 void    WriteToSD();
         private:
-                String  FileName = "CalibrationData.txt";
+                String  FileName = "/CalibrationData.txt";
                 long    steps_per_level = 10000;
                 long    offset [12][2] = { {0, 0},
                                            {0, 0},
