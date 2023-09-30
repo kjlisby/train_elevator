@@ -3,21 +3,30 @@
 
 #include <stdint.h>
 
+// Keep track of the exact number of steps compared to the home position
+// each stepper motor must move to obtain the correct height of the elevator.
+// Persist the data on SD card.
 class Calibrator {
         public:
-                void SetOffset(bool Left, bool Upwards, int Level, long NewValue);
-                void GetOffset(bool Left, bool Upwards, int Level, long NewValue);
-        private:
-                String  FileName = "CalibrationData.txt";
+                void    SetOffset(int Level, long NewLeftValue, long NewRightValue);
+                long    GetOffset(bool Left, int Level);
                 void    ReadFromSD();
                 void    WriteToSD();
+        private:
+                String  FileName = "CalibrationData.txt";
                 long    steps_per_level = 10000;
-                long    offset[6][2][2] = { { {0,0}, {0,0} },
-                                            { {0,0}, {0,0} },
-                                            { {0,0}, {0,0} },
-                                            { {0,0}, {0,0} },
-                                            { {0,0}, {0,0} },
-                                            { {0,0}, {0,0} } };
+                long    offset [12][2] = { {0, 0},
+                                           {0, 0},
+                                           {10000, 10000}, 
+                                           {10000, 10000},
+                                           {20000, 20000},
+                                           {20000, 20000},
+                                           {30000, 30000},
+                                           {30000, 30000},
+                                           {40000, 40000},
+                                           {40000, 40000},
+                                           {50000, 50000},
+                                           {50000, 50000} };
 };
 
 #endif
