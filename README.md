@@ -17,8 +17,7 @@ The hardware consist of:
   - An optocoupler and a few diodes and resistors to act as i CDD interface
   - 20 volt power supply to drive the stepper motors
   - 5 volt power supply for the control system
-  - Micro switches to sense the position of the elevator
-  - Optical sensor for adding security
-  - Possibly an MCP23017 based Arduino module to add more digital I/O ports
+  - Two micro switches to sense the end-stop position of each side of the elevator
+  - Optical sensor for ensuring there is no train "sticking out" when moving the elevator
 
 See more at http://lisby.dk/wordpress/?p=2779 (so far only in Danish).
