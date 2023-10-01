@@ -2,15 +2,15 @@
 #include <SD.h>
 
 void Calibrator::SetOffset (int Level, long NewLeftValue, long NewRightValue) {
-  offset[Level-1][1] = NewLeftValue;
-  offset[Level-1][0] = NewRightValue;
+  this->offset[Level-1][1] = NewLeftValue;
+  this->offset[Level-1][0] = NewRightValue;
 }
 
 long Calibrator::GetOffset (bool Left, int Level) {
   if (Left) {
-    return offset[Level-1][1];
+    return this->offset[Level-1][1];
   } else {
-    return offset[Level-1][0];
+    return this->offset[Level-1][0];
   }
 }
 
@@ -23,9 +23,9 @@ void Calibrator::ReadFromSD () {
   if (myFile) {
     do {
       buffer[i++] = myFile.read();
-      if (buffer[i] == '-1') {
+      if (buffer[i] == '_') {
         buffer[i] = '\0';
-        offset[level-1][side] = atol(buffer);
+        this->offset[level-1][side] = atol(buffer);
         i = 0;
         if (side == 1) {
           side = 0;
@@ -44,7 +44,7 @@ void Calibrator::WriteToSD () {
   if (myFile) {
     for (level = 1; level <= 12; level++) {
       for (side = 0; side <= 1; side++) {
-        myFile.print (offset[level-1][side]);
+        myFile.print (this->offset[level-1][side]);
         myFile.print ('_');
       }
     }
