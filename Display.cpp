@@ -2,42 +2,61 @@
 
 #include "Display.h"
 
-void Display::Init (SDWebServer *WS) {
+//void Display::Init (SDWebServer *WS) {
+void Display::Init () {
+	this->MyDisplay = new Adafruit_SSD1306 (SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
+	
 	// SSD1306_SWITCHCAPVCC = generate display voltage from 3.3V internally
-	this->display.begin(SSD1306_SWITCHCAPVCC, 0x3C);
+	this->MyDisplay->begin(SSD1306_SWITCHCAPVCC, 0x3C);
 
 	// Show initial display buffer contents on the screen --
 	// the library initializes this with an Adafruit splash screen.
-	this->display.display();
+	this->MyDisplay->display();
 	this->WS = WS;
 }
 
 void Display::MovingUp () {
 	// Show a upwards arrow with this->NextLevel on top and this->CurrentLevel at the bottom
-	this->display.clearDisplay();
-	this->display.setTextSize(3); // Draw 3X-scale text
-	this->display.setTextColor(WHITE);
-	this->display.setCursor(40, 0);
-	this->display.println(F(this->NextLevel));
-	this->display.setCursor(40, 40);
-	this->display.print(F(this->CurrentLevel));
-	this->display.fillTriangle(64, 20, 24, 30, 104, 30, WHITE);
-	this->display.fillRect(54, 30, 20, 10, WHITE);
-	this->display.display();
+	this->MyDisplay->clearDisplay();
+	this->MyDisplay->setTextSize(3); // Draw 3X-scale text
+	this->MyDisplay->setTextColor(WHITE);
+	if (this->NextLevel < 10) {
+		this->MyDisplay->setCursor(55, 0);
+	} else {
+		this->MyDisplay->setCursor(45, 0);
+	}
+	this->MyDisplay->println(this->NextLevel);
+	if (this->CurrentLevel < 10) {
+		this->MyDisplay->setCursor(55, 45);
+	} else {
+		this->MyDisplay->setCursor(45, 45);
+	}
+	this->MyDisplay->print(this->CurrentLevel);
+	this->MyDisplay->fillTriangle(64, 22, 44, 30, 84, 30, WHITE);
+	this->MyDisplay->fillRect(54, 30, 20, 10, WHITE);
+	this->MyDisplay->display();
 }
 
 void Display::MovingDown () {
 	// Show a downwards arrow with this->CurrentLevel on top and this->NextLevel at the bottom
-	this->display.clearDisplay();
-	this->display.setTextSize(3); // Draw 3X-scale text
-	this->display.setTextColor(WHITE);
-	this->display.setCursor(40, 0);
-	this->display.println(F(this->CurrentLevel));
-	this->display.setCursor(40, 40);
-	this->display.print(F(this->NextLevel));
-	this->display.fillRect(54, 20, 20, 10, WHITE);
-	this->display.fillTriangle(64, 40, 24, 30, 104, 30, WHITE);
-	this->display.display();
+	this->MyDisplay->clearDisplay();
+	this->MyDisplay->setTextSize(3); // Draw 3X-scale text
+	this->MyDisplay->setTextColor(WHITE);
+	if (this->CurrentLevel < 10) {
+		this->MyDisplay->setCursor(55, 0);
+	} else {
+		this->MyDisplay->setCursor(45, 0);
+	}
+	this->MyDisplay->println(this->CurrentLevel);
+	if (this->NextLevel < 10) {
+		this->MyDisplay->setCursor(55, 45);
+	} else {
+		this->MyDisplay->setCursor(45, 45);
+	}
+	this->MyDisplay->print(this->NextLevel);
+	this->MyDisplay->fillRect(54, 22, 20, 10, WHITE);
+	this->MyDisplay->fillTriangle(64, 40, 44, 30, 84, 30, WHITE);
+	this->MyDisplay->display();
 }
 
 void Display::NewLevel (int Level) {
@@ -52,22 +71,26 @@ void Display::NewLevel (int Level) {
 
 void Display::AtLevel (int Level) {
 	// Show the number
-	this->display.clearDisplay();
-	this->display.setTextSize(6); // Draw 6X-scale text
-	this->display.setTextColor(WHITE);
-	this->display.setCursor(10, 10);
-	this->display.print(F(Level));
-	this->display.display();
+	this->MyDisplay->clearDisplay();
+	this->MyDisplay->setTextSize(6); // Draw 5X-scale text
+	this->MyDisplay->setTextColor(WHITE);
+	if (Level < 10) {
+		this->MyDisplay->setCursor(45, 10);
+	} else {
+		this->MyDisplay->setCursor(25, 10);
+	}
+	this->MyDisplay->print(Level);
+	this->MyDisplay->display();
 	this->WS->sendMessage("STATUS: AtLevel "+to_string(Level));
 	this->CurrentLevel = Level;
 }
 
 void Display::Homing () {
-	this->display.clearDisplay();
-	this->display.setTextSize(4); // Draw 4X-scale text
-	this->display.setTextColor(WHITE);
-	this->display.setCursor(10, 20);
-	this->display.print(F("HOMING.."));
-	this->display.display();
+	this->MyDisplay->clearDisplay();
+	this->MyDisplay->setTextSize(2); // Draw 3X-scale text
+	this->MyDisplay->setTextColor(WHITE);
+	this->MyDisplay->setCursor(30, 30);
+	this->MyDisplay->print(F("HOMING"));
+	this->MyDisplay->display();
 	this->WS->sendMessage("STATUS: HOMING");
 }
