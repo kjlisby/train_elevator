@@ -3,13 +3,13 @@
 #include "Display.h"
 
 void Display::Init (SDWebServer *WS) {
-  // SSD1306_SWITCHCAPVCC = generate display voltage from 3.3V internally
-  this->display.begin(SSD1306_SWITCHCAPVCC, 0x3C);
+	// SSD1306_SWITCHCAPVCC = generate display voltage from 3.3V internally
+	this->display.begin(SSD1306_SWITCHCAPVCC, 0x3C);
 
-  // Show initial display buffer contents on the screen --
-  // the library initializes this with an Adafruit splash screen.
-  this->display.display();
-  this->WS = WS;
+	// Show initial display buffer contents on the screen --
+	// the library initializes this with an Adafruit splash screen.
+	this->display.display();
+	this->WS = WS;
 }
 
 void Display::MovingUp () {
@@ -20,7 +20,7 @@ void Display::MovingUp () {
 	this->display.setCursor(40, 0);
 	this->display.println(F(this->NextLevel));
 	this->display.setCursor(40, 40);
-	this->display.println(F(this->CurrentLevel));
+	this->display.print(F(this->CurrentLevel));
 	this->display.fillTriangle(64, 20, 24, 30, 104, 30, WHITE);
 	this->display.fillRect(54, 30, 20, 10, WHITE);
 	this->display.display();
@@ -34,7 +34,7 @@ void Display::MovingDown () {
 	this->display.setCursor(40, 0);
 	this->display.println(F(this->CurrentLevel));
 	this->display.setCursor(40, 40);
-	this->display.println(F(this->NextLevel));
+	this->display.print(F(this->NextLevel));
 	this->display.fillRect(54, 20, 20, 10, WHITE);
 	this->display.fillTriangle(64, 40, 24, 30, 104, 30, WHITE);
 	this->display.display();
@@ -56,7 +56,7 @@ void Display::AtLevel (int Level) {
 	this->display.setTextSize(6); // Draw 6X-scale text
 	this->display.setTextColor(WHITE);
 	this->display.setCursor(10, 10);
-	this->display.println(F(Level));
+	this->display.print(F(Level));
 	this->display.display();
 	this->WS->sendMessage("STATUS: AtLevel "+to_string(Level));
 	this->CurrentLevel = Level;
@@ -67,7 +67,7 @@ void Display::Homing () {
 	this->display.setTextSize(4); // Draw 4X-scale text
 	this->display.setTextColor(WHITE);
 	this->display.setCursor(10, 20);
-	this->display.println(F("HOMING.."));
+	this->display.print(F("HOMING.."));
 	this->display.display();
 	this->WS->sendMessage("STATUS: HOMING");
 }
