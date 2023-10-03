@@ -2,6 +2,7 @@
 #include "OTAHandler.h"
 #include "AjaxHandler.h"
 #include "Calibrator.h"
+#include "Display.h"
 
 #define SD_CS_PIN       5
 #define SD_D1_MOSI_PIN 23
@@ -15,6 +16,7 @@ SDWebServer   *WS;
 OTAHandler    *OH;
 AjaxHandler   *AH;
 Calibrator    *CA;
+Display       *DI;
 
 void SDWebServer_handleNotFound() {
 	WS->loadFromSdCard(WS->getServer()->uri());
@@ -33,6 +35,8 @@ void setup(void) {
 	AH->Init(WS->getServer());
 	CA = new Calibrator();
 	CA->ReadFromSD();
+	DI = new Display();
+	DI->Init(WS);
 	pinMode ( LED_BUILTIN, OUTPUT );
 	analogWrite ( LED_BUILTIN, 0 );
 }
