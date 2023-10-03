@@ -5,6 +5,7 @@
 #include <Wire.h>
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
+#include "SDWebServer.h"
 
 #define SCREEN_WIDTH 128 // OLED display width, in pixels
 #define SCREEN_HEIGHT 64 // OLED display height, in pixels
@@ -14,15 +15,14 @@
 
 class Display {
 	public:
-		void Init     ();
+		void Init     (SDWebServer *WS);
 		void NewLevel (int Level);
 		void AtLevel  (int Level);
-}
-
-void Display::Homing () {
+		void Homing   ();
 
 	private:
 		Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
+		SDWebServer *WS;
 		int CurrentLevel = 1;
 		int NextLevel    = 1;
 		void MovingUp ();
