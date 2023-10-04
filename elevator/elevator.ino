@@ -23,7 +23,7 @@ void SDWebServer_handleNotFound() {
 }
 
 void setup(void) {
-	Serial.begin(115200);
+	Serial.begin(9600);
 	Serial.setDebugOutput(true);
 	Serial.print("\n");
 	WS = new SDWebServer();
@@ -37,8 +37,6 @@ void setup(void) {
 	CA->ReadFromSD();
 	DI = new Display();
 	DI->Init(WS);
-	pinMode ( LED_BUILTIN, OUTPUT );
-	analogWrite ( LED_BUILTIN, 0 );
 }
 
 void loop(void) {

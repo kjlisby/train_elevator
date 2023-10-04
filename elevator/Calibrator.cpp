@@ -19,7 +19,7 @@ void Calibrator::ReadFromSD () {
   int i = 0;
   int level = 1;
   int side = 0;
-  myFile = SD.open(Calibrator::FileName);
+  File myFile = SD.open(this->FileName);
   if (myFile) {
     do {
       buffer[i++] = myFile.read();
@@ -40,10 +40,10 @@ void Calibrator::ReadFromSD () {
 }
 
 void Calibrator::WriteToSD () {
-  myFile = SD.open(Calibrator::FileName, FILE_WRITE);
+  File myFile = SD.open(this->FileName, FILE_WRITE);
   if (myFile) {
-    for (level = 1; level <= 12; level++) {
-      for (side = 0; side <= 1; side++) {
+    for (int level = 1; level <= 12; level++) {
+      for (int side = 0; side <= 1; side++) {
         myFile.print (this->offset[level-1][side]);
         myFile.print ('_');
       }

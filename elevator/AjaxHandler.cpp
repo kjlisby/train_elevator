@@ -1,8 +1,8 @@
 #include "AjaxHandler.h"
-#include "Turnout.h"
+/* #include "Turnout.h"
 #include "PowerSupply.h"
 #include "TrainDetector.h"
-
+ */
 // The AjaxHandler is responding to commands sent bia HTTP requests by the JavaScript code that is executed in a browser somewhere.
 // There is no event mechanism. Just simple commands:
 //   - read the status of everything
@@ -10,7 +10,7 @@
 //   - adjust power
 //   - etc.
 
-extern PowerSupply   *PSU1;
+/* extern PowerSupply   *PSU1;
 extern PowerSupply   *PSU2;
 extern Turnout       *TU1;
 extern Turnout       *TU2;
@@ -26,7 +26,7 @@ extern bool          AutoMode;
 extern void          ToggleAutoMode();
 extern String        Train1Position;
 extern String        Train2Position;
-
+ */
 //#define ledPin LED_BUILTIN
 
 String JSON_ArrayStart() {
@@ -49,7 +49,7 @@ class InternalAjaxHandler : public RequestHandler {
 
   String SetTurnout(String TurnoutName, String Cmd) {
     //Serial.println("xXxXxXxX--------- SetTurnout "+TurnoutName+" "+Cmd);
-    Turnout *TU;
+/*     Turnout *TU;
     switch (TurnoutName[1]) {
       case '1': TU = TU1; break;
       case '2': TU = TU2; break;
@@ -68,12 +68,12 @@ class InternalAjaxHandler : public RequestHandler {
       Serial.println("xXxXxXxX--------- SetTurnout "+TurnoutName+" CLOSE");
       return JSON_ArrayStart()+JSON_item(TurnoutName, "closed")+JSON_ArrayEnd();
     }
-  }
+ */  }
 
   String GetStatus() {
-    Serial.println("GET STATUS  Train1Position="+Train1Position);
+ //   Serial.println("GET STATUS  Train1Position="+Train1Position);
     String RetVal = JSON_ArrayStart();
-    RetVal += JSON_item("AutoMode",String(AutoMode));
+/*     RetVal += JSON_item("AutoMode",String(AutoMode));
     RetVal += JSON_ArrayDivider()+JSON_item("Power1", String(PSU1->GetSpeed()));
     RetVal += JSON_ArrayDivider()+JSON_item("Power2", String(PSU2->GetSpeed()));
     if (!PSU1->GetStatus()) {
@@ -100,7 +100,7 @@ class InternalAjaxHandler : public RequestHandler {
     RetVal += JSON_ArrayDivider()+JSON_item("T6", TU6->GetPosition());
     RetVal += JSON_ArrayDivider()+JSON_item("train1Pos", Train1Position);
     RetVal += JSON_ArrayDivider()+JSON_item("train2Pos", Train2Position);
-    Serial.println("GET STATUS - end of GetStatus()");
+  */   Serial.println("GET STATUS - end of GetStatus()");
     return RetVal+JSON_ArrayEnd();
   }
 
@@ -144,8 +144,8 @@ class InternalAjaxHandler : public RequestHandler {
         server.send(200, "text/plain", "B6 activated");
       } else if (cmdarray[2].equals("B7")) {
         server.send(200, "text/plain", "B7 activated");
-      } else if (cmdarray[2].equals("automode")) {
-        ToggleAutoMode();
+       } else if (cmdarray[2].equals("automode")) {
+/*        ToggleAutoMode();
         Serial.println("AutoMode toggled to "+String(AutoMode));
         server.send(200, "text/plain", JSON_ArrayStart()+JSON_item("automode", String(AutoMode))+JSON_ArrayEnd());
       } else if (cmdarray[2].equals("stop1")) {
@@ -166,12 +166,12 @@ class InternalAjaxHandler : public RequestHandler {
           server.send(200, "text/plain", JSON_ArrayStart()+JSON_item("Power1", String(PSU1->GetSpeed()))+JSON_ArrayEnd());
         } else {
           server.send(409, "text/plain", "Speed change not allowed in auto mode");
-        }
+         }
       } else if (cmdarray[2].equals("psu2")) {
         if (!AutoMode) {
-          PSU2->SetSpeed(cmdarray[3].toInt());
+           PSU2->SetSpeed(cmdarray[3].toInt());
           server.send(200, "text/plain", JSON_ArrayStart()+JSON_item("Power2", String(PSU2->GetSpeed()))+JSON_ArrayEnd());
-        } else {
+         } else {
           server.send(409, "text/plain", "Speed change not allowed in auto mode");
         }
       } else if (cmdarray[2].length() == 2 &&
@@ -180,7 +180,7 @@ class InternalAjaxHandler : public RequestHandler {
                  cmdarray[2][1] <= '6' &&
                 (cmdarray[3].equals("S") || cmdarray[3].equals("T"))) {
         server.send(200, "text/plain", SetTurnout(cmdarray[2], cmdarray[3]));
-      } else {
+*/      } else {
         server.send(404, "text/plain", "Unknown HTLM element for set command");
       }
     } else {

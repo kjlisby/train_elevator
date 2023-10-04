@@ -22,7 +22,7 @@ class Display {
 
 	private:
 		Adafruit_SSD1306 *MyDisplay;
-		SDWebServer *WS;
+		SDWebServer      *WS;
 		int CurrentLevel = 1;
 		int NextLevel    = 1;
 		void MovingUp ();
