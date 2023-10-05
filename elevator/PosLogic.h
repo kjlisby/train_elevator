@@ -2,6 +2,8 @@
 #define POS_LOGIC_H
 
 #include <AccelStepper.h>
+#include "Calibrator.h"
+#include "Display.h"
 
 #define LH_STEPPER_DIR_PIN 12
 #define LH_STEPPER_STEP_PIN 13
@@ -14,21 +16,28 @@
 #define RH_BACK_SECURITY_PIN 2
 #define RH_FRONT_SECURITY_PIN 15
 
+#define STATUS_IDLE     0
+#define STATUS_HOMING_1 1
+#define STATUS_HOMING_2 2
+#define STATUS_HOMING_3 3
+#define STATUS_HOMING_4 4
+#define STATUS_MOVING   5
+
 class PosLogic {
 	public:
-		void Init ();
+		void Init (Calibrator *CA, Display *DI);
 		void Home ();
-		void MoveTo (int Level);
+		void MoveTo (int Level, int AdditionalSteps);
 		String GetStatus ();
+    void Loop ();
 	private:
 		AccelStepper *LHStepper;
 		AccelStepper *RHStepper;
-		uint8_t LHEndStopPin   = LH_ENDSTOP_PIN;
-		uint8_t RHEndStopPin   = RH_ENDSTOP_PIN;
-		uint8_t LBSecurityPin  = LH_BACK_SECURITY_PIN;
-		uint8_t LFSecurityPin  = LH_FRONT_SECURITY_PIN;
-		uint8_t RBSecurityPin  = RH_BACK_SECURITY_PIN;
-		uint8_t RFSecurityPin  = RH_FRONT_SECURITY_PIN;
+		Calibrator   *MyCalibrator;
+		Display      *MyDisplay;
+		int          MyStatus = STATUS_IDLE;
+		int          CurrentLevel = 0;
+		int          NextLevel    = 0;
 };
 
 #endif
