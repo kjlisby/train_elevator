@@ -3,6 +3,7 @@
 #include "AjaxHandler.h"
 #include "Calibrator.h"
 #include "Display.h"
+#include "PosLogic.h"
 
 #define SD_CS_PIN       5
 #define SD_D1_MOSI_PIN 23
@@ -17,6 +18,7 @@ OTAHandler    *OH;
 AjaxHandler   *AH;
 Calibrator    *CA;
 Display       *DI;
+PosLogic      *PL;
 
 void SDWebServer_handleNotFound() {
 	WS->loadFromSdCard(WS->getServer()->uri());
@@ -37,6 +39,8 @@ void setup(void) {
 	CA->ReadFromSD();
 	DI = new Display();
 	DI->Init(WS);
+	PL = new PosLogic();
+	PL->Init(CA, DI);
 }
 
 void loop(void) {
@@ -44,4 +48,5 @@ void loop(void) {
 	WS->Loop();
 	OH->Loop();
 	AH->Loop();
+	PL->Loop();
 }
