@@ -26,10 +26,10 @@
 class PosLogic {
 	public:
 		void Init (Calibrator *CA, Display *DI);
-		void Home ();
-		void MoveTo (int Level, int AdditionalSteps);
+		bool Home ();
+		bool MoveTo (int Level, int AdditionalSteps);
 		String GetStatus ();
-    void Loop ();
+		void Loop ();
 	private:
 		AccelStepper *LHStepper;
 		AccelStepper *RHStepper;
@@ -38,6 +38,7 @@ class PosLogic {
 		int          MyStatus = STATUS_IDLE;
 		int          CurrentLevel = 0;
 		int          NextLevel    = 0;
+		bool Blocked();
 };
 
 #endif

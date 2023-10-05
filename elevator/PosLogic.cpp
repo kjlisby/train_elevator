@@ -17,19 +17,32 @@ void PosLogic::Init (Calibrator *CA, Display *DI) {
 	pinMode(RH_FRONT_SECURITY_PIN, INPUT_PULLUP);
 }
 
-void PosLogic::Home () {
+bool PosLogic::Home () {
+	if (this->Blocked()) {
+		serial.println("ELEVATOR_BLOCKED");
+		return false;
+	}
 	this->MyStatus = STATUS_HOMING_1;
+	return true;
 }
 	
-void PosLogic::MoveTo (int Level, int AdditionalSteps) {
+bool PosLogic::MoveTo (int Level, int AdditionalSteps) {
+	if (this->Blocked()) {
+		serial.println("ELEVATOR_BLOCKED");
+		return false;
+	}
 	this->MyStatus  = STATUS_MOVING;
 	this->NextLevel = Level;
 	this->LHStepper->moveTo(this->MyCalibrator->GetOffset(true,  Level)+AdditionalSteps);
 	this->RHStepper->moveTo(this->MyCalibrator->GetOffset(false, Level)+AdditionalSteps);
 	this->MyDisplay->NewLevel(Level);
+	return true;
 }
 	
 String PosLogic::GetStatus () {
+	if (this->Blocked()) {
+		return ("BLOCKED");
+	}
 	switch (this->MyStatus) {
 		case STATUS_HOMING_1:
 			return ("HOMING phase 1");
@@ -47,12 +60,16 @@ String PosLogic::GetStatus () {
 	return ("UNKNOWN STATE");
 }
 
+bool PosLogic::Blocked () {
+	return (!digitalRead(LH_BACK_SECURITY_PIN) || !digitalRead(LH_FRONT_SECURITY_PIN) || !digitalRead(RH_BACK_SECURITY_PIN) || !digitalRead(RH_FRONT_SECURITY_PIN));
+}
+
 void PosLogic::Loop () {
 	this->LHStepper->run();
 	this->RHStepper->run();
 	switch (this->MyStatus) {
 		case STATUS_HOMING_1: // Moving downwards searching for end-stop
-			if (digitalRead(LH_ENDSTOP_PIN) && digitalRead(LH_ENDSTOP_PIN)) {
+			if (!digitalRead(LH_ENDSTOP_PIN) && !digitalRead(LH_ENDSTOP_PIN)) {
 				this->MyStatus = STATUS_HOMING_2;
 				this->LHStepper->move(20);
 				this->RHStepper->move(20);
@@ -63,10 +80,10 @@ void PosLogic::Loop () {
 			break;
 		case STATUS_HOMING_2: // Moving upwards (each side separately) until end-stop is exactly not activated
 			if (!this->LHStepper->isRunning() && !this->LHStepper->isRunning()) {
-				if (digitalRead(LH_ENDSTOP_PIN)) {
+				if (!digitalRead(LH_ENDSTOP_PIN)) {
 					this->LHStepper->move(20);
 				}
-				if (digitalRead(RH_ENDSTOP_PIN)) {
+				if (!digitalRead(RH_ENDSTOP_PIN)) {
 					this->RHStepper->move(20);
 				}
 				if (!this->LHStepper->isRunning() && !this->LHStepper->isRunning()) {
@@ -74,10 +91,10 @@ void PosLogic::Loop () {
 					this->MyStatus = STATUS_HOMING_3;
 				}
 			} else {
-				if (!digitalRead(LH_ENDSTOP_PIN)) {
+				if (digitalRead(LH_ENDSTOP_PIN)) {
 					this->LHStepper->stop();
 				}
-				if (!digitalRead(RH_ENDSTOP_PIN)) {
+				if (digitalRead(RH_ENDSTOP_PIN)) {
 					this->RHStepper->stop();
 				}
 			}
