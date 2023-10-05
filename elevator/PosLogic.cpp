@@ -55,9 +55,6 @@ String PosLogic::GetStatus () {
 	if (this->Blocked()) {
 		return ("BLOCKED");
 	}
-	if (this->Locked) {
-		return ("LOCKED");
-	}
 	switch (this->MyStatus) {
 		case STATUS_HOMING_1:
 			return ("HOMING phase 1");
