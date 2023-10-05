@@ -31,6 +31,10 @@ bool PosLogic::MoveTo (int Level, int AdditionalSteps) {
 		Serial.println("ELEVATOR_BLOCKED");
 		return false;
 	}
+	if (this->Locked) {
+		Serial.println("ELEVATOR_LOCKED");
+		return false;
+	}
 	this->MyStatus  = STATUS_MOVING;
 	this->NextLevel = Level;
 	this->LHStepper->moveTo(this->MyCalibrator->GetOffset(true,  Level)+AdditionalSteps);
@@ -38,10 +42,21 @@ bool PosLogic::MoveTo (int Level, int AdditionalSteps) {
 	this->MyDisplay->NewLevel(Level);
 	return true;
 }
+
+bool PosLogic::Lock () {
+this->Locked = true;
+}
+
+bool PosLogic::Unlock () {
+this->Locked = false;
+}
 	
 String PosLogic::GetStatus () {
 	if (this->Blocked()) {
 		return ("BLOCKED");
+	}
+	if (this->Locked) {
+		return ("LOCKED");
 	}
 	switch (this->MyStatus) {
 		case STATUS_HOMING_1:
