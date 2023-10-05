@@ -27,6 +27,8 @@ class PosLogic {
 	public:
 		void   Init (Calibrator *CA, Display *DI);
 		bool   Home ();
+void Lock ();
+void Unlock ();
 		bool   MoveTo (int Level, int AdditionalSteps);
 		String GetStatus ();
 		int    GetCurrentLevel ();
@@ -39,6 +41,7 @@ class PosLogic {
 		int          MyStatus = STATUS_IDLE;
 		int          CurrentLevel = 0;
 		int          NextLevel    = 0;
+bool Locked = false;
 		bool Blocked();
 };
 
