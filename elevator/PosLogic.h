@@ -25,11 +25,12 @@
 
 class PosLogic {
 	public:
-		void Init (Calibrator *CA, Display *DI);
-		bool Home ();
-		bool MoveTo (int Level, int AdditionalSteps);
+		void   Init (Calibrator *CA, Display *DI);
+		bool   Home ();
+		bool   MoveTo (int Level, int AdditionalSteps);
 		String GetStatus ();
-		void Loop ();
+		int    GetCurrentLevel ();
+		void   Loop ();
 	private:
 		AccelStepper *LHStepper;
 		AccelStepper *RHStepper;

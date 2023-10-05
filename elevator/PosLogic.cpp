@@ -19,7 +19,7 @@ void PosLogic::Init (Calibrator *CA, Display *DI) {
 
 bool PosLogic::Home () {
 	if (this->Blocked()) {
-		serial.println("ELEVATOR_BLOCKED");
+		Serial.println("ELEVATOR_BLOCKED");
 		return false;
 	}
 	this->MyStatus = STATUS_HOMING_1;
@@ -28,7 +28,7 @@ bool PosLogic::Home () {
 	
 bool PosLogic::MoveTo (int Level, int AdditionalSteps) {
 	if (this->Blocked()) {
-		serial.println("ELEVATOR_BLOCKED");
+		Serial.println("ELEVATOR_BLOCKED");
 		return false;
 	}
 	this->MyStatus  = STATUS_MOVING;
@@ -62,6 +62,13 @@ String PosLogic::GetStatus () {
 
 bool PosLogic::Blocked () {
 	return (!digitalRead(LH_BACK_SECURITY_PIN) || !digitalRead(LH_FRONT_SECURITY_PIN) || !digitalRead(RH_BACK_SECURITY_PIN) || !digitalRead(RH_FRONT_SECURITY_PIN));
+}
+
+int PosLogic::GetCurrentLevel () {
+	if (this->Blocked() || this->MyStatus != STATUS_IDLE) {
+		return 0;
+	}
+	return this->CurrentLevel;
 }
 
 void PosLogic::Loop () {
