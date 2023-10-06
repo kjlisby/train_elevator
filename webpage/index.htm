@@ -3,28 +3,156 @@
 <head>
 <link rel="stylesheet" type="text/css" href="elevator.css">
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-<title>Elevator</title>
+	<title>Elevator</title>
+	<link rel="icon" type="image/x-icon" href="train.ico">
 </head>
 <body onload="Start();">
-	
-<!-- <p id="demo">This is a paragraph.</p>
-<div class="rxd">
-    <textarea id="logConsole" readonly></textarea>
-</div> -->
-	
-<button class="button" onclick="alert('Level 1! - Yes sir! Coming up!')">Level 1</button>
-<button class="button" onclick="alert('Level 2! - Yes sir! Coming up!')">Level 2</button>
-<button class="button" onclick="alert('Level 3! - Yes sir! Coming up!')">Level 3</button>
-<button class="button" onclick="alert('Level 4! - Yes sir! Coming up!')">Level 4</button>
-<button class="button" onclick="alert('Level 5! - Yes sir! Coming up!')">Level 5</button>
-<button class="button" onclick="alert('Level 6! - Yes sir! Coming up!')">Level 6</button>
-<button class="button" onclick="alert('Level 7! - Yes sir! Coming up!')">Level 7</button>
-<button class="button" onclick="alert('Level 8! - Yes sir! Coming up!')">Level 8</button>
-<button class="button" onclick="alert('Level 9! - Yes sir! Coming up!')">Level 9</button>
-<button class="button" onclick="alert('Level 10! - Yes sir! Coming up!')">Level 10</button>
-<button class="button" onclick="alert('Level 11! - Yes sir! Coming up!')">Level 11</button>
-<button class="button" onclick="alert('Level 12! - Yes sir! Coming up!')">Level 12</button>
 
+
+<div class="placeable" style="width: 50vw; height: 50vh; top: 50vh; left: 50vw;">
+	<p id="heading">Status:</p>
+    <textarea id="OLED_copy" readonly></textarea>
+</div>
+
+<div class="placeable" style="width: 50vw; height: 50vh; top: 1vh; left: 50vw;">
+	<p id="heading">Event Log:</p>
+    <textarea id="logConsole" readonly></textarea>
+</div>
+	
+<label class="placeable" style="font-size: 1.2vw; top: 0.5vh; left: 1.2vw">Move to</label>
+<label class="placeable" style="font-size: 1.2vw; top: 0.5vh; left: 7.2vw">Calibr. left</label>
+<label class="placeable" style="font-size: 1.2vw; top: 0.5vh; left: 14.2vw">Calibr. right</label>
+<label class="placeable" style="font-size: 1.2vw; top: 0.5vh; left: 21vw">Calibration action</label>
+
+<button class="button placeable" onclick="alert('Level 1! - Yes sir! Coming up!')" style="top: 4vh; left: 1vw">Level 1</button>
+<button class="button placeable" onclick="alert('Level 2! - Yes sir! Coming up!')" style="top: 8vh; left: 1vw">Level 2</button>
+<button class="button placeable" onclick="alert('Level 3! - Yes sir! Coming up!')" style="top: 12vh; left: 1vw">Level 3</button>
+<button class="button placeable" onclick="alert('Level 4! - Yes sir! Coming up!')" style="top: 16vh; left: 1vw">Level 4</button>
+<button class="button placeable" onclick="alert('Level 5! - Yes sir! Coming up!')" style="top: 20vh; left: 1vw">Level 5</button>
+<button class="button placeable" onclick="alert('Level 6! - Yes sir! Coming up!')" style="top: 24vh; left: 1vw">Level 6</button>
+<button class="button placeable" onclick="alert('Level 7! - Yes sir! Coming up!')" style="top: 28vh; left: 1vw">Level 7</button>
+<button class="button placeable" onclick="alert('Level 8! - Yes sir! Coming up!')" style="top: 32vh; left: 1vw">Level 8</button>
+<button class="button placeable" onclick="alert('Level 9! - Yes sir! Coming up!')" style="top: 36vh; left: 1vw">Level 9</button>
+<button class="button placeable" onclick="alert('Level 10! - Yes sir! Coming up!')" style="top: 40vh; left: 1vw">Level 10</button>
+<button class="button placeable" onclick="alert('Level 11! - Yes sir! Coming up!')" style="top: 44vh; left: 1vw">Level 11</button>
+<button class="button placeable" onclick="alert('Level 12! - Yes sir! Coming up!')" style="top: 48vh; left: 1vw">Level 12</button>
+
+<button class="button placeable cal_1" onclick="alert('Level 1 left calibration -')" style="width: 1vw; top: 4vh; left: 7vw">-</button>
+<button class="button placeable cal_2" onclick="alert('Level 2 left calibration -')" style="width: 1vw; top: 8vh; left: 7vw">-</button>
+<button class="button placeable cal_3" onclick="alert('Level 3 left calibration -')" style="width: 1vw; top: 12vh; left: 7vw">-</button>
+<button class="button placeable cal_4" onclick="alert('Level 4 left calibration -')" style="width: 1vw; top: 16vh; left: 7vw">-</button>
+<button class="button placeable cal_5" onclick="alert('Level 5 left calibration -')" style="width: 1vw; top: 20vh; left: 7vw">-</button>
+<button class="button placeable cal_6" onclick="alert('Level 6 left calibration -')" style="width: 1vw; top: 24vh; left: 7vw">-</button>
+<button class="button placeable cal_7" onclick="alert('Level 7 left calibration -')" style="width: 1vw; top: 28vh; left: 7vw">-</button>
+<button class="button placeable cal_8" onclick="alert('Level 8 left calibration -')" style="width: 1vw; top: 32vh; left: 7vw">-</button>
+<button class="button placeable cal_9" onclick="alert('Level 9 left calibration -')" style="width: 1vw; top: 36vh; left: 7vw">-</button>
+<button class="button placeable cal_10" onclick="alert('Level 10 left calibration -')" style="width: 1vw; top: 40vh; left: 7vw">-</button>
+<button class="button placeable cal_11" onclick="alert('Level 11 left calibration -')" style="width: 1vw; top: 44vh; left: 7vw">-</button>
+<button class="button placeable cal_12" onclick="alert('Level 12 left calibration -')" style="width: 1vw; top: 48vh; left: 7vw">-</button>
+
+<input type="number" min="-200" max="200" class="placeable cal_1" id="cali_left_1" name="cali_left_1" value="0" style="font-size: 0.7vw; top: 4.5vh; left:8.1vw"><br>
+<input type="number" min="-200" max="200" class="placeable cal_2" id="cali_left_2" name="cali_left_2" value="0" style="font-size: 0.7vw; top: 8.5vh; left:8.1vw"><br>
+<input type="number" min="9800" max="10200" class="placeable cal_3" id="cali_left_3" name="cali_left_3" value="10000" style="font-size: 0.7vw; top: 12.5vh; left:8.1vw"><br>
+<input type="number" min="9800" max="10200" class="placeable cal_4" id="cali_left_4" name="cali_left_4" value="10000" style="font-size: 0.7vw; top: 16.5vh; left:8.1vw"><br>
+<input type="number" min="19800" max="20200" class="placeable cal_5" id="cali_left_5" name="cali_left_5" value="20000" style="font-size: 0.7vw; top: 20.5vh; left:8.1vw"><br>
+<input type="number" min="19800" max="20200" class="placeable cal_6" id="cali_left_6" name="cali_left_6" value="20000" style="font-size: 0.7vw; top: 24.5vh; left:8.1vw"><br>
+<input type="number" min="29800" max="30200" class="placeable cal_7" id="cali_left_7" name="cali_left_7" value="30000" style="font-size: 0.7vw; top: 28.5vh; left:8.1vw"><br>
+<input type="number" min="29800" max="30200" class="placeable cal_8" id="cali_left_8" name="cali_left_8" value="30000" style="font-size: 0.7vw; top: 32.5vh; left:8.1vw"><br>
+<input type="number" min="39800" max="40200" class="placeable cal_9" id="cali_left_9" name="cali_left_9" value="40000" style="font-size: 0.7vw; top: 36.5vh; left:8.1vw"><br>
+<input type="number" min="39800" max="40200" class="placeable cal_10" id="cali_left_10" name="cali_left_10" value="40000" style="font-size: 0.7vw; top: 40.5vh; left:8.1vw"><br>
+<input type="number" min="49800" max="50200" class="placeable cal_11" id="cali_left_11" name="cali_left_11" value="50000" style="font-size: 0.7vw; top: 44.5vh; left:8.1vw"><br>
+<input type="number" min="49800" max="50200" class="placeable cal_12" id="cali_left_12" name="cali_left_12" value="50000" style="font-size: 0.7vw; top: 48.5vh; left:8.1vw"><br>
+
+<button class="button placeable cal_1" onclick="alert('Level 1 left calibration +')" style="width: 1vw; top: 4vh; left: 12.1vw">+</button>
+<button class="button placeable cal_2" onclick="alert('Level 2 left calibration +')" style="width: 1vw; top: 8vh; left: 12.1vw">+</button>
+<button class="button placeable cal_3" onclick="alert('Level 3 left calibration +')" style="width: 1vw; top: 12vh; left: 12.1vw">+</button>
+<button class="button placeable cal_4" onclick="alert('Level 4 left calibration +')" style="width: 1vw; top: 16vh; left: 12.1vw">+</button>
+<button class="button placeable cal_5" onclick="alert('Level 5 left calibration +')" style="width: 1vw; top: 20vh; left: 12.1vw">+</button>
+<button class="button placeable cal_6" onclick="alert('Level 6 left calibration +')" style="width: 1vw; top: 24vh; left: 12.1vw">+</button>
+<button class="button placeable cal_7" onclick="alert('Level 7 left calibration +')" style="width: 1vw; top: 28vh; left: 12.1vw">+</button>
+<button class="button placeable cal_8" onclick="alert('Level 8 left calibration +')" style="width: 1vw; top: 32vh; left: 12.1vw">+</button>
+<button class="button placeable cal_9" onclick="alert('Level 9 left calibration +')" style="width: 1vw; top: 36vh; left: 12.1vw">+</button>
+<button class="button placeable cal_10" onclick="alert('Level 10 left calibration +')" style="width: 1vw; top: 40vh; left: 12.1vw">+</button>
+<button class="button placeable cal_11" onclick="alert('Level 11 left calibration +')" style="width: 1vw; top: 44vh; left: 12.1vw">+</button>
+<button class="button placeable cal_12" onclick="alert('Level 12 left calibration +')" style="width: 1vw; top: 48vh; left: 12.1vw">+</button>
+
+<button class="button placeable cal_1" onclick="alert('Level 1 right calibration -')" style="width: 1vw; top: 4vh; left: 14vw">-</button>
+<button class="button placeable cal_2" onclick="alert('Level 2 right calibration -')" style="width: 1vw; top: 8vh; left: 14vw">-</button>
+<button class="button placeable cal_3" onclick="alert('Level 3 right calibration -')" style="width: 1vw; top: 12vh; left: 14vw">-</button>
+<button class="button placeable cal_4" onclick="alert('Level 4 right calibration -')" style="width: 1vw; top: 16vh; left: 14vw">-</button>
+<button class="button placeable cal_5" onclick="alert('Level 5 right calibration -')" style="width: 1vw; top: 20vh; left: 14vw">-</button>
+<button class="button placeable cal_6" onclick="alert('Level 6 right calibration -')" style="width: 1vw; top: 24vh; left: 14vw">-</button>
+<button class="button placeable cal_7" onclick="alert('Level 7 right calibration -')" style="width: 1vw; top: 28vh; left: 14vw">-</button>
+<button class="button placeable cal_8" onclick="alert('Level 8 right calibration -')" style="width: 1vw; top: 32vh; left: 14vw">-</button>
+<button class="button placeable cal_9" onclick="alert('Level 9 right calibration -')" style="width: 1vw; top: 36vh; left: 14vw">-</button>
+<button class="button placeable cal_10" onclick="alert('Level 10 right calibration -')" style="width: 1vw; top: 40vh; left: 14vw">-</button>
+<button class="button placeable cal_11" onclick="alert('Level 11 right calibration -')" style="width: 1vw; top: 44vh; left: 14vw">-</button>
+<button class="button placeable cal_12" onclick="alert('Level 12 right calibration -')" style="width: 1vw; top: 48vh; left: 14vw">-</button>
+
+<input type="number" min="-200" max="200" class="placeable cal_1" id="cali_right_1" name="cali_right_1" value="0" style="font-size: 0.7vw; top: 4.5vh; left:15.1vw"><br>
+<input type="number" min="-200" max="200" class="placeable cal_2" id="cali_right_2" name="cali_right_2" value="0" style="font-size: 0.7vw; top: 8.5vh; left:15.1vw"><br>
+<input type="number" min="9800" max="10200" class="placeable cal_3" id="cali_right_3" name="cali_right_3" value="10000" style="font-size: 0.7vw; top: 12.5vh; left:15.1vw"><br>
+<input type="number" min="9800" max="10200" class="placeable cal_4" id="cali_right_4" name="cali_right_4" value="10000" style="font-size: 0.7vw; top: 16.5vh; left:15.1vw"><br>
+<input type="number" min="10800" max="20200" class="placeable cal_5" id="cali_right_5" name="cali_right_5" value="20000" style="font-size: 0.7vw; top: 20.5vh; left:15.1vw"><br>
+<input type="number" min="10800" max="20200" class="placeable cal_6" id="cali_right_6" name="cali_right_6" value="20000" style="font-size: 0.7vw; top: 24.5vh; left:15.1vw"><br>
+<input type="number" min="20800" max="30200" class="placeable cal_7" id="cali_right_7" name="cali_right_7" value="30000" style="font-size: 0.7vw; top: 28.5vh; left:15.1vw"><br>
+<input type="number" min="20800" max="30200" class="placeable cal_8" id="cali_right_8" name="cali_right_8" value="30000" style="font-size: 0.7vw; top: 32.5vh; left:15.1vw"><br>
+<input type="number" min="30800" max="40200" class="placeable cal_9" id="cali_right_9" name="cali_right_9" value="40000" style="font-size: 0.7vw; top: 36.5vh; left:15.1vw"><br>
+<input type="number" min="30800" max="40200" class="placeable cal_10" id="cali_right_10" name="cali_right_10" value="40000" style="font-size: 0.7vw; top: 40.5vh; left:15.1vw"><br>
+<input type="number" min="40800" max="50200" class="placeable cal_11" id="cali_right_11" name="cali_right_11" value="50000" style="font-size: 0.7vw; top: 44.5vh; left:15.1vw"><br>
+<input type="number" min="40800" max="50200" class="placeable cal_12" id="cali_right_12" name="cali_right_12" value="50000" style="font-size: 0.7vw; top: 48.5vh; left:15.1vw"><br>
+
+<button class="button placeable cal_1" onclick="alert('Level 1 right calibration +')" style="width: 1vw; top: 4vh; left: 19.1vw">+</button>
+<button class="button placeable cal_2" onclick="alert('Level 2 right calibration +')" style="width: 1vw; top: 8vh; left: 19.1vw">+</button>
+<button class="button placeable cal_3" onclick="alert('Level 3 right calibration +')" style="width: 1vw; top: 12vh; left: 19.1vw">+</button>
+<button class="button placeable cal_4" onclick="alert('Level 4 right calibration +')" style="width: 1vw; top: 16vh; left: 19.1vw">+</button>
+<button class="button placeable cal_5" onclick="alert('Level 5 right calibration +')" style="width: 1vw; top: 20vh; left: 19.1vw">+</button>
+<button class="button placeable cal_6" onclick="alert('Level 6 right calibration +')" style="width: 1vw; top: 24vh; left: 19.1vw">+</button>
+<button class="button placeable cal_7" onclick="alert('Level 7 right calibration +')" style="width: 1vw; top: 28vh; left: 19.1vw">+</button>
+<button class="button placeable cal_8" onclick="alert('Level 8 right calibration +')" style="width: 1vw; top: 32vh; left: 19.1vw">+</button>
+<button class="button placeable cal_9" onclick="alert('Level 9 right calibration +')" style="width: 1vw; top: 36vh; left: 19.1vw">+</button>
+<button class="button placeable cal_10" onclick="alert('Level 10 right calibration +')" style="width: 1vw; top: 40vh; left: 19.1vw">+</button>
+<button class="button placeable cal_11" onclick="alert('Level 11 right calibration +')" style="width: 1vw; top: 44vh; left: 19.1vw">+</button>
+<button class="button placeable cal_12" onclick="alert('Level 12 right calibration +')" style="width: 1vw; top: 48vh; left: 19.1vw">+</button>
+
+<button class="button placeable cal_1" onclick="alert('Level 1 restore calibration data')" style="width: 4vw; top: 4vh; left: 21vw">Restore</button>
+<button class="button placeable cal_2" onclick="alert('Level 2 restore calibration data')" style="width: 4vw; top: 8vh; left: 21vw">Restore</button>
+<button class="button placeable cal_3" onclick="alert('Level 3 restore calibration data')" style="width: 4vw; top: 12vh; left: 21vw">Restore</button>
+<button class="button placeable cal_4" onclick="alert('Level 4 restore calibration data')" style="width: 4vw; top: 16vh; left: 21vw">Restore</button>
+<button class="button placeable cal_5" onclick="alert('Level 5 restore calibration data')" style="width: 4vw; top: 20vh; left: 21vw">Restore</button>
+<button class="button placeable cal_6" onclick="alert('Level 6 restore calibration data')" style="width: 4vw; top: 24vh; left: 21vw">Restore</button>
+<button class="button placeable cal_7" onclick="alert('Level 7 restore calibration data')" style="width: 4vw; top: 28vh; left: 21vw">Restore</button>
+<button class="button placeable cal_8" onclick="alert('Level 8 restore calibration data')" style="width: 4vw; top: 32vh; left: 21vw">Restore</button>
+<button class="button placeable cal_9" onclick="alert('Level 9 restore calibration data')" style="width: 4vw; top: 36vh; left: 21vw">Restore</button>
+<button class="button placeable cal_10" onclick="alert('Level 10 restore calibration data')" style="width: 4vw; top: 40vh; left: 21vw">Restore</button>
+<button class="button placeable cal_11" onclick="alert('Level 11 restore calibration data')" style="width: 4vw; top: 44vh; left: 21vw">Restore</button>
+<button class="button placeable cal_12" onclick="alert('Level 12 restore calibration data')" style="width: 4vw; top: 48vh; left: 21vw">Restore</button>
+
+<button class="button placeable cal_1" onclick="alert('Level 1 move to calibration point')" style="width: 4vw; top: 4vh; left: 26vw">Move</button>
+<button class="button placeable cal_2" onclick="alert('Level 2 move to calibration point')" style="width: 4vw; top: 8vh; left: 26vw">Move</button>
+<button class="button placeable cal_3" onclick="alert('Level 3 move to calibration point')" style="width: 4vw; top: 12vh; left: 26vw">Move</button>
+<button class="button placeable cal_4" onclick="alert('Level 4 move to calibration point')" style="width: 4vw; top: 16vh; left: 26vw">Move</button>
+<button class="button placeable cal_5" onclick="alert('Level 5 move to calibration point')" style="width: 4vw; top: 20vh; left: 26vw">Move</button>
+<button class="button placeable cal_6" onclick="alert('Level 6 move to calibration point')" style="width: 4vw; top: 24vh; left: 26vw">Move</button>
+<button class="button placeable cal_7" onclick="alert('Level 7 move to calibration point')" style="width: 4vw; top: 28vh; left: 26vw">Move</button>
+<button class="button placeable cal_8" onclick="alert('Level 8 move to calibration point')" style="width: 4vw; top: 32vh; left: 26vw">Move</button>
+<button class="button placeable cal_9" onclick="alert('Level 9 move to calibration point')" style="width: 4vw; top: 36vh; left: 26vw">Move</button>
+<button class="button placeable cal_10" onclick="alert('Level 10 move to calibration point')" style="width: 4vw; top: 40vh; left: 26vw">Move</button>
+<button class="button placeable cal_11" onclick="alert('Level 11 move to calibration point')" style="width: 4vw; top: 44vh; left: 26vw">Move</button>
+<button class="button placeable cal_12" onclick="alert('Level 12 move to calibration point')" style="width: 4vw; top: 48vh; left: 26vw">Move</button>
+
+<button class="button placeable cal_1" onclick="alert('Level 1 save calibration data')" style="width: 4vw; top: 4vh; left: 31vw">Save</button>
+<button class="button placeable cal_2" onclick="alert('Level 2 save calibration data')" style="width: 4vw; top: 8vh; left: 31vw">Save</button>
+<button class="button placeable cal_3" onclick="alert('Level 3 save calibration data')" style="width: 4vw; top: 12vh; left: 31vw">Save</button>
+<button class="button placeable cal_4" onclick="alert('Level 4 save calibration data')" style="width: 4vw; top: 16vh; left: 31vw">Save</button>
+<button class="button placeable cal_5" onclick="alert('Level 5 save calibration data')" style="width: 4vw; top: 20vh; left: 31vw">Save</button>
+<button class="button placeable cal_6" onclick="alert('Level 6 save calibration data')" style="width: 4vw; top: 24vh; left: 31vw">Save</button>
+<button class="button placeable cal_7" onclick="alert('Level 7 save calibration data')" style="width: 4vw; top: 28vh; left: 31vw">Save</button>
+<button class="button placeable cal_8" onclick="alert('Level 8 save calibration data')" style="width: 4vw; top: 32vh; left: 31vw">Save</button>
+<button class="button placeable cal_9" onclick="alert('Level 9 save calibration data')" style="width: 4vw; top: 36vh; left: 31vw">Save</button>
+<button class="button placeable cal_10" onclick="alert('Level 10 save calibration data')" style="width: 4vw; top: 40vh; left: 31vw">Save</button>
+<button class="button placeable cal_11" onclick="alert('Level 11 save calibration data')" style="width: 4vw; top: 44vh; left: 31vw">Save</button>
+<button class="button placeable cal_12" onclick="alert('Level 12 save calibration data')" style="width: 4vw; top: 48vh; left: 31vw">Save</button>
 
 
 <!-- <img id="B3"   class="skinne PS1" src="skinne_varm.gif" style="width:  5vw;   top:  9vw;   left: 25vw; transform-origin: top left; transform:rotate(270deg) translate(-100%, 0%);">
@@ -70,13 +198,13 @@
 <img id="B7_loco" class="loco" src="locomotive_scaled.jpg" style="width: 3vw; top:  3vw;   left: 60vw;">
 <img id="B8_loco" class="loco" src="locomotive_scaled.jpg" style="width: 3vw; top: 10vw;   left: 72vw;">
 <img id="B9_loco" class="loco" src="locomotive_scaled.jpg" style="width: 3vw; top: 23vw;   left:  6vw;">
-	
-<div class="slidecontainer" style="top: 30vw; left: 25vw;">
+	-->
+<!-- <div class="slidecontainer" style="top: 30vw; left: 25vw;">
   <input type="range" min="-255" max="255" value="0" class="slider" id="Power1">
 </div>	
 <input id="stop1"  type="button" class="placedButton klikbar" value="STOP"  style="top: 43vw; left: 30vw;">
 <input id="reset1" type="button" class="placedButton klikbar" value="RESET" style="top: 47vw; left: 29.5vw;">
-
+ --><!-- 
 <div class="slidecontainer" style="top: 30vw; left: 45vw;">
   <input type="range" min="-255" max="255" value="0" class="slider" id="Power2">
 </div>	

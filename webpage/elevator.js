@@ -2,6 +2,12 @@ var Train1Position = "B7_loco";
 var Train2Position = "B2_loco";
 
 function Start() {
+	for (let i = 3; i < 6; i++) {
+		const elems = document.getElementsByClassName("cal_"+i);
+		for (let x of elems) {
+			x.style.visibility="hidden";
+		}
+	}
   InitWS();
   GetStatus();
 }

@@ -38,7 +38,7 @@ p {
 	visibility: hidden;
 }
 
-.placedButton {
+.placeable {
 	position:absolute;
 	font-size: 1.9vw;
 }
@@ -82,8 +82,9 @@ p {
 
 .button {
   display: inline-block;
-  padding: 15px 25px;
-  font-size: 24px;
+  width: 5vw;
+  height: 3vh;
+  font-size: 1vw;
   cursor: pointer;
   text-align: center;
   text-decoration: none;
@@ -91,14 +92,14 @@ p {
   color: #fff;
   background-color: #4CAF50;
   border: none;
-  border-radius: 15px;
-  box-shadow: 0 9px #999;
+  border-radius: 1vw;
+  box-shadow: 0 0.3vw #999;
 }
 
 .button:hover {background-color: #3e8e41}
 
 .button:active {
   background-color: #3e8e41;
-  box-shadow: 0 5px #666;
-  transform: translateY(4px);
+  box-shadow: 0 0.1vw #666;
+  transform: translateY(0.2vw);
 }
