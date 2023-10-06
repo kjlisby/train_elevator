@@ -35,6 +35,10 @@ bool PosLogic::MoveTo (int Level, int AdditionalSteps) {
 		Serial.println("ELEVATOR_LOCKED");
 		return false;
 	}
+	if (this->MyStatus != STATUS_IDLE) {
+		Serial.print("ELEVATOR NOT IDLE"); Serial.println(this->GetStatus);
+		return false;
+	}
 	this->MyStatus  = STATUS_MOVING;
 	this->NextLevel = Level;
 	this->LHStepper->moveTo(this->MyCalibrator->GetOffset(true,  Level)+AdditionalSteps);
