@@ -9,14 +9,16 @@
 <body onload="Start();">
 
 
-<div class="placeable" style="width: 50vw; height: 50vh; top: 50vh; left: 50vw;">
+<div class="placeable" style="top: 1vh; left: 50vw;">
 	<p id="heading">Status:</p>
-    <textarea id="OLED_copy" readonly></textarea>
+    <textarea id="OLED_copy"
+		style="width: 40vw; height: 40vh; resize: none; vertical-align: middle; text-align: center; font-size: 5.5vw; background-color: darkblue; color: white;"
+		readonly>12&#13;&#10;&#8650;&#13;&#10;3&#8648;</textarea>
 </div>
 
-<div class="placeable" style="width: 50vw; height: 50vh; top: 1vh; left: 50vw;">
+<div class="placeable" style="top: 50vh; left: 50vw;">
 	<p id="heading">Event Log:</p>
-    <textarea id="logConsole" readonly></textarea>
+    <textarea id="logConsole" style="width: 40vw; height: 40vh; overflow-y: scroll; resize: none;" readonly></textarea>
 </div>
 	
 <label class="placeable" style="font-size: 1.2vw; top: 0.5vh; left: 1.2vw">Move to</label>
