@@ -16,7 +16,7 @@ function InitWS() {
 
 // Enable and refresh the calibration fields and buttons for a new level
 function EnableCalibration(actualLevel) {
-	for (let i = 1; i < 12; i++) {
+	for (let i = 1; i <= 12; i++) {
 		const elems = document.getElementsByClassName("cal_"+i);
 		for (let x of elems) {
 			x.style.visibility="hidden";
