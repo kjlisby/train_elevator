@@ -52,6 +52,28 @@ bool PosLogic::MoveTo (int Level, int AdditionalSteps) {
 	return true;
 }
 
+bool PosLogic::MoveToSteps (int Level, int StepsLeft, int StepsRight) {
+	if (this->Blocked()) {
+		Serial.println("ELEVATOR_BLOCKED");
+		return false;
+	}
+	if (this->Locked) {
+		Serial.println("ELEVATOR_LOCKED");
+		return false;
+	}
+	if (this->MyStatus != STATUS_IDLE) {
+		Serial.print("ELEVATOR NOT IDLE"); Serial.println(this->GetStatus());
+		return false;
+	}
+	this->MyStatus  = STATUS_MOVING;
+	this->NextLevel = Level;
+	this->LHStepper->moveTo(StepsLeft);
+	this->RHStepper->moveTo(StepsRight);
+	this->MyDisplay->NewLevel(Level);
+	this->MyWebServer->sendMessage(this->GetStatus());
+	return true;
+}
+
 void PosLogic::Lock () {
 	this->Locked = true;
 }

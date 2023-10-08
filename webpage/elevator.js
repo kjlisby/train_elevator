@@ -1,9 +1,10 @@
-
+// Start() is called by the HTML page on loading
 function Start() {
 	InitWS();
 	GetStatus();
 }
 
+// Initialize the WEB socket for receiving events
 var Socket;
 function InitWS() {
 	Socket = new WebSocket('ws://' + window.location.hostname + ':81/');
@@ -13,6 +14,7 @@ function InitWS() {
 	}
 }
 
+// Enable and refresh the calibration fields and buttons for a new level
 function EnableCalibration(actualLevel) {
 	for (let i = 1; i < 12; i++) {
 		const elems = document.getElementsByClassName("cal_"+i);
@@ -27,6 +29,7 @@ function EnableCalibration(actualLevel) {
 	GetCalibration(actualLevel);
 }
 
+// Get the stored calibration data for a level
 function GetCalibration(level) {
 	var xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = function() {
@@ -38,6 +41,7 @@ function GetCalibration(level) {
 	xhttp.send();
 }
 
+// Save the values in the calibration input fields
 function SaveCalibration(level, leftValue, rightValue) {
 	var xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = function() {
@@ -49,17 +53,31 @@ function SaveCalibration(level, leftValue, rightValue) {
 	xhttp.send();
 }
 
-function MoveElevator(level, leftValue, rightValue) {
+// Move the elevator to a new level using already stored calibration data
+function MoveElevator(level) {
 	var xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = function() {
 		if (this.readyState == 4 && this.status == 200) {
 			UpdatePage(this.responseText);
 		}
 	};
-	xhttp.open("GET", "ajax_set_level_"+level+"_"+leftValue+"_"+rightValue, true);
+	xhttp.open("GET", "ajax_set_level_"+level, true);
 	xhttp.send();
 }
 
+// Move the elevator to the absolute step values in the calibration input fields
+function MoveElevatorDuringCalibration(level, leftValue, rightValue) {
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = function() {
+		if (this.readyState == 4 && this.status == 200) {
+			UpdatePage(this.responseText);
+		}
+	};
+	xhttp.open("GET", "ajax_set_calibrationlevel_"+level+"_"+leftValue+"_"+rightValue, true);
+	xhttp.send();
+}
+
+// Poll the server for status every second to keep up to date - in case an event is missed
 function GetStatus() {
 	var request = new XMLHttpRequest();
 	request.onreadystatechange = function(){
@@ -72,20 +90,21 @@ function GetStatus() {
 	setTimeout('GetStatus()',1000);
 }
 
-
+// Handle events as well as responses to various commands
 function UpdatePage(jsonString) {
 	var i;
 	var obj_list = JSON.parse(jsonString);
 	for (i in obj_list.objects) {
-		if (obj_list.objects[i].item == "automode") {
-		} else if (obj_list.objects[i].item == "PSU1FB") {
+		if (obj_list.objects[i].item == "STATUS") {
+		} else if (obj_list.objects[i].item == "CALBB_STORED") {
 		}
 	} /* list iteration */
 } /* function UpdatePage */
 
 
 
-/* function flip(idToFlip, wanted_rotation) {
+/* 
+function flip(idToFlip, wanted_rotation) {
 	document.getElementById(idToFlip).style.transform = "rotate("+wanted_rotation+"deg)";
 }
 
@@ -206,6 +225,7 @@ function UpdatePage(jsonString) {
       Train2Position = obj_list.objects[i].value+"_loco";
       document.getElementById(Train2Position).style.visibility="visible";
     }
-  } /* list iteration */
- */} /* function UpdatePage */
+  }
+ }
+ */
 

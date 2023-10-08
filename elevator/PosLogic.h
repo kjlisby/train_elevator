@@ -31,6 +31,7 @@ class PosLogic {
 		void   Lock ();
 		void   Unlock ();
 		bool   MoveTo (int Level, int AdditionalSteps);
+		bool   MoveToSteps (int Level, int StepsLeft, int StepsRight);
 		String GetStatus ();
 		int    GetCurrentLevel ();
 		void   Loop ();
