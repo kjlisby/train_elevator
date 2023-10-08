@@ -1,24 +1,63 @@
-var Train1Position = "B7_loco";
-var Train2Position = "B2_loco";
 
 function Start() {
-	for (let i = 3; i < 6; i++) {
+	InitWS();
+	GetStatus();
+}
+
+var Socket;
+function InitWS() {
+	Socket = new WebSocket('ws://' + window.location.hostname + ':81/');
+	document.getElementById("logConsole").value += 'Listening on ws://' + window.location.hostname + ':81/';
+	Socket.onmessage = function(evt) {
+		document.getElementById("logConsole").value += evt.data;
+	}
+}
+
+function EnableCalibration(actualLevel) {
+	for (let i = 1; i < 12; i++) {
 		const elems = document.getElementsByClassName("cal_"+i);
 		for (let x of elems) {
 			x.style.visibility="hidden";
 		}
 	}
-  InitWS();
-  GetStatus();
+	const elems = document.getElementsByClassName("cal_"+actualLevel);
+	for (let x of elems) {
+		x.style.visibility="visible";
+	}
+	GetCalibration(actualLevel);
 }
 
-var Socket;
-function InitWS() {
-  Socket = new WebSocket('ws://' + window.location.hostname + ':81/');
-  document.getElementById("logConsole").value += 'Listening on ws://' + window.location.hostname + ':81/';
-  Socket.onmessage = function(evt) {
-	  document.getElementById("logConsole").value += evt.data;
-  }
+function GetCalibration(level) {
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = function() {
+		if (this.readyState == 4 && this.status == 200) {
+			UpdatePage(this.responseText);
+		}
+	};
+	xhttp.open("GET", "ajax_get_calibration_"+level, true);
+	xhttp.send();
+}
+
+function SaveCalibration(level, leftValue, rightValue) {
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = function() {
+		if (this.readyState == 4 && this.status == 200) {
+			UpdatePage(this.responseText);
+		}
+	};
+	xhttp.open("GET", "ajax_set_calibration_"+level+"_"+leftValue+"_"+rightValue, true);
+	xhttp.send();
+}
+
+function MoveElevator(level, leftValue, rightValue) {
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = function() {
+		if (this.readyState == 4 && this.status == 200) {
+			UpdatePage(this.responseText);
+		}
+	};
+	xhttp.open("GET", "ajax_set_level_"+level+"_"+leftValue+"_"+rightValue, true);
+	xhttp.send();
 }
 
 function GetStatus() {
@@ -33,7 +72,20 @@ function GetStatus() {
 	setTimeout('GetStatus()',1000);
 }
 
-function flip(idToFlip, wanted_rotation) {
+
+function UpdatePage(jsonString) {
+	var i;
+	var obj_list = JSON.parse(jsonString);
+	for (i in obj_list.objects) {
+		if (obj_list.objects[i].item == "automode") {
+		} else if (obj_list.objects[i].item == "PSU1FB") {
+		}
+	} /* list iteration */
+} /* function UpdatePage */
+
+
+
+/* function flip(idToFlip, wanted_rotation) {
 	document.getElementById(idToFlip).style.transform = "rotate("+wanted_rotation+"deg)";
 }
 
@@ -87,9 +139,9 @@ for (i = 0; i < x.length; i++) {
   }
 }
 
-var output = document.getElementById("demo");
+var output = document.getElementById("demo"); 
 function UpdatePage(jsonString) {
-  output.innerHTML = "";
+   output.innerHTML = "";
   //output.innerHTML = jsonString;
   var i;
   var obj_list = JSON.parse(jsonString);
@@ -155,5 +207,5 @@ function UpdatePage(jsonString) {
       document.getElementById(Train2Position).style.visibility="visible";
     }
   } /* list iteration */
-} /* function UpdatePage */
+ */} /* function UpdatePage */
 

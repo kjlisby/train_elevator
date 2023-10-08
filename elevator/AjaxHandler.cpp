@@ -29,18 +29,7 @@ extern String        Train2Position;
  */
 //#define ledPin LED_BUILTIN
 
-String JSON_ArrayStart() {
-  return "{\"objects\":[";
-}
-String JSON_ArrayDivider() {
-  return ",";
-}
-String JSON_ArrayEnd() {
-  return "]}";
-}
-String JSON_item(String Name, String Value) {
-  return "{\"item\":\""+Name+"\",\"value\":\""+Value+"\"}";
-}
+#include "JSONArray.h"
 
 class InternalAjaxHandler : public RequestHandler {
   bool canHandle(HTTPMethod method, String uri) {

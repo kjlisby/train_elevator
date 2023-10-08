@@ -39,9 +39,9 @@ void setup(void) {
 	CA = new Calibrator();
 	CA->ReadFromSD();
 	DI = new Display();
-	DI->Init(WS);
+	DI->Init();
 	PL = new PosLogic();
-	PL->Init(CA, DI);
+	PL->Init(CA, DI, WS);
 	DC = new DccInterface();
 	DC->Init();
 }

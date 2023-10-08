@@ -1,8 +1,10 @@
 #include "PosLogic.h"
+#include "JSONArray.h"
 
-void PosLogic::Init (Calibrator *CA, Display *DI) {
+void PosLogic::Init (Calibrator *CA, Display *DI, SDWebServer *WS) {
 	this->MyCalibrator = CA;
 	this->MyDisplay = DI;
+	this->MyWebServer = WS;
 	this->LHStepper = new AccelStepper(AccelStepper::DRIVER, LH_STEPPER_STEP_PIN, LH_STEPPER_DIR_PIN);
 	this->LHStepper->setMaxSpeed(200.0);
 	this->LHStepper->setAcceleration(100.0);
@@ -23,6 +25,8 @@ bool PosLogic::Home () {
 		return false;
 	}
 	this->MyStatus = STATUS_HOMING_1;
+	this->MyDisplay->Homing();
+	this->MyWebServer->sendMessage(this->GetStatus());
 	return true;
 }
 	
@@ -36,7 +40,7 @@ bool PosLogic::MoveTo (int Level, int AdditionalSteps) {
 		return false;
 	}
 	if (this->MyStatus != STATUS_IDLE) {
-		Serial.print("ELEVATOR NOT IDLE"); Serial.println(this->GetStatus);
+		Serial.print("ELEVATOR NOT IDLE"); Serial.println(this->GetStatus());
 		return false;
 	}
 	this->MyStatus  = STATUS_MOVING;
@@ -44,36 +48,48 @@ bool PosLogic::MoveTo (int Level, int AdditionalSteps) {
 	this->LHStepper->moveTo(this->MyCalibrator->GetOffset(true,  Level)+AdditionalSteps);
 	this->RHStepper->moveTo(this->MyCalibrator->GetOffset(false, Level)+AdditionalSteps);
 	this->MyDisplay->NewLevel(Level);
+	this->MyWebServer->sendMessage(this->GetStatus());
 	return true;
 }
 
-bool PosLogic::Lock () {
-this->Locked = true;
+void PosLogic::Lock () {
+	this->Locked = true;
 }
 
-bool PosLogic::Unlock () {
-this->Locked = false;
+void PosLogic::Unlock () {
+	this->Locked = false;
 }
 	
 String PosLogic::GetStatus () {
+	String retval = JSON_ArrayStart();
 	if (this->Blocked()) {
-		return ("BLOCKED");
+		retval += JSON_item("STATUS", "BLOCKED");
 	}
 	switch (this->MyStatus) {
 		case STATUS_HOMING_1:
-			return ("HOMING phase 1");
+			retval += JSON_item("STATUS", "HOMING1");
+			break;
 		case STATUS_HOMING_2:
-			return ("HOMING phase 2");
+			retval += JSON_item("STATUS", "HOMING2");
+			break;
 		case STATUS_HOMING_3:
-			return ("HOMING phase 3");
+			retval += JSON_item("STATUS", "HOMING3");
+			break;
 		case STATUS_HOMING_4:
-			return ("HOMING phase 4");
+			retval += JSON_item("STATUS", "HOMING4");
+			break;
 		case STATUS_MOVING:
-			return ("MOVING from "+String(this->CurrentLevel)+" to "+String(this->NextLevel));
+			retval += JSON_item("STATUS", "MOVING");
+			retval += JSON_ArrayDivider()+JSON_item("FROM", String(this->CurrentLevel));
+			retval += JSON_ArrayDivider()+JSON_item("TO", String(this->NextLevel));
+			break;
 		case STATUS_IDLE:
-			return ("STEADY at "+String(this->CurrentLevel));
+			retval += JSON_item("STATUS", "IDLE");
+			retval += JSON_ArrayDivider()+JSON_item("LEVEL", String(this->CurrentLevel));
+			break;
 	}
-	return ("UNKNOWN STATE");
+	retval += JSON_ArrayEnd();
+	return retval;
 }
 
 bool PosLogic::Blocked () {
@@ -94,6 +110,7 @@ void PosLogic::Loop () {
 		case STATUS_HOMING_1: // Moving downwards searching for end-stop
 			if (!digitalRead(LH_ENDSTOP_PIN) && !digitalRead(LH_ENDSTOP_PIN)) {
 				this->MyStatus = STATUS_HOMING_2;
+				this->MyWebServer->sendMessage(this->GetStatus());
 				this->LHStepper->move(20);
 				this->RHStepper->move(20);
 			} else {
@@ -112,6 +129,7 @@ void PosLogic::Loop () {
 				if (!this->LHStepper->isRunning() && !this->LHStepper->isRunning()) {
 					this->MoveTo(1,1000);
 					this->MyStatus = STATUS_HOMING_3;
+					this->MyWebServer->sendMessage(this->GetStatus());
 				}
 			} else {
 				if (digitalRead(LH_ENDSTOP_PIN)) {
@@ -125,13 +143,17 @@ void PosLogic::Loop () {
 			if (!this->LHStepper->isRunning() && !this->LHStepper->isRunning()) {
 				this->MoveTo(1,0);
 				this->MyStatus = STATUS_HOMING_4;
+				this->MyWebServer->sendMessage(this->GetStatus());
 			}
 			break;
 		case STATUS_HOMING_4: // Moving to level 1 and then resetting stepper positions to zero
 			if (!this->LHStepper->isRunning() && !this->LHStepper->isRunning()) {
 				this->LHStepper->setCurrentPosition(0);
 				this->RHStepper->setCurrentPosition(0);
+				this->CurrentLevel = 1;
 				this->MyStatus = STATUS_IDLE;
+				this->MyDisplay->AtLevel(this->CurrentLevel);
+				this->MyWebServer->sendMessage(this->GetStatus());
 			}
 			break;
 		case STATUS_MOVING:
@@ -139,6 +161,7 @@ void PosLogic::Loop () {
 				this->CurrentLevel = this->NextLevel;
 				this->MyStatus = STATUS_IDLE;
 				this->MyDisplay->AtLevel(this->CurrentLevel);
+				this->MyWebServer->sendMessage(this->GetStatus());
 			}
 			break;
 		default:;

@@ -2,7 +2,7 @@
 
 #include "Display.h"
 
-void Display::Init (SDWebServer *WS) {
+void Display::Init () {
 	this->MyDisplay = new Adafruit_SSD1306 (SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 	
 	// SSD1306_SWITCHCAPVCC = generate display voltage from 3.3V internally
@@ -11,7 +11,6 @@ void Display::Init (SDWebServer *WS) {
 	// Show initial display buffer contents on the screen --
 	// the library initializes this with an Adafruit splash screen.
 	this->MyDisplay->display();
-	this->WS = WS;
 }
 
 void Display::MovingUp () {
@@ -65,8 +64,6 @@ void Display::NewLevel (int Level) {
 	} else if (Level < this->CurrentLevel) {
 		this->MovingDown();
 	}
-  String WebMessage = "STATUS: Moving from "+String(this->CurrentLevel)+" to "+String(this->NextLevel);
-  this->WS->sendMessage(WebMessage);
 }
 
 void Display::AtLevel (int Level) {
@@ -81,8 +78,6 @@ void Display::AtLevel (int Level) {
 	}
 	this->MyDisplay->print(Level);
 	this->MyDisplay->display();
-  String WebMessage = "STATUS: AtLevel "+String(Level);
-	this->WS->sendMessage(WebMessage);
 	this->CurrentLevel = Level;
 }
 
@@ -93,5 +88,4 @@ void Display::Homing () {
 	this->MyDisplay->setCursor(30, 30);
 	this->MyDisplay->print(F("HOMING"));
 	this->MyDisplay->display();
-	this->WS->sendMessage("STATUS: HOMING");
 }

@@ -4,6 +4,7 @@
 #include <AccelStepper.h>
 #include "Calibrator.h"
 #include "Display.h"
+#include "SDWebServer.h"
 
 #define LH_STEPPER_DIR_PIN 12
 #define LH_STEPPER_STEP_PIN 13
@@ -25,10 +26,10 @@
 
 class PosLogic {
 	public:
-		void   Init (Calibrator *CA, Display *DI);
+		void   Init (Calibrator *CA, Display *DI, SDWebServer *WS);
 		bool   Home ();
-void Lock ();
-void Unlock ();
+		void   Lock ();
+		void   Unlock ();
 		bool   MoveTo (int Level, int AdditionalSteps);
 		String GetStatus ();
 		int    GetCurrentLevel ();
@@ -38,11 +39,12 @@ void Unlock ();
 		AccelStepper *RHStepper;
 		Calibrator   *MyCalibrator;
 		Display      *MyDisplay;
+		SDWebServer  *MyWebServer;
 		int          MyStatus = STATUS_IDLE;
 		int          CurrentLevel = 0;
 		int          NextLevel    = 0;
-bool Locked = false;
-		bool Blocked();
+		bool         Locked = false;
+		bool         Blocked();
 };
 
 #endif
