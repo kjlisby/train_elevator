@@ -43,7 +43,7 @@ class InternalAjaxHandler : public RequestHandler {
 	}
 
 	bool handle(WebServer& server, HTTPMethod requestMethod, String requestUri) {   
-		Serial.println("AJAX GETINPUT");
+		Serial.println(); Serial.println("AJAX GETINPUT");
 		Serial.println(requestUri);
 
 		String cmdarray[10];
@@ -68,7 +68,9 @@ class InternalAjaxHandler : public RequestHandler {
 		}
 
 		if (cmdarray[1].startsWith("getstatus")) {
+			Serial.println("getsttus før server.send");
 			server.send(200, "text/plain", PL->GetStatus());
+			Serial.println("getsttus efter server.send");
 		} else if (cmdarray[1].equals("get")) {
 				if (cmdarray[2].equals("calibration")) {
 					server.send(200, "text/plain", GetCalibration(cmdarray[3].toInt()));
@@ -88,6 +90,8 @@ class InternalAjaxHandler : public RequestHandler {
 		} else {
 			server.send(404, "text/plain", "Unknown AJAX command");
 		}
+		Serial.println(" slut på internalAjaxHandler handle");
+		return(true);
 	}
 } internalAjaxHandler;
 

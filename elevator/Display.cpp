@@ -8,6 +8,12 @@ void Display::Init () {
 	// SSD1306_SWITCHCAPVCC = generate display voltage from 3.3V internally
 	this->MyDisplay->begin(SSD1306_SWITCHCAPVCC, 0x3C);
 
+	this->MyDisplay->clearDisplay();
+	this->MyDisplay->setTextSize(2);
+	this->MyDisplay->setTextColor(WHITE);
+	this->MyDisplay->setCursor(30, 30);
+	this->MyDisplay->print(F("Hello"));
+
 	// Show initial display buffer contents on the screen --
 	// the library initializes this with an Adafruit splash screen.
 	this->MyDisplay->display();
