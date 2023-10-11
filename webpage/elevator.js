@@ -37,25 +37,29 @@ function EnableCalibration(actualLevel) {
 // Get the stored calibration data for a level
 function GetCalibration(level) {
 	document.getElementById("logConsole").value += ' GetCalibration';
-	var xhttp = new XMLHttpRequest();
+	let xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = function() {
 		if (this.readyState == 4 && this.status == 200) {
 			UpdatePage(this.responseText);
 		}
 	};
+	document.getElementById("logConsole").value += ' GetCalibration 2';
 	xhttp.open("GET", "ajax_get_calibration_"+level, true);
+	document.getElementById("logConsole").value += ' GetCalibration 3';
 	xhttp.send();
 }
 
 // Save the values in the calibration input fields
-function SaveCalibration(level, leftValue, rightValue) {
+function SaveCalibration(level) {
 	document.getElementById("logConsole").value += ' SaveCalibration';
-	var xhttp = new XMLHttpRequest();
+	let xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = function() {
 		if (this.readyState == 4 && this.status == 200) {
 			UpdatePage(this.responseText);
 		}
 	};
+	let leftValue  = document.getElementById("cali_left_"+level).value;
+	let rightValue = document.getElementById("cali_right_"+level).value;
 	xhttp.open("GET", "ajax_set_calibration_"+level+"_"+leftValue+"_"+rightValue, true);
 	xhttp.send();
 }
@@ -63,7 +67,7 @@ function SaveCalibration(level, leftValue, rightValue) {
 // Move the elevator to a new level using already stored calibration data
 function MoveElevator(level) {
 	document.getElementById("logConsole").value += ' MoveElevator';
-	var xhttp = new XMLHttpRequest();
+	let xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = function() {
 		if (this.readyState == 4 && this.status == 200) {
 			UpdatePage(this.responseText);
@@ -74,14 +78,16 @@ function MoveElevator(level) {
 }
 
 // Move the elevator to the absolute step values in the calibration input fields
-function MoveElevatorDuringCalibration(level, leftValue, rightValue) {
+function MoveElevatorDuringCalibration(level) {
 	document.getElementById("logConsole").value += ' MoveElevatorDuringCalibration';
-	var xhttp = new XMLHttpRequest();
+	let xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = function() {
 		if (this.readyState == 4 && this.status == 200) {
 			UpdatePage(this.responseText);
 		}
 	};
+	let leftValue  = document.getElementById("cali_left_"+level).value;
+	let rightValue = document.getElementById("cali_right_"+level).value;
 	xhttp.open("GET", "ajax_set_levelfromcalibration_"+level+"_"+leftValue+"_"+rightValue, true);
 	xhttp.send();
 }
@@ -89,7 +95,7 @@ function MoveElevatorDuringCalibration(level, leftValue, rightValue) {
 // Poll the server for status every second to keep up to date - in case an event is missed
 function GetStatus() {
 	document.getElementById("logConsole").value += ' GetStatus';
-	var request = new XMLHttpRequest();
+	let request = new XMLHttpRequest();
 	request.onreadystatechange = function(){
 		if(this.readyState == 4 && this.status == 200) {
 		  UpdatePage(this.responseText);
@@ -105,8 +111,7 @@ var CurrentLevel = 0;
 // Handle events as well as responses to various commands
 function UpdatePage(jsonString) {
 	document.getElementById("logConsole").value += ' UpdatePage';
-	var i;
-	var obj_list = JSON.parse(jsonString);
+	let obj_list = JSON.parse(jsonString);
 	for (let i = 0; i < obj_list.objects.length; i++) {
 		if (obj_list.objects[i].item == "STATUS") {
 			document.getElementById("logConsole").value += ' STATUS';
@@ -171,9 +176,13 @@ function UpdatePage(jsonString) {
 				// unknown status
 			}
 		} else if (obj_list.objects[i].item == "CAL_LEVEL") {
+			document.getElementById("logConsole").value += ' CAL_LEVEL';
 			if (obj_list.objects[i+1].value == CurrentLevel) {
+				document.getElementById("logConsole").value += ' CAL_LEVEL 2';
 				document.getElementById("cali_left_"+CurrentLevel).value = obj_list.objects[i+2].value;
+				document.getElementById("logConsole").value += ' CAL_LEVEL 2';
 				document.getElementById("cali_rightt_"+CurrentLevel).value = obj_list.objects[i+3].value;
+				document.getElementById("logConsole").value += ' CAL_LEVEL 3';
 			}
 		} else {
 			// unknown command

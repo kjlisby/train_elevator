@@ -21,6 +21,7 @@ Display       *DI;
 PosLogic      *PL;
 DccInterface  *DC;
 
+
 void setup(void) {
 	Serial.begin(9600);
 	Serial.setDebugOutput(true);
@@ -37,8 +38,8 @@ void setup(void) {
 	DI->Init();
 	PL = new PosLogic();
 	PL->Init(CA, DI, WS);
-	DC = new DccInterface();
-	DC->Init();
+	// DC = new DccInterface();
+	// DC->Init();
 }
 
 void loop(void) {
@@ -46,5 +47,5 @@ void loop(void) {
 	OH->Loop();
 	AH->Loop();
 	PL->Loop();
-	DC->Loop();
+//	DC->Loop();
 }

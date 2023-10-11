@@ -15,17 +15,23 @@ long Calibrator::GetOffset (bool Left, int Level) {
 }
 
 void Calibrator::ReadFromSD () {
-	char buffer[20];
+  Serial.println("Calibrator::ReadFromSD 1");
+	char buffer[200];
+	char latest_char;
 	int i = 0;
 	int level = 1;
 	int side = 0;
 	File myFile = SD.open(this->FileName, FILE_READ);
+  Serial.println("Calibrator::ReadFromSD 2");
 	if (myFile) {
 		do {
-			buffer[i++] = myFile.read();
-			if (buffer[i] == '_') {
-				buffer[i] = '\0';
+			latest_char = buffer[i++] = myFile.read();
+  Serial.print("Calibrator::ReadFromSD 3 "); Serial.println(latest_char);
+			if (latest_char == '_' || latest_char == 'S') {
+  Serial.println("Calibrator::ReadFromSD 4");
+				buffer[i-1] = '\0';
 				this->offset[level-1][side] = atol(buffer);
+  Serial.print("Calibrator::ReadFromSD 5 "); Serial.println(buffer);
 				i = 0;
 				if (side == 1) {
 					side = 0;
@@ -34,9 +40,12 @@ void Calibrator::ReadFromSD () {
 					side = 1;
 				}
 			}
-		} while (buffer[i] != -1);
+  Serial.println("Calibrator::ReadFromSD 6");
+		} while (latest_char != 'S');
+  Serial.println("Calibrator::ReadFromSD 7");
 		close (myFile);
 	}
+  Serial.println("Calibrator::ReadFromSD 8");
 }
 
 void Calibrator::WriteToSD () {
@@ -46,7 +55,11 @@ void Calibrator::WriteToSD () {
 		for (int level = 1; level <= 12; level++) {
 			for (int side = 0; side <= 1; side++) {
 				myFile.print (this->offset[level-1][side]);
-				myFile.print ('_');
+				if (level == 12 && side == 1) {
+					myFile.print ('S');
+				} else {
+					myFile.print ('_');
+				}
 			}
 		}
 		close(myFile);

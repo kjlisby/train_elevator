@@ -39,7 +39,7 @@
 <button class="button placeable" onclick="MoveElevator(11);" style="top: 44vh; left: 1vw">Level 11</button>
 <button class="button placeable" onclick="MoveElevator(12);" style="top: 48vh; left: 1vw">Level 12</button>
 
-<button class="button placeable cal_1" onclick="alert('Level 1 left calibration -')" style="width: 1vw; top: 4vh; left: 7vw">-</button>
+<!-- <button class="button placeable cal_1" onclick="alert('Level 1 left calibration -')" style="width: 1vw; top: 4vh; left: 7vw">-</button>
 <button class="button placeable cal_2" onclick="alert('Level 2 left calibration -')" style="width: 1vw; top: 8vh; left: 7vw">-</button>
 <button class="button placeable cal_3" onclick="alert('Level 3 left calibration -')" style="width: 1vw; top: 12vh; left: 7vw">-</button>
 <button class="button placeable cal_4" onclick="alert('Level 4 left calibration -')" style="width: 1vw; top: 16vh; left: 7vw">-</button>
@@ -51,21 +51,21 @@
 <button class="button placeable cal_10" onclick="alert('Level 10 left calibration -')" style="width: 1vw; top: 40vh; left: 7vw">-</button>
 <button class="button placeable cal_11" onclick="alert('Level 11 left calibration -')" style="width: 1vw; top: 44vh; left: 7vw">-</button>
 <button class="button placeable cal_12" onclick="alert('Level 12 left calibration -')" style="width: 1vw; top: 48vh; left: 7vw">-</button>
+ -->
+<input type="number" min="-200" max="200" class="placeable cal_1" id="cali_left_1" name="cali_left_1" value="0" style="font-size: 0.7vw; top: 4.5vh; left:8.1vw; visibility: hidden"><br>
+<input type="number" min="-200" max="200" class="placeable cal_2" id="cali_left_2" name="cali_left_2" value="0" style="font-size: 0.7vw; top: 8.5vh; left:8.1vw; visibility: hidden"><br>
+<input type="number" min="9800" max="10200" class="placeable cal_3" id="cali_left_3" name="cali_left_3" value="10000" style="font-size: 0.7vw; top: 12.5vh; left:8.1vw; visibility: hidden"><br>
+<input type="number" min="9800" max="10200" class="placeable cal_4" id="cali_left_4" name="cali_left_4" value="10000" style="font-size: 0.7vw; top: 16.5vh; left:8.1vw; visibility: hidden"><br>
+<input type="number" min="19800" max="20200" class="placeable cal_5" id="cali_left_5" name="cali_left_5" value="20000" style="font-size: 0.7vw; top: 20.5vh; left:8.1vw; visibility: hidden"><br>
+<input type="number" min="19800" max="20200" class="placeable cal_6" id="cali_left_6" name="cali_left_6" value="20000" style="font-size: 0.7vw; top: 24.5vh; left:8.1vw; visibility: hidden"><br>
+<input type="number" min="29800" max="30200" class="placeable cal_7" id="cali_left_7" name="cali_left_7" value="30000" style="font-size: 0.7vw; top: 28.5vh; left:8.1vw; visibility: hidden"><br>
+<input type="number" min="29800" max="30200" class="placeable cal_8" id="cali_left_8" name="cali_left_8" value="30000" style="font-size: 0.7vw; top: 32.5vh; left:8.1vw; visibility: hidden"><br>
+<input type="number" min="39800" max="40200" class="placeable cal_9" id="cali_left_9" name="cali_left_9" value="40000" style="font-size: 0.7vw; top: 36.5vh; left:8.1vw; visibility: hidden"><br>
+<input type="number" min="39800" max="40200" class="placeable cal_10" id="cali_left_10" name="cali_left_10" value="40000" style="font-size: 0.7vw; top: 40.5vh; left:8.1vw; visibility: hidden"><br>
+<input type="number" min="49800" max="50200" class="placeable cal_11" id="cali_left_11" name="cali_left_11" value="50000" style="font-size: 0.7vw; top: 44.5vh; left:8.1vw; visibility: hidden"><br>
+<input type="number" min="49800" max="50200" class="placeable cal_12" id="cali_left_12" name="cali_left_12" value="50000" style="font-size: 0.7vw; top: 48.5vh; left:8.1vw; visibility: hidden"><br>
 
-<input type="number" min="-200" max="200" class="placeable cal_1" id="cali_left_1" name="cali_left_1" value="0" style="font-size: 0.7vw; top: 4.5vh; left:8.1vw"><br>
-<input type="number" min="-200" max="200" class="placeable cal_2" id="cali_left_2" name="cali_left_2" value="0" style="font-size: 0.7vw; top: 8.5vh; left:8.1vw"><br>
-<input type="number" min="9800" max="10200" class="placeable cal_3" id="cali_left_3" name="cali_left_3" value="10000" style="font-size: 0.7vw; top: 12.5vh; left:8.1vw"><br>
-<input type="number" min="9800" max="10200" class="placeable cal_4" id="cali_left_4" name="cali_left_4" value="10000" style="font-size: 0.7vw; top: 16.5vh; left:8.1vw"><br>
-<input type="number" min="19800" max="20200" class="placeable cal_5" id="cali_left_5" name="cali_left_5" value="20000" style="font-size: 0.7vw; top: 20.5vh; left:8.1vw"><br>
-<input type="number" min="19800" max="20200" class="placeable cal_6" id="cali_left_6" name="cali_left_6" value="20000" style="font-size: 0.7vw; top: 24.5vh; left:8.1vw"><br>
-<input type="number" min="29800" max="30200" class="placeable cal_7" id="cali_left_7" name="cali_left_7" value="30000" style="font-size: 0.7vw; top: 28.5vh; left:8.1vw"><br>
-<input type="number" min="29800" max="30200" class="placeable cal_8" id="cali_left_8" name="cali_left_8" value="30000" style="font-size: 0.7vw; top: 32.5vh; left:8.1vw"><br>
-<input type="number" min="39800" max="40200" class="placeable cal_9" id="cali_left_9" name="cali_left_9" value="40000" style="font-size: 0.7vw; top: 36.5vh; left:8.1vw"><br>
-<input type="number" min="39800" max="40200" class="placeable cal_10" id="cali_left_10" name="cali_left_10" value="40000" style="font-size: 0.7vw; top: 40.5vh; left:8.1vw"><br>
-<input type="number" min="49800" max="50200" class="placeable cal_11" id="cali_left_11" name="cali_left_11" value="50000" style="font-size: 0.7vw; top: 44.5vh; left:8.1vw"><br>
-<input type="number" min="49800" max="50200" class="placeable cal_12" id="cali_left_12" name="cali_left_12" value="50000" style="font-size: 0.7vw; top: 48.5vh; left:8.1vw"><br>
-
-<button class="button placeable cal_1" onclick="alert('Level 1 left calibration +')" style="width: 1vw; top: 4vh; left: 12.1vw">+</button>
+<!-- <button class="button placeable cal_1" onclick="alert('Level 1 left calibration +')" style="width: 1vw; top: 4vh; left: 12.1vw">+</button>
 <button class="button placeable cal_2" onclick="alert('Level 2 left calibration +')" style="width: 1vw; top: 8vh; left: 12.1vw">+</button>
 <button class="button placeable cal_3" onclick="alert('Level 3 left calibration +')" style="width: 1vw; top: 12vh; left: 12.1vw">+</button>
 <button class="button placeable cal_4" onclick="alert('Level 4 left calibration +')" style="width: 1vw; top: 16vh; left: 12.1vw">+</button>
@@ -90,21 +90,21 @@
 <button class="button placeable cal_10" onclick="alert('Level 10 right calibration -')" style="width: 1vw; top: 40vh; left: 14vw">-</button>
 <button class="button placeable cal_11" onclick="alert('Level 11 right calibration -')" style="width: 1vw; top: 44vh; left: 14vw">-</button>
 <button class="button placeable cal_12" onclick="alert('Level 12 right calibration -')" style="width: 1vw; top: 48vh; left: 14vw">-</button>
+ -->
+<input type="number" min="-200" max="200" class="placeable cal_1" id="cali_right_1" name="cali_right_1" value="0" style="font-size: 0.7vw; top: 4.5vh; left:15.1vw; visibility: hidden"><br>
+<input type="number" min="-200" max="200" class="placeable cal_2" id="cali_right_2" name="cali_right_2" value="0" style="font-size: 0.7vw; top: 8.5vh; left:15.1vw; visibility: hidden"><br>
+<input type="number" min="9800" max="10200" class="placeable cal_3" id="cali_right_3" name="cali_right_3" value="10000" style="font-size: 0.7vw; top: 12.5vh; left:15.1vw; visibility: hidden"><br>
+<input type="number" min="9800" max="10200" class="placeable cal_4" id="cali_right_4" name="cali_right_4" value="10000" style="font-size: 0.7vw; top: 16.5vh; left:15.1vw; visibility: hidden"><br>
+<input type="number" min="10800" max="20200" class="placeable cal_5" id="cali_right_5" name="cali_right_5" value="20000" style="font-size: 0.7vw; top: 20.5vh; left:15.1vw; visibility: hidden"><br>
+<input type="number" min="10800" max="20200" class="placeable cal_6" id="cali_right_6" name="cali_right_6" value="20000" style="font-size: 0.7vw; top: 24.5vh; left:15.1vw; visibility: hidden"><br>
+<input type="number" min="20800" max="30200" class="placeable cal_7" id="cali_right_7" name="cali_right_7" value="30000" style="font-size: 0.7vw; top: 28.5vh; left:15.1vw; visibility: hidden"><br>
+<input type="number" min="20800" max="30200" class="placeable cal_8" id="cali_right_8" name="cali_right_8" value="30000" style="font-size: 0.7vw; top: 32.5vh; left:15.1vw; visibility: hidden"><br>
+<input type="number" min="30800" max="40200" class="placeable cal_9" id="cali_right_9" name="cali_right_9" value="40000" style="font-size: 0.7vw; top: 36.5vh; left:15.1vw; visibility: hidden"><br>
+<input type="number" min="30800" max="40200" class="placeable cal_10" id="cali_right_10" name="cali_right_10" value="40000" style="font-size: 0.7vw; top: 40.5vh; left:15.1vw; visibility: hidden"><br>
+<input type="number" min="40800" max="50200" class="placeable cal_11" id="cali_right_11" name="cali_right_11" value="50000" style="font-size: 0.7vw; top: 44.5vh; left:15.1vw; visibility: hidden"><br>
+<input type="number" min="40800" max="50200" class="placeable cal_12" id="cali_right_12" name="cali_right_12" value="50000" style="font-size: 0.7vw; top: 48.5vh; left:15.1vw; visibility: hidden"><br>
 
-<input type="number" min="-200" max="200" class="placeable cal_1" id="cali_right_1" name="cali_right_1" value="0" style="font-size: 0.7vw; top: 4.5vh; left:15.1vw"><br>
-<input type="number" min="-200" max="200" class="placeable cal_2" id="cali_right_2" name="cali_right_2" value="0" style="font-size: 0.7vw; top: 8.5vh; left:15.1vw"><br>
-<input type="number" min="9800" max="10200" class="placeable cal_3" id="cali_right_3" name="cali_right_3" value="10000" style="font-size: 0.7vw; top: 12.5vh; left:15.1vw"><br>
-<input type="number" min="9800" max="10200" class="placeable cal_4" id="cali_right_4" name="cali_right_4" value="10000" style="font-size: 0.7vw; top: 16.5vh; left:15.1vw"><br>
-<input type="number" min="10800" max="20200" class="placeable cal_5" id="cali_right_5" name="cali_right_5" value="20000" style="font-size: 0.7vw; top: 20.5vh; left:15.1vw"><br>
-<input type="number" min="10800" max="20200" class="placeable cal_6" id="cali_right_6" name="cali_right_6" value="20000" style="font-size: 0.7vw; top: 24.5vh; left:15.1vw"><br>
-<input type="number" min="20800" max="30200" class="placeable cal_7" id="cali_right_7" name="cali_right_7" value="30000" style="font-size: 0.7vw; top: 28.5vh; left:15.1vw"><br>
-<input type="number" min="20800" max="30200" class="placeable cal_8" id="cali_right_8" name="cali_right_8" value="30000" style="font-size: 0.7vw; top: 32.5vh; left:15.1vw"><br>
-<input type="number" min="30800" max="40200" class="placeable cal_9" id="cali_right_9" name="cali_right_9" value="40000" style="font-size: 0.7vw; top: 36.5vh; left:15.1vw"><br>
-<input type="number" min="30800" max="40200" class="placeable cal_10" id="cali_right_10" name="cali_right_10" value="40000" style="font-size: 0.7vw; top: 40.5vh; left:15.1vw"><br>
-<input type="number" min="40800" max="50200" class="placeable cal_11" id="cali_right_11" name="cali_right_11" value="50000" style="font-size: 0.7vw; top: 44.5vh; left:15.1vw"><br>
-<input type="number" min="40800" max="50200" class="placeable cal_12" id="cali_right_12" name="cali_right_12" value="50000" style="font-size: 0.7vw; top: 48.5vh; left:15.1vw"><br>
-
-<button class="button placeable cal_1" onclick="alert('Level 1 right calibration +')" style="width: 1vw; top: 4vh; left: 19.1vw">+</button>
+<!-- <button class="button placeable cal_1" onclick="alert('Level 1 right calibration +')" style="width: 1vw; top: 4vh; left: 19.1vw">+</button>
 <button class="button placeable cal_2" onclick="alert('Level 2 right calibration +')" style="width: 1vw; top: 8vh; left: 19.1vw">+</button>
 <button class="button placeable cal_3" onclick="alert('Level 3 right calibration +')" style="width: 1vw; top: 12vh; left: 19.1vw">+</button>
 <button class="button placeable cal_4" onclick="alert('Level 4 right calibration +')" style="width: 1vw; top: 16vh; left: 19.1vw">+</button>
@@ -116,109 +116,47 @@
 <button class="button placeable cal_10" onclick="alert('Level 10 right calibration +')" style="width: 1vw; top: 40vh; left: 19.1vw">+</button>
 <button class="button placeable cal_11" onclick="alert('Level 11 right calibration +')" style="width: 1vw; top: 44vh; left: 19.1vw">+</button>
 <button class="button placeable cal_12" onclick="alert('Level 12 right calibration +')" style="width: 1vw; top: 48vh; left: 19.1vw">+</button>
-
-<button class="button placeable cal_1" onclick="GetCalibration(1);" style="width: 4vw; top: 4vh; left: 21vw">Restore</button>
-<button class="button placeable cal_2" onclick="GetCalibration(2);" style="width: 4vw; top: 8vh; left: 21vw">Restore</button>
-<button class="button placeable cal_3" onclick="GetCalibration(3);" style="width: 4vw; top: 12vh; left: 21vw">Restore</button>
-<button class="button placeable cal_4" onclick="GetCalibration(4);" style="width: 4vw; top: 16vh; left: 21vw">Restore</button>
-<button class="button placeable cal_5" onclick="GetCalibration(5);" style="width: 4vw; top: 20vh; left: 21vw">Restore</button>
-<button class="button placeable cal_6" onclick="GetCalibration(6);" style="width: 4vw; top: 24vh; left: 21vw">Restore</button>
-<button class="button placeable cal_7" onclick="GetCalibration(7);" style="width: 4vw; top: 28vh; left: 21vw">Restore</button>
-<button class="button placeable cal_8" onclick="GetCalibration(8);" style="width: 4vw; top: 32vh; left: 21vw">Restore</button>
-<button class="button placeable cal_9" onclick="GetCalibration(9);" style="width: 4vw; top: 36vh; left: 21vw">Restore</button>
-<button class="button placeable cal_10" onclick="GetCalibration(10);" style="width: 4vw; top: 40vh; left: 21vw">Restore</button>
-<button class="button placeable cal_11" onclick="GetCalibration(11);" style="width: 4vw; top: 44vh; left: 21vw">Restore</button>
-<button class="button placeable cal_12" onclick="GetCalibration(12);" style="width: 4vw; top: 48vh; left: 21vw">Restore</button>
-
-<button class="button placeable cal_1" onclick="alert('Level 1 move to calibration point')" style="width: 4vw; top: 4vh; left: 26vw">Move</button>
-<button class="button placeable cal_2" onclick="alert('Level 2 move to calibration point')" style="width: 4vw; top: 8vh; left: 26vw">Move</button>
-<button class="button placeable cal_3" onclick="alert('Level 3 move to calibration point')" style="width: 4vw; top: 12vh; left: 26vw">Move</button>
-<button class="button placeable cal_4" onclick="alert('Level 4 move to calibration point')" style="width: 4vw; top: 16vh; left: 26vw">Move</button>
-<button class="button placeable cal_5" onclick="alert('Level 5 move to calibration point')" style="width: 4vw; top: 20vh; left: 26vw">Move</button>
-<button class="button placeable cal_6" onclick="alert('Level 6 move to calibration point')" style="width: 4vw; top: 24vh; left: 26vw">Move</button>
-<button class="button placeable cal_7" onclick="alert('Level 7 move to calibration point')" style="width: 4vw; top: 28vh; left: 26vw">Move</button>
-<button class="button placeable cal_8" onclick="alert('Level 8 move to calibration point')" style="width: 4vw; top: 32vh; left: 26vw">Move</button>
-<button class="button placeable cal_9" onclick="alert('Level 9 move to calibration point')" style="width: 4vw; top: 36vh; left: 26vw">Move</button>
-<button class="button placeable cal_10" onclick="alert('Level 10 move to calibration point')" style="width: 4vw; top: 40vh; left: 26vw">Move</button>
-<button class="button placeable cal_11" onclick="alert('Level 11 move to calibration point')" style="width: 4vw; top: 44vh; left: 26vw">Move</button>
-<button class="button placeable cal_12" onclick="alert('Level 12 move to calibration point')" style="width: 4vw; top: 48vh; left: 26vw">Move</button>
-
-<button class="button placeable cal_1" onclick="alert('Level 1 save calibration data')" style="width: 4vw; top: 4vh; left: 31vw">Save</button>
-<button class="button placeable cal_2" onclick="alert('Level 2 save calibration data')" style="width: 4vw; top: 8vh; left: 31vw">Save</button>
-<button class="button placeable cal_3" onclick="alert('Level 3 save calibration data')" style="width: 4vw; top: 12vh; left: 31vw">Save</button>
-<button class="button placeable cal_4" onclick="alert('Level 4 save calibration data')" style="width: 4vw; top: 16vh; left: 31vw">Save</button>
-<button class="button placeable cal_5" onclick="alert('Level 5 save calibration data')" style="width: 4vw; top: 20vh; left: 31vw">Save</button>
-<button class="button placeable cal_6" onclick="alert('Level 6 save calibration data')" style="width: 4vw; top: 24vh; left: 31vw">Save</button>
-<button class="button placeable cal_7" onclick="alert('Level 7 save calibration data')" style="width: 4vw; top: 28vh; left: 31vw">Save</button>
-<button class="button placeable cal_8" onclick="alert('Level 8 save calibration data')" style="width: 4vw; top: 32vh; left: 31vw">Save</button>
-<button class="button placeable cal_9" onclick="alert('Level 9 save calibration data')" style="width: 4vw; top: 36vh; left: 31vw">Save</button>
-<button class="button placeable cal_10" onclick="alert('Level 10 save calibration data')" style="width: 4vw; top: 40vh; left: 31vw">Save</button>
-<button class="button placeable cal_11" onclick="alert('Level 11 save calibration data')" style="width: 4vw; top: 44vh; left: 31vw">Save</button>
-<button class="button placeable cal_12" onclick="alert('Level 12 save calibration data')" style="width: 4vw; top: 48vh; left: 31vw">Save</button>
-
-
-<!-- <img id="B3"   class="skinne PS1" src="skinne_varm.gif" style="width:  5vw;   top:  9vw;   left: 25vw; transform-origin: top left; transform:rotate(270deg) translate(-100%, 0%);">
-<img id="T2_S" class="skinne sporskifte klikbar PS1" src="skinne_varm.gif" style="width:  5vw;   top: 14vw;   left: 25vw; transform-origin: top left; transform:rotate(270deg) translate(-100%, 0%);">
-<img id="T2_T" class="skinne sporskifte klikbar PS1" src="skinne_varm.gif" style="width:  5vw;   top: 13.5vw; left: 25.5vw; transform-origin: top left; transform:rotate(315deg) translate(-100%, 0%);">
-<img id="B1"   class="skinne klikbar PS1" src="skinne_kold.jpg" style="width: 10vw;   top: 19vw;   left: 25vw; transform-origin: top left; transform:rotate(270deg) translate(-100%, 0%);">
-<img id="B2"   class="skinne klikbar PS1" src="skinne_varm.gif" style="width: 13.5vw; top: 17vw;   left: 22vw; transform-origin: top left; transform:rotate(270deg) translate(-100%, 0%);">
-<img id="T1_S" class="skinne sporskifte klikbar PS1" src="skinne_varm.gif" style="width:  5vw;   top: 29vw;   left: 25vw; transform-origin: top left; transform:rotate(270deg) translate(-100%, 0%);">
-<img id="T1_T" class="skinne sporskifte klikbar PS1" src="skinne_varm.gif" style="width:  5vw;   top: 30.5vw; left: 22vw; transform-origin: top left; transform:rotate(235deg) translate(-100%, 0%);">
-<img id="B9_7" class="skinne PS1" src="skinne_varm.gif" style="width:  5vw;   top: 34vw;   left: 25vw; transform-origin: top left; transform:rotate(270deg) translate(-100%, 0%);">
-<img id="B9_6" class="skinne PS1" src="skinne_varm.gif" style="width:  5vw;   top: 38vw;   left: 21vw; transform-origin: bottom right;  transform: rotate(-45deg);">
-<img id="B9_5" class="skinne PS1" src="skinne_varm.gif" style="width: 13.5vw; top: 41.5vw; left: 9vw;">
-<img id="B9_4" class="skinne PS1" src="skinne_varm.gif" style="width:  5vw;   top: 38vw;   left:  5vw;   transform-origin: bottom left;   transform: rotate(45deg);">
-<img id="B9_3" class="skinne PS1" src="skinne_varm.gif" style="width: 30vw;   top:  9vw;   left:  5vw;   transform-origin: top left;      transform: rotate(90deg)  translate(0, -100%);">
-<img id="B9_2" class="skinne PS1" src="skinne_varm.gif" style="width:  5vw;   top:  5vw;   left: 4.5vw;  transform-origin: bottom right;  transform: rotate(135deg) translate(100%, 100%);">
-<img id="B9_1" class="skinne PS1" src="skinne_varm.gif" style="width: 16vw;   top:  5vw;   left:  9vw;   transform-origin: center center; transform: rotate(180deg);">
-<img id="T3_S" class="skinne sporskifte klikbar PS1" src="skinne_varm.gif" style="width:  5vw;   top:  5vw;   left: 25vw;   transform-origin: center center; transform: rotate(180deg);">
-<img id="T3_T" class="skinne sporskifte klikbar PS1" src="skinne_varm.gif" style="width:  5vw;   top:  5vw;   left: 24.5vw; transform-origin: bottom right;  transform: rotate(-45deg);">
-<img id="B4"   class="skinne PS1" src="skinne_varm.gif" style="width: 10vw;   top:  5vw;   left: 29vw;   transform-origin: center center; transform: rotate(180deg);">
-<img id="T4_S" class="skinne sporskifte klikbar PS1" src="skinne_varm.gif" style="width:  5vw;   top:  5vw;   left: 39vw;   transform-origin: center center; transform: rotate(180deg);">
-<img id="T4_T" class="skinne sporskifte klikbar PS1" src="skinne_varm.gif" style="width:  5vw;   top:  4vw;   left: 34.5vw; transform-origin: bottom right;  transform: rotate(45deg) translate(100%, 100%);">
-<img id="B5"   class="skinne klikbar PS1" src="skinne_varm.gif" style="width: 10vw;   top:  8.5vw; left: 42.5vw;">
-<img id="B6"   class="skinne klikbar PS2" src="skinne_varm.gif" style="width:  8vw;   top:  5vw;   left: 44vw;   transform-origin: center center; transform: rotate(180deg);">
-<img id="T5_S" class="skinne sporskifte klikbar PS2" src="skinne_varm.gif" style="width:  5vw;   top:  5vw;   left: 51vw;   transform-origin: center center; transform: rotate(180deg);">
-<img id="T5_T" class="skinne sporskifte klikbar PS2" src="skinne_varm.gif" style="width:  5vw;   top:  4vw;   left: 50.5vw; transform-origin: bottom right;  transform: rotate(-45deg) translate(0%, 100%);">
-<img id="B7"   class="skinne PS2" src="skinne_varm.gif" style="width: 10vw;   top:  5vw;   left: 56vw;   transform-origin: center center; transform: rotate(180deg);">
-<img id="T6_S" class="skinne sporskifte klikbar PS2" src="skinne_varm.gif" style="width:  5vw;   top:  5vw;   left: 66vw;   transform-origin: center center; transform: rotate(0deg);">
-<img id="T6_T" class="skinne sporskifte klikbar PS2" src="skinne_varm.gif" style="width:  5vw;   top: 11vw;   left: 68vw; transform-origin: center center;  transform: rotate(-135deg) translate(100%, 100%);">
-<img id="B8_7" class="skinne PS2" src="skinne_varm.gif" style="width:  5vw;   top:  5vw;   left: 71vw;   transform-origin: center center; transform: rotate(0deg);">
-<img id="B8_6" class="skinne PS2" src="skinne_varm.gif" style="width:  5vw;   top:  6.7vw; left: 75vw;   transform-origin: center center; transform: rotate(45deg);">
-<img id="B8_5" class="skinne PS2" src="skinne_varm.gif" style="width:  5vw;   top: 10.5vw; left: 76.5vw; transform-origin: center center; transform: rotate(90deg);">
-<img id="B8_4" class="skinne PS2" src="skinne_varm.gif" style="width:  5vw;   top: 15.5vw; left: 75.5vw;   transform-origin: center center;  transform: rotate(135deg) translate(0%, 100%);">
-<img id="B8_3" class="skinne PS2" src="skinne_varm.gif" style="width:  4vw;   top: 16.5vw; left: 72vw;   transform-origin: center center; transform: rotate(180deg);">
-<img id="B8_2" class="skinne PS2" src="skinne_varm.gif" style="width:  5vw;   top: 15.5vw; left: 67.5vw; transform-origin: center center; transform: rotate(-135deg) translate(0%, 100%);">
-<img id="B8_1" class="skinne PS2" src="skinne_varm.gif" style="width:  5vw;   top: 10.5vw; left: 66.5vw;   transform-origin: center center; transform: rotate(-90deg);">
-
-<img id="B1_loco" class="loco" src="locomotive_scaled.jpg" style="width: 3vw; top: 23vw;   left: 26vw;">
-<img id="B2_loco" class="loco" src="locomotive_scaled.jpg" style="width: 3vw; top: 23vw;   left: 19vw;">
-<img id="B3_loco" class="loco" src="locomotive_scaled.jpg" style="width: 3vw; top: 11vw;   left: 26vw;">
-<img id="B4_loco" class="loco" src="locomotive_scaled.jpg" style="width: 3vw; top:  3vw;   left: 33vw;">
-<img id="B5_loco" class="loco" src="locomotive_scaled.jpg" style="width: 3vw; top:  9.5vw; left: 45vw;">
-<img id="B6_loco" class="loco" src="locomotive_scaled.jpg" style="width: 3vw; top:  3vw;   left: 45vw;">
-<img id="B7_loco" class="loco" src="locomotive_scaled.jpg" style="width: 3vw; top:  3vw;   left: 60vw;">
-<img id="B8_loco" class="loco" src="locomotive_scaled.jpg" style="width: 3vw; top: 10vw;   left: 72vw;">
-<img id="B9_loco" class="loco" src="locomotive_scaled.jpg" style="width: 3vw; top: 23vw;   left:  6vw;">
-	-->
-<!-- <div class="slidecontainer" style="top: 30vw; left: 25vw;">
-  <input type="range" min="-255" max="255" value="0" class="slider" id="Power1">
-</div>	
-<input id="stop1"  type="button" class="placedButton klikbar" value="STOP"  style="top: 43vw; left: 30vw;">
-<input id="reset1" type="button" class="placedButton klikbar" value="RESET" style="top: 47vw; left: 29.5vw;">
- --><!-- 
-<div class="slidecontainer" style="top: 30vw; left: 45vw;">
-  <input type="range" min="-255" max="255" value="0" class="slider" id="Power2">
-</div>	
-<input id="stop2"  type="button" class="placedButton klikbar" value="STOP"  style="top: 43vw; left: 51vw;">
-<input id="reset2" type="button" class="placedButton klikbar" value="RESET" style="top: 47vw; left: 50.5vw;">
-
-	
-<div class="checkbox" style="top: 17vw; left: 35vw">
-  <input type="checkbox" id="automode" class="checkbox klikbar">
-  <label id="automodelabel">Run trains automatically</label>
-</div>
  -->
+<button class="button placeable cal_1" onclick="GetCalibration(1);" style="width: 4vw; top: 4vh; left: 21vw; visibility: hidden">Restore</button>
+<button class="button placeable cal_2" onclick="GetCalibration(2);" style="width: 4vw; top: 8vh; left: 21vw; visibility: hidden">Restore</button>
+<button class="button placeable cal_3" onclick="GetCalibration(3);" style="width: 4vw; top: 12vh; left: 21vw;  visibility: hidden">Restore</button>
+<button class="button placeable cal_4" onclick="GetCalibration(4);" style="width: 4vw; top: 16vh; left: 21vw;  visibility: hidden">Restore</button>
+<button class="button placeable cal_5" onclick="GetCalibration(5);" style="width: 4vw; top: 20vh; left: 21vw; visibility: hidden">Restore</button>
+<button class="button placeable cal_6" onclick="GetCalibration(6);" style="width: 4vw; top: 24vh; left: 21vw; visibility: hidden">Restore</button>
+<button class="button placeable cal_7" onclick="GetCalibration(7);" style="width: 4vw; top: 28vh; left: 21vw; visibility: hidden">Restore</button>
+<button class="button placeable cal_8" onclick="GetCalibration(8);" style="width: 4vw; top: 32vh; left: 21vw; visibility: hidden">Restore</button>
+<button class="button placeable cal_9" onclick="GetCalibration(9);" style="width: 4vw; top: 36vh; left: 21vw; visibility: hidden">Restore</button>
+<button class="button placeable cal_10" onclick="GetCalibration(10);" style="width: 4vw; top: 40vh; left: 21vw; visibility: hidden">Restore</button>
+<button class="button placeable cal_11" onclick="GetCalibration(11);" style="width: 4vw; top: 44vh; left: 21vw; visibility: hidden">Restore</button>
+<button class="button placeable cal_12" onclick="GetCalibration(12);" style="width: 4vw; top: 48vh; left: 21vw; visibility: hidden">Restore</button>
+
+<button class="button placeable cal_1" onclick="MoveElevatorDuringCalibration(1);" style="width: 4vw; top: 4vh; left: 26vw; visibility: hidden">Move</button>
+<button class="button placeable cal_2" onclick="MoveElevatorDuringCalibration(2);" style="width: 4vw; top: 8vh; left: 26vw; visibility: hidden">Move</button>
+<button class="button placeable cal_3" onclick="MoveElevatorDuringCalibration(3);" style="width: 4vw; top: 12vh; left: 26vw; visibility: hidden">Move</button>
+<button class="button placeable cal_4" onclick="MoveElevatorDuringCalibration(4);" style="width: 4vw; top: 16vh; left: 26vw; visibility: hidden">Move</button>
+<button class="button placeable cal_5" onclick="MoveElevatorDuringCalibration(5);" style="width: 4vw; top: 20vh; left: 26vw; visibility: hidden">Move</button>
+<button class="button placeable cal_6" onclick="MoveElevatorDuringCalibration(6);" style="width: 4vw; top: 24vh; left: 26vw; visibility: hidden">Move</button>
+<button class="button placeable cal_7" onclick="MoveElevatorDuringCalibration(7);" style="width: 4vw; top: 28vh; left: 26vw; visibility: hidden">Move</button>
+<button class="button placeable cal_8" onclick="MoveElevatorDuringCalibration(8);" style="width: 4vw; top: 32vh; left: 26vw; visibility: hidden">Move</button>
+<button class="button placeable cal_9" onclick="MoveElevatorDuringCalibration(9);" style="width: 4vw; top: 36vh; left: 26vw; visibility: hidden">Move</button>
+<button class="button placeable cal_10" onclick="MoveElevatorDuringCalibration(10);" style="width: 4vw; top: 40vh; left: 26vw; visibility: hidden">Move</button>
+<button class="button placeable cal_11" onclick="MoveElevatorDuringCalibration(11);" style="width: 4vw; top: 44vh; left: 26vw; visibility: hidden">Move</button>
+<button class="button placeable cal_12" onclick="MoveElevatorDuringCalibration(12);" style="width: 4vw; top: 48vh; left: 26vw; visibility: hidden">Move</button>
+
+<button class="button placeable cal_1" onclick="SaveCalibration(1);" style="width: 4vw; top: 4vh; left: 31vw; visibility: hidden">Save</button>
+<button class="button placeable cal_2" onclick="SaveCalibration(2);" style="width: 4vw; top: 8vh; left: 31vw; visibility: hidden">Save</button>
+<button class="button placeable cal_3" onclick="SaveCalibration(3);" style="width: 4vw; top: 12vh; left: 31vw; visibility: hidden">Save</button>
+<button class="button placeable cal_4" onclick="SaveCalibration(4);" style="width: 4vw; top: 16vh; left: 31vw; visibility: hidden">Save</button>
+<button class="button placeable cal_5" onclick="SaveCalibration(5);" style="width: 4vw; top: 20vh; left: 31vw; visibility: hidden">Save</button>
+<button class="button placeable cal_6" onclick="SaveCalibration(6);" style="width: 4vw; top: 24vh; left: 31vw; visibility: hidden">Save</button>
+<button class="button placeable cal_7" onclick="SaveCalibration(7);" style="width: 4vw; top: 28vh; left: 31vw; visibility: hidden">Save</button>
+<button class="button placeable cal_8" onclick="SaveCalibration(8);" style="width: 4vw; top: 32vh; left: 31vw; visibility: hidden">Save</button>
+<button class="button placeable cal_9" onclick="SaveCalibration(9);" style="width: 4vw; top: 36vh; left: 31vw; visibility: hidden">Save</button>
+<button class="button placeable cal_10" onclick="SaveCalibration(10);" style="width: 4vw; top: 40vh; left: 31vw; visibility: hidden">Save</button>
+<button class="button placeable cal_11" onclick="SaveCalibration(11);" style="width: 4vw; top: 44vh; left: 31vw; visibility: hidden">Save</button>
+<button class="button placeable cal_12" onclick="SaveCalibration(12);" style="width: 4vw; top: 48vh; left: 31vw; visibility: hidden">Save</button>
+
+
 <script src="elevator.js"></script>
 </body>
 </html> 
