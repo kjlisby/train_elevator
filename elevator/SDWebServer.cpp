@@ -71,10 +71,29 @@ bool SDWebServer::loadFromSdCard (String path) {
   return true;
 }
 
+String get_wifi_status(int status){
+    switch(status){
+        case WL_IDLE_STATUS:
+        return "WL_IDLE_STATUS";
+        case WL_SCAN_COMPLETED:
+        return "WL_SCAN_COMPLETED";
+        case WL_NO_SSID_AVAIL:
+        return "WL_NO_SSID_AVAIL";
+        case WL_CONNECT_FAILED:
+        return "WL_CONNECT_FAILED";
+        case WL_CONNECTION_LOST:
+        return "WL_CONNECTION_LOST";
+        case WL_CONNECTED:
+        return "WL_CONNECTED";
+        case WL_DISCONNECTED:
+        return "WL_DISCONNECTED";
+    }
+}
+
 void SDWebServer::setupNetwork(bool AP) {
   this->server   = new WebServer(80);
   this->apIP     = new IPAddress(42, 42, 42, 42);
-  this->staticIP = new IPAddress(192,168,1,200);
+  this->staticIP = new IPAddress(192,168,1,201);
   this->gateway  = new IPAddress(192,168,1,1);
   this->subnet   = new IPAddress(255,255,255,0);
   WiFi.persistent(false);
@@ -94,6 +113,7 @@ void SDWebServer::setupNetwork(bool AP) {
     // Wait for connection
     uint8_t i = 0;
     while (WiFi.status() != WL_CONNECTED && i++ < 20) {//wait 10 seconds
+      Serial.println(get_wifi_status(WiFi.status()));
       delay(500);
     }
     if (i == 21) {
@@ -107,6 +127,11 @@ void SDWebServer::setupNetwork(bool AP) {
     Serial.print("Connected! IP address: ");
     Serial.println(WiFi.localIP());
   }
+}
+
+extern SDWebServer *WS;
+void SDWebServer_handleNotFound() {
+	WS->loadFromSdCard(WS->getServer()->uri());
 }
 
 bool INITIALIZED = false;
@@ -128,12 +153,14 @@ void SDWebServer::Init(uint8_t SDPin) {
     this->setupNetwork(false);
   }
   server->begin();
+  server->onNotFound(SDWebServer_handleNotFound);
   webSocket.begin();
   webSocket.onEvent(webSocketEvent);
   Serial.println("HTTP server started");
 }
 
 void SDWebServer::Loop() {
+  this->server->handleClient();
   webSocket.loop();
 }
 
