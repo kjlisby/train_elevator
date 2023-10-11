@@ -9,9 +9,8 @@ function Start() {
 // Initialize the WEB socket for receiving events
 var Socket;
 function InitWS() {
-//	Socket = new WebSocket('ws://' + window.location.hostname + ':81/');
-//	Socket = new WebSocket('ws://localhost:81/');
-	Socket = new WebSocket('ws://192.168.1.200:81/');
+	Socket = new WebSocket('ws://' + window.location.hostname + ':81/');
+//	Socket = new WebSocket('ws://192.168.1.201:81/');
 	document.getElementById("logConsole").value += 'Listening on ws://' + window.location.hostname + ':81/';
 	Socket.onmessage = function(evt) {
 		document.getElementById("logConsole").value += evt.data;
