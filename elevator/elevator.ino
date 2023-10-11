@@ -21,17 +21,12 @@ Display       *DI;
 PosLogic      *PL;
 DccInterface  *DC;
 
-void SDWebServer_handleNotFound() {
-	WS->loadFromSdCard(WS->getServer()->uri());
-}
-
 void setup(void) {
 	Serial.begin(9600);
 	Serial.setDebugOutput(true);
 	Serial.print("\n");
 	WS = new SDWebServer();
 	WS->Init(SD_CS_PIN);
-	WS->getServer()->onNotFound(SDWebServer_handleNotFound);
 	OH = new OTAHandler();
 	OH->Init();
 	AH = new AjaxHandler();
@@ -47,7 +42,6 @@ void setup(void) {
 }
 
 void loop(void) {
-	WS->getServer()->handleClient();
 	WS->Loop();
 	OH->Loop();
 	AH->Loop();
