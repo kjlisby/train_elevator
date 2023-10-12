@@ -20,6 +20,7 @@ class InternalAjaxHandler : public RequestHandler {
 	}
 
 	String GetCalibration(int level) {
+		Serial.println("AjaxHandler GetCalibration");
 		return JSON_ArrayStart()+JSON_item("CAL_LEVEL",String(level))+
 		       JSON_ArrayDivider()+JSON_item("LEFT", String(CA->GetOffset(true, level)))+
 		       JSON_ArrayDivider()+JSON_item("RIGHT",String(CA->GetOffset(false,level)))+
