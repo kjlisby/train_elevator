@@ -34,6 +34,7 @@ class PosLogic {
 		bool   MoveToSteps (int Level, int StepsLeft, int StepsRight);
 		String GetStatus ();
 		int    GetCurrentLevel ();
+		bool   isRunning();
 		void   Loop ();
 	private:
 		AccelStepper *LHStepper;
