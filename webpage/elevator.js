@@ -177,12 +177,14 @@ function UpdatePage(jsonString) {
 			}
 		} else if (obj_list.objects[i].item == "CAL_LEVEL") {
 			document.getElementById("logConsole").value += ' CAL_LEVEL';
-			if (obj_list.objects[i+1].value == CurrentLevel) {
+			document.getElementById("logConsole").value += ' '+obj_list.objects[i].value;
+			document.getElementById("logConsole").value += ' '+CurrentLevel;
+			if (obj_list.objects[i].value == CurrentLevel) {
 				document.getElementById("logConsole").value += ' CAL_LEVEL 2';
-				document.getElementById("cali_left_"+CurrentLevel).value = obj_list.objects[i+2].value;
-				document.getElementById("logConsole").value += ' CAL_LEVEL 2';
-				document.getElementById("cali_rightt_"+CurrentLevel).value = obj_list.objects[i+3].value;
+				document.getElementById("cali_left_"+CurrentLevel).value = obj_list.objects[i+1].value;
 				document.getElementById("logConsole").value += ' CAL_LEVEL 3';
+				document.getElementById("cali_right_"+CurrentLevel).value = obj_list.objects[i+2].value;
+				document.getElementById("logConsole").value += ' CAL_LEVEL 4';
 			}
 		} else {
 			// unknown command
