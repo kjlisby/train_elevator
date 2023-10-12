@@ -2,41 +2,30 @@
 #include "JSONArray.h"
 
 void PosLogic::Init (Calibrator *CA, Display *DI, SDWebServer *WS) {
-  Serial.println("PL Init 1");
 	this->MyCalibrator = CA;
-  Serial.println("PL Init 2");
 	this->MyDisplay = DI;
-  Serial.println("PL Init 3");
 	this->MyWebServer = WS;
-  Serial.println("PL Init 4");
 	this->LHStepper = new AccelStepper(AccelStepper::DRIVER, LH_STEPPER_STEP_PIN, LH_STEPPER_DIR_PIN);
-  Serial.println("PL Init 5");
-	this->LHStepper->setMaxSpeed(200000.0);
-  Serial.println("PL Init 6");
-	this->LHStepper->setAcceleration(100.0);
-  Serial.println("PL Init 7");
+	// 500 rotation/min == 100.000 steps/min == 1667 steps/second
+	this->LHStepper->setMaxSpeed(1500.0);
+	// acceleration is in steps per second per second i.e. to accelerate to max speed of 1500 steps/s in 3 seconds it needs to be 500
+	this->LHStepper->setAcceleration(500.0);
 	this->RHStepper = new AccelStepper(AccelStepper::DRIVER, RH_STEPPER_STEP_PIN, RH_STEPPER_DIR_PIN);
-  Serial.println("PL Init 8");
-	this->RHStepper->setMaxSpeed(200000.0);
-  Serial.println("PL Init 9");
-	this->RHStepper->setAcceleration(100.0);
-  Serial.println("PL Init 10");
+	// 500 rotation/min == 100.000 steps/min == 1667 steps/second
+	this->RHStepper->setMaxSpeed(1500.0);
+	// acceleration is in steps per second per second i.e. to accelerate to max speed of 1500 steps/s in 3 seconds it needs to be 500
+	this->RHStepper->setAcceleration(500.0);
 	pinMode(LH_ENDSTOP_PIN, INPUT_PULLUP);
-  Serial.println("PL Init 11");
 	pinMode(RH_ENDSTOP_PIN, INPUT_PULLUP);
-  Serial.println("PL Init 12");
 	pinMode(LH_BACK_SECURITY_PIN,  INPUT_PULLUP);
-  Serial.println("PL Init 13");
 	pinMode(LH_FRONT_SECURITY_PIN, INPUT_PULLUP);
-  Serial.println("PL Init 14");
 	pinMode(RH_BACK_SECURITY_PIN,  INPUT_PULLUP);
-  Serial.println("PL Init 15");
 	pinMode(RH_FRONT_SECURITY_PIN, INPUT_PULLUP);
-  Serial.println("PL Init 16");
+	Serial.println("PL Init Done");
 }
 
 bool PosLogic::Home () {
-  Serial.println("PosLog::Home");
+	Serial.println("PosLog::Home");
 	if (this->Blocked()) {
 		Serial.println("ELEVATOR_BLOCKED");
 		return false;
@@ -48,7 +37,7 @@ bool PosLogic::Home () {
 }
 	
 bool PosLogic::MoveTo (int Level, int AdditionalSteps) {
-  Serial.println("PosLogic::MoveTo");
+	Serial.println("PosLogic::MoveTo");
 	if (this->Blocked()) {
 		Serial.println("ELEVATOR_BLOCKED");
 		return false;
@@ -71,7 +60,7 @@ bool PosLogic::MoveTo (int Level, int AdditionalSteps) {
 }
 
 bool PosLogic::MoveToSteps (int Level, int StepsLeft, int StepsRight) {
-  Serial.println("PosLogic::MoveToSteps");
+	Serial.println("PosLogic::MoveToSteps");
 	if (this->Blocked()) {
 		Serial.println("ELEVATOR_BLOCKED");
 		return false;
@@ -94,17 +83,17 @@ bool PosLogic::MoveToSteps (int Level, int StepsLeft, int StepsRight) {
 }
 
 void PosLogic::Lock () {
-  Serial.println("PosLogic::Lock");
+	Serial.println("PosLogic::Lock");
 	this->Locked = true;
 }
 
 void PosLogic::Unlock () {
-  Serial.println("PosLogic::Unlock");
+	Serial.println("PosLogic::Unlock");
 	this->Locked = false;
 }
 	
 String PosLogic::GetStatus () {
-  Serial.println("PosLogic::GetStatus");
+	Serial.println("PosLogic::GetStatus");
 	String retval = JSON_ArrayStart();
 	if (this->Blocked()) {
 		retval += JSON_item("STATUS", "BLOCKED");
@@ -133,22 +122,26 @@ String PosLogic::GetStatus () {
 			break;
 	}
 	retval += JSON_ArrayEnd();
-  Serial.print("STATUS IS "); Serial.println(retval);
+	Serial.print("STATUS IS "); Serial.println(retval);
 	return retval;
 }
 
 bool PosLogic::Blocked () {
-  Serial.println("PosLogic::Blocked");
-  return false;
+	Serial.println("PosLogic::Blocked");
+return false;
 	return (!digitalRead(LH_BACK_SECURITY_PIN) || !digitalRead(LH_FRONT_SECURITY_PIN) || !digitalRead(RH_BACK_SECURITY_PIN) || !digitalRead(RH_FRONT_SECURITY_PIN));
 }
 
 int PosLogic::GetCurrentLevel () {
-  Serial.println("PosLogic::GetCurrentLevel");
+	Serial.println("PosLogic::GetCurrentLevel");
 	if (this->Blocked() || this->MyStatus != STATUS_IDLE) {
 		return 0;
 	}
 	return this->CurrentLevel;
+}
+
+bool PosLogic::isRunning() {
+	return this->LHStepper->isRunning() || this->RHStepper->isRunning();
 }
 
 void PosLogic::Loop () {
