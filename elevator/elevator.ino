@@ -43,9 +43,12 @@ void setup(void) {
 }
 
 void loop(void) {
-	WS->Loop();
-	OH->Loop();
-	AH->Loop();
+	if (!PL->isRunning()) {
+		// Doing time-consuming stuff (such as displaying an HTML page) will prohibit smooth movement of the steppers
+		WS->Loop();
+		OH->Loop();
+		AH->Loop();
+//		DC->Loop();
+	}
 	PL->Loop();
-//	DC->Loop();
 }
