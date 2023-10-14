@@ -28,27 +28,39 @@ void setup(void) {
 	Serial.print("\n");
 	WS = new SDWebServer();
 	WS->Init(SD_CS_PIN);
+  Serial.println("WS started");
 	OH = new OTAHandler();
 	OH->Init();
+  Serial.println("OH started");
 	AH = new AjaxHandler();
 	AH->Init(WS->getServer());
+  Serial.println("AH started");
 	CA = new Calibrator();
+  Serial.println("before CA->ReadFromSD");
 	CA->ReadFromSD();
+  Serial.println("CA started");
 	DI = new Display();
 	DI->Init();
+  Serial.println("DI started");
 	PL = new PosLogic();
 	PL->Init(CA, DI, WS);
+  Serial.println("PL started");
 	// DC = new DccInterface();
 	// DC->Init();
 }
 
 void loop(void) {
+  //Serial.print(".");
 	if (!PL->isRunning()) {
+  //Serial.print("-");
 		// Doing time-consuming stuff (such as displaying an HTML page) will prohibit smooth movement of the steppers
 		WS->Loop();
+  //Serial.print("|");
 		OH->Loop();
+  //Serial.print(":");
 		AH->Loop();
 //		DC->Loop();
 	}
+  //Serial.print("#");
 	PL->Loop();
 }

@@ -23,4 +23,6 @@ The hardware consist of:
 And it is put together as follows (with all sensors shown as switches). Note also that so far, I don't think I will need the "enable" wire to the stepper motors. Removing power from the steppers would only mean that the ESP32 is no longer knowing the exact location of the elevator:
 ![](Diagram.jpg)
 
+I was at first almost done with the WIFI version, which uses a Web browser as UI. But because of weak WIFI connection, I abandoned that idea and instead began the Serial version, which simply connects via a second USB port to the PC and communicates directly with JMRI (Java Model Railroad Interface), where the UI is placed.
+
 See more at http://lisby.dk/wordpress/?p=2779 (so far only in Danish).
