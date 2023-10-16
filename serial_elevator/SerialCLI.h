@@ -1,7 +1,6 @@
-#IFNDEF SERIALCLI_H
-#DEFINE SERIALCLI_H
+#ifndef SERIALCLI_H
+#define SERIALCLI_H
 
-#include <ESP32.h>
 #include "PosLogic.h"
 #include "Calibrator.h"
 
@@ -11,15 +10,15 @@
 
 class SerialCLI {
 	public:
-		void Init(PosLgic *PL, Calibrator *CA);
-		void SerialCLI::loop();
+		void Init(PosLogic *PL, Calibrator *CA);
+		void Loop();
 
 	private:
-		void HandleCommand(char *cmd);
+		void HandleCommand(String request);
 		PosLogic   *PL;
 		Calibrator *CA;
 		char cmdBuffer[200];
 		int readPos = 0;
 };
 
-#ENDIF
+#endif

@@ -1,10 +1,8 @@
 #include "PosLogic.h"
-#include "JSONArray.h"
 
-void PosLogic::Init (Calibrator *CA, Display *DI, SDWebServer *WS) {
+void PosLogic::Init (Calibrator *CA, Display *DI) {
 	this->MyCalibrator = CA;
 	this->MyDisplay = DI;
-	this->MyWebServer = WS;
 	this->LHStepper = new AccelStepper(AccelStepper::DRIVER, LH_STEPPER_STEP_PIN, LH_STEPPER_DIR_PIN);
 	// 500 rotation/min == 100.000 steps/min == 1667 steps/second
 	this->LHStepper->setMaxSpeed(1500.0);
@@ -21,33 +19,33 @@ void PosLogic::Init (Calibrator *CA, Display *DI, SDWebServer *WS) {
 	pinMode(LH_FRONT_SECURITY_PIN, INPUT_PULLUP);
 	pinMode(RH_BACK_SECURITY_PIN,  INPUT_PULLUP);
 	pinMode(RH_FRONT_SECURITY_PIN, INPUT_PULLUP);
-	Serial.println("PL Init Done");
+	Serial.println("DEBUG PL Init Done");
 }
 
 bool PosLogic::Home () {
-	Serial.println("PosLog::Home");
+	Serial.println("DEBUG PosLog::Home");
 	if (this->Blocked()) {
-		Serial.println("ELEVATOR_BLOCKED");
+		Serial.println("STATUS BLOCKED");
 		return false;
 	}
 	this->MyStatus = STATUS_HOMING_1;
 	this->MyDisplay->Homing();
-	this->MyWebServer->sendMessage(this->GetStatus());
+	Serial.println(this->GetStatus());
 	return true;
 }
 	
 bool PosLogic::MoveTo (int Level, int AdditionalSteps) {
-	Serial.println("PosLogic::MoveTo");
+	Serial.println("DEBUG PosLogic::MoveTo");
 	if (this->Blocked()) {
-		Serial.println("ELEVATOR_BLOCKED");
+		Serial.println("STATUS BLOCKED");
 		return false;
 	}
 	if (this->Locked) {
-		Serial.println("ELEVATOR_LOCKED");
+		Serial.println("STATUS LOCKED");
 		return false;
 	}
 	if (this->MyStatus != STATUS_IDLE) {
-		Serial.print("ELEVATOR NOT IDLE"); Serial.println(this->GetStatus());
+		Serial.println(this->GetStatus());
 		return false;
 	}
 	this->MyStatus  = STATUS_MOVING;
@@ -55,22 +53,22 @@ bool PosLogic::MoveTo (int Level, int AdditionalSteps) {
 	this->LHStepper->moveTo(this->MyCalibrator->GetOffset(true,  Level)+AdditionalSteps);
 	this->RHStepper->moveTo(this->MyCalibrator->GetOffset(false, Level)+AdditionalSteps);
 	this->MyDisplay->NewLevel(Level);
-	this->MyWebServer->sendMessage(this->GetStatus());
+	Serial.println(this->GetStatus());
 	return true;
 }
 
 bool PosLogic::MoveToSteps (int Level, int StepsLeft, int StepsRight) {
-	Serial.println("PosLogic::MoveToSteps");
+	Serial.println("DEBUG PosLogic::MoveToSteps");
 	if (this->Blocked()) {
-		Serial.println("ELEVATOR_BLOCKED");
+		Serial.println("STATUS BLOCKED");
 		return false;
 	}
 	if (this->Locked) {
-		Serial.println("ELEVATOR_LOCKED");
+		Serial.println("STATUS LOCKED");
 		return false;
 	}
 	if (this->MyStatus != STATUS_IDLE) {
-		Serial.print("ELEVATOR NOT IDLE"); Serial.println(this->GetStatus());
+		Serial.println(this->GetStatus());
 		return false;
 	}
 	this->MyStatus  = STATUS_MOVING;
@@ -78,62 +76,50 @@ bool PosLogic::MoveToSteps (int Level, int StepsLeft, int StepsRight) {
 	this->LHStepper->moveTo(StepsLeft);
 	this->RHStepper->moveTo(StepsRight);
 	this->MyDisplay->NewLevel(Level);
-	this->MyWebServer->sendMessage(this->GetStatus());
+	Serial.println(this->GetStatus());
 	return true;
 }
 
 void PosLogic::Lock () {
-	Serial.println("PosLogic::Lock");
+	Serial.println("DEBUG PosLogic::Lock");
 	this->Locked = true;
 }
 
 void PosLogic::Unlock () {
-	Serial.println("PosLogic::Unlock");
+	Serial.println("DEBUG PosLogic::Unlock");
 	this->Locked = false;
 }
 	
 String PosLogic::GetStatus () {
-	Serial.println("PosLogic::GetStatus");
-	String retval = JSON_ArrayStart();
+	Serial.println("DEBUG PosLogic::GetStatus");
 	if (this->Blocked()) {
-		retval += JSON_item("STATUS", "BLOCKED");
+		return "STATUS BLOCKED";
 	}
 	switch (this->MyStatus) {
 		case STATUS_HOMING_1:
-			retval += JSON_item("STATUS", "HOMING1");
-			break;
+			return "STATUS HOMING 1";
 		case STATUS_HOMING_2:
-			retval += JSON_item("STATUS", "HOMING2");
-			break;
+			return "STATUS HOMING 2";
 		case STATUS_HOMING_3:
-			retval += JSON_item("STATUS", "HOMING3");
-			break;
+			return "STATUS HOMING 3";
 		case STATUS_HOMING_4:
-			retval += JSON_item("STATUS", "HOMING4");
-			break;
+			return "STATUS HOMING 4";
 		case STATUS_MOVING:
-			retval += JSON_item("STATUS", "MOVING");
-			retval += JSON_ArrayDivider()+JSON_item("FROM", String(this->CurrentLevel));
-			retval += JSON_ArrayDivider()+JSON_item("TO", String(this->NextLevel));
-			break;
+			return "STATUS MOVING "+String(this->CurrentLevel)+" "+String(this->NextLevel);
 		case STATUS_IDLE:
-			retval += JSON_item("STATUS", "IDLE");
-			retval += JSON_ArrayDivider()+JSON_item("LEVEL", String(this->CurrentLevel));
-			break;
+			return "STATUS IDLE "+String(this->CurrentLevel);
 	}
-	retval += JSON_ArrayEnd();
-	Serial.print("STATUS IS "); Serial.println(retval);
-	return retval;
+	return "STATUS UNKNOWN";
 }
 
 bool PosLogic::Blocked () {
-	Serial.println("PosLogic::Blocked");
+	Serial.println("DEBUG PosLogic::Blocked");
 return false;
 	return (!digitalRead(LH_BACK_SECURITY_PIN) || !digitalRead(LH_FRONT_SECURITY_PIN) || !digitalRead(RH_BACK_SECURITY_PIN) || !digitalRead(RH_FRONT_SECURITY_PIN));
 }
 
 int PosLogic::GetCurrentLevel () {
-	Serial.println("PosLogic::GetCurrentLevel");
+	Serial.println("DEBUG PosLogic::GetCurrentLevel");
 	if (this->Blocked() || this->MyStatus != STATUS_IDLE) {
 		return 0;
 	}
@@ -151,7 +137,7 @@ void PosLogic::Loop () {
 		case STATUS_HOMING_1: // Moving downwards searching for end-stop
 			if (!digitalRead(LH_ENDSTOP_PIN) && !digitalRead(LH_ENDSTOP_PIN)) {
 				this->MyStatus = STATUS_HOMING_2;
-				this->MyWebServer->sendMessage(this->GetStatus());
+				Serial.println(this->GetStatus());
 				this->LHStepper->move(20);
 				this->RHStepper->move(20);
 			} else {
@@ -170,7 +156,7 @@ void PosLogic::Loop () {
 				if (!this->LHStepper->isRunning() && !this->LHStepper->isRunning()) {
 					this->MoveTo(1,1000);
 					this->MyStatus = STATUS_HOMING_3;
-					this->MyWebServer->sendMessage(this->GetStatus());
+					Serial.println(this->GetStatus());
 				}
 			} else {
 				if (digitalRead(LH_ENDSTOP_PIN)) {
@@ -184,7 +170,7 @@ void PosLogic::Loop () {
 			if (!this->LHStepper->isRunning() && !this->LHStepper->isRunning()) {
 				this->MoveTo(1,0);
 				this->MyStatus = STATUS_HOMING_4;
-				this->MyWebServer->sendMessage(this->GetStatus());
+				Serial.println(this->GetStatus());
 			}
 			break;
 		case STATUS_HOMING_4: // Moving to level 1 and then resetting stepper positions to zero
@@ -194,7 +180,7 @@ void PosLogic::Loop () {
 				this->CurrentLevel = 1;
 				this->MyStatus = STATUS_IDLE;
 				this->MyDisplay->AtLevel(this->CurrentLevel);
-				this->MyWebServer->sendMessage(this->GetStatus());
+				Serial.println(this->GetStatus());
 			}
 			break;
 		case STATUS_MOVING:
@@ -202,7 +188,7 @@ void PosLogic::Loop () {
 				this->CurrentLevel = this->NextLevel;
 				this->MyStatus = STATUS_IDLE;
 				this->MyDisplay->AtLevel(this->CurrentLevel);
-				this->MyWebServer->sendMessage(this->GetStatus());
+				Serial.println(this->GetStatus());
 			}
 			break;
 		default:;
