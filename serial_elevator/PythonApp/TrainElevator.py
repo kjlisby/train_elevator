@@ -1,10 +1,7 @@
 from serial import *
 from tkinter import *
 from functools import partial
-
-serialPort = "COM4"
-baudRate = 19200
-# ser = Serial(serialPort , baudRate, timeout=0, writeTimeout=0) #ensure non-blocking
+from time import sleep
 
 #make a TkInter Window
 root = Tk()
@@ -86,6 +83,12 @@ log.insert(END,"linie 4\n")
 displayInfo("",    "2",     "",144,1, 3)
 displayInfo("\n\n","Homing","", 48,5,10)
 
+# Set the serial communication up
+# serialPort = "COM4"
+# baudRate = 19200
+# ser = Serial(serialPort , baudRate, timeout=0, writeTimeout=0) #ensure non-blocking
+ser = Serial()
+ser.baudrate = 19200
 
 #make our own buffer
 #useful for parsing commands
@@ -94,6 +97,20 @@ serBuffer = ""
 
 def readSerial():
     while True:
+        while not ser.is_open:
+            try:
+                ser.port = 'COM3'
+                ser.open()
+            except:
+                log.insert(END, "Failed to connect to COM3")
+            if ser.is_open:
+                break
+            try:
+                ser.port = 'COM4'
+                ser.open()
+            except:
+                log.insert(END, "Failed to connect to COM4")
+                sleep(15)
         c = ser.read() # attempt to read a character from Serial
         
         #was anything read?
@@ -128,14 +145,15 @@ def readSerial():
 
 
 # after initializing serial, an arduino may need a bit of time to reset
-# root.after(100, readSerial)
+root.after(100, readSerial)
 
 def readStatus():
     cmd = "get status\n"
-    ser.write(cmd.encode("utf-8"))
+    if ser.is_open
+        ser.write(cmd.encode("utf-8"))
     root.after(10000, readStatus)
     
-# root.after(10000, readStatus)
+root.after(10000, readStatus)
     
 
 root.mainloop()
