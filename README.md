@@ -23,6 +23,6 @@ The hardware consist of:
 And it is put together as follows (with all sensors shown as switches). Note also that so far, I don't think I will need the "enable" wire to the stepper motors. Removing power from the steppers would only mean that the ESP32 is no longer knowing the exact location of the elevator:
 ![](Diagram.jpg)
 
-I was at first almost done with the WIFI version, which uses a Web browser as UI. But because of weak WIFI connection, I abandoned that idea and instead began the Serial version, which simply connects via the USB port of the ESP32 to the PC and communicates directly with either JMRI (Java Model Railroad Interface) or the Python based UI. Or for that matter, the Arduino IDE can be used as a command-line.
+I was at first almost done with the WIFI version, which uses a Web browser as UI. But because of weak WIFI connection, I abandoned that idea and instead began the Serial version, which simply connects via the USB port of the ESP32 to the PC and communicates directly with either JMRI (Java Model Railroad Interface) or the Python based UI. Or for that matter, the serial monitor in the Arduino IDE can be used as a command-line. Note that the SD card is not used by the serial version. So I have removed that.
 
 See more at http://lisby.dk/wordpress/?p=2779 (so far only in Danish).
