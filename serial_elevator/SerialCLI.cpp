@@ -44,7 +44,7 @@ void SerialCLI::HandleCommand(String  request) {
 		if (cmdarray[1].equals("status")) {
 			Serial.println(PL->GetStatus());
 		} else if (cmdarray[1].equals("calibration")) {
-			Serial.print("CALIBRATION "); Serial.print(cmdarray[2]); Serial.print(" "); Serial.print(CA->GetOffset(true,cmdarray[2].toInt())); Serial.print(" "); Serial.println(CA->GetOffset(true,cmdarray[2].toInt()));
+			Serial.print("CALIBRATION "); Serial.print(cmdarray[2]); Serial.print(" "); Serial.print(CA->GetOffset(true,cmdarray[2].toInt())); Serial.print(" "); Serial.println(CA->GetOffset(false,cmdarray[2].toInt()));
 		} else {
 			Serial.println("DEBUG Unknown HTLM element for get command");
 		}

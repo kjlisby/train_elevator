@@ -7,12 +7,15 @@ root = Tk()
 root.wm_title("Train Elevator")
     
 CurrentLevel = 0
+ReadingCalibration = False
 
 #handle button press
 def moveElevator(level):
     sendCmd("set level "+str(level))
 def restoreCalibration(level):
+    global ReadingCalibration
     sendCmd("get calibration "+str(level))
+    ReadingCalibration = True
 def moveToCalibration(level):
     left = leftSpinboxes[level-1].get()
     right = rightSpinboxes[level-1].get()
@@ -119,14 +122,18 @@ scrollbar.config(command=log.yview)
 #handle messages received from the elevator
 def handleInput(event):
     global CurrentLevel
+    global ReadingCalibration
     logDebug("Rx: "+event)
     eList = event.split()
+    if len(eList) == 0:
+        return
     if eList[0] == "CALIBRATION":
         level = int(eList[1])
         left  = int(eList[2])
         right = int(eList[3])
-        if level == CurrentLevel:
+        if level == CurrentLevel and ReadingCalibration:
             #logDebug("level == CurrentLevel")
+            ReadingCalibration = False
             enableButtons(level)
             leftSpinboxes[level-1].delete(0,END)
             leftSpinboxes[level-1].insert(0,str(left))
@@ -157,14 +164,15 @@ def handleInput(event):
                 displayInfo("\n"+from_+"\n","\u21CA\n",to_, 48,5,14)
         if status == "IDLE":
             newLevel = int(eList[2])
-            #logDebug("newLevel: "+str(newLevel)+" CurrentLevel: "+str(CurrentLevel))
+            logDebug("newLevel: "+str(newLevel)+" CurrentLevel: "+str(CurrentLevel))
             if newLevel != CurrentLevel:
-                #logDebug("newLevel != CurrentLevel")
-                disableButtons(CurrentLevel)
-                enableButtons(newLevel)
+                logDebug("newLevel != CurrentLevel")
+                CurrentLevel = newLevel
+                sendCmd("get calibration "+str(CurrentLevel))
+                ReadingCalibration = True
             displayInfo("",    str(newLevel),     "",225,1, 3)
-            CurrentLevel = newLevel
-            sendCmd("get calibration "+str(CurrentLevel))
+            disableButtons(CurrentLevel)
+            enableButtons(newLevel)
 
 # Set the serial communication up
 ser = Serial()
