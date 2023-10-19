@@ -3,58 +3,47 @@ from tkinter import *
 from functools import partial
 from time import sleep, strftime
 
-#make a TkInter Window
 root = Tk()
 root.wm_title("Train Elevator")
-
-# function to update the Display
-def displayInfo(line1, line2, line3, fontSize, height, width):
-    display.config(font =("Courier", fontSize), height=height, width=width)
-    display.delete('1.0', END)
-    display.insert(END,line1)
-    display.insert(END,line2)
-    display.insert(END,line3)
-    display.tag_add("tag_name", "1.0", "end")
     
-currentLevel = 0;
+CurrentLevel = 0
 
-def disableButton(b):
-    b.config(state=DISABLED, bg='darkgrey')
-def enableButton(b):
-    b.config(state=NORMAL, bg='green')
-
+#handle button press
 def moveElevator(level):
-    logDebug("Move Elevator "+str(level))
     sendCmd("set level "+str(level))
 def restoreCalibration(level):
-    logDebug("Restore calibration "+str(level))
     sendCmd("get calibration "+str(level))
 def moveToCalibration(level):
     left = leftSpinboxes[level-1].get()
     right = rightSpinboxes[level-1].get()
-    logDebug("Move to calibration "+str(level))
     sendCmd("set levelfromcalibration "+str(level)+" "+left+" "+right)
 def saveCalibration(level):
     left = leftSpinboxes[level-1].get()
     right = rightSpinboxes[level-1].get()
-    logDebug("Save calibration "+str(level))
-    sendCmd("set calibration"+str(level)+" "+left+" "+right)
-
-def displayIdle(level):
-    displayInfo("",    str(level+1),     "",220,1, 3)
-def displayMoving(fromLevel, toLevel):
-    displayInfo("\n5\n","\u21C8\n","3", 48,5,10)
-    displayInfo("\n7\n","\u21CA\n","12", 48,5,10)
-def displayHoming():
-    displayInfo("\n\n","Homing","", 48,5,10)
+    sendCmd("set calibration "+str(level)+" "+left+" "+right)
 
 def logDebug(line):
+    log.config(state=NORMAL)
     log.insert(END, strftime("%H:%M:%S", time.localtime()) + " " + line + "\n")
     log.see(END)
+    log.config(state=DISABLED)
+
+#enable/disable calibration widgets
+def disableButtons(level):
+    leftSpinboxes[level-1].config(state=DISABLED)
+    rightSpinboxes[level-1].config(state=DISABLED)
+    restoreButtons[level-1].config(state=DISABLED, bg='darkgrey')
+    moveButtons[level-1].config(state=DISABLED, bg='darkgrey')
+    saveButtons[level-1].config(state=DISABLED, bg='darkgrey')
+def enableButtons(level):
+    leftSpinboxes[level-1].config(state=NORMAL)
+    rightSpinboxes[level-1].config(state=NORMAL)
+    restoreButtons[level-1].config(state=NORMAL, bg='green')
+    moveButtons[level-1].config(state=NORMAL, bg='green')
+    saveButtons[level-1].config(state=NORMAL, bg='green')
 
 #add buttons etc. in a frame
 buttonFrame = Frame(root)
-#buttonFrame.pack( fill = NONE, expand = False, anchor = NW)
 buttonFrame.grid(column=0, row=0, sticky=NW)
 levelButtons = []
 leftSpinboxes = []
@@ -65,7 +54,7 @@ saveButtons = []
 for level in range (12):
     lButton = Button(buttonFrame, text ="Level "+str(level+1), command = partial (moveElevator, level+1), bg='green', fg='white')
     levelButtons.append(lButton)
-    levelButtons[level].grid(column=0, row=level, sticky=W, padx=5, pady=5,  ipadx=25, ipady=5 )
+    levelButtons[level].grid(column=0, row=11-level, sticky=W, padx=5, pady=5,  ipadx=25, ipady=5 )
 
     if level % 2 == 0:
         calibration=5000*level
@@ -73,85 +62,118 @@ for level in range (12):
         calibration=5000*(level-1)
     min_ = calibration-500
     max_ = calibration+500
+    
     lButton = Spinbox(buttonFrame, width=10, from_=min_, to=max_)
     leftSpinboxes.append(lButton)
-    leftSpinboxes[level].grid(column=1, row=level, sticky=W, padx=5, pady=5,  ipadx=25, ipady=5 )
+    leftSpinboxes[level].grid(column=1, row=11-level, sticky=W, padx=5, pady=5,  ipadx=25, ipady=5 )
     leftSpinboxes[level].delete(0,END)
     leftSpinboxes[level].insert(0,str(calibration))
+    leftSpinboxes[level].config(state=DISABLED)
 
     lButton = Spinbox(buttonFrame, width=10, from_=min_, to=max_)
     rightSpinboxes.append(lButton)
-    rightSpinboxes[level].grid(column=2, row=level, sticky=W, padx=5, pady=5,  ipadx=25, ipady=5 )
+    rightSpinboxes[level].grid(column=2, row=11-level, sticky=W, padx=5, pady=5,  ipadx=25, ipady=5 )
     rightSpinboxes[level].delete(0,END)
     rightSpinboxes[level].insert(0,str(calibration))
+    rightSpinboxes[level].config(state=DISABLED)
 
     lButton = Button(buttonFrame, text ="Restore", command = partial (restoreCalibration, level+1), bg='darkgrey', fg='white', state=DISABLED)
     restoreButtons.append(lButton)
-    restoreButtons[level].grid(column=3, row=level, sticky=W, padx=5, pady=5,  ipadx=25, ipady=5 )
+    restoreButtons[level].grid(column=3, row=11-level, sticky=W, padx=5, pady=5,  ipadx=25, ipady=5 )
 
     lButton = Button(buttonFrame, text ="Move", command = partial (moveToCalibration, level+1), bg='darkgrey', fg='white', state=DISABLED)
     moveButtons.append(lButton)
-    moveButtons[level].grid(column=4, row=level, sticky=W, padx=5, pady=5,  ipadx=25, ipady=5 )
+    moveButtons[level].grid(column=4, row=11-level, sticky=W, padx=5, pady=5,  ipadx=25, ipady=5 )
 
     lButton = Button(buttonFrame, text ="Save", command = partial (saveCalibration, level+1), bg='darkgrey', fg='white', state=DISABLED)
     saveButtons.append(lButton)
-    saveButtons[level].grid(column=5, row=level, sticky=W, padx=5, pady=5,  ipadx=25, ipady=5 )
-
-# levelButtons[4].config(command = partial (displayInfo, "",    str(level+1),     "",220,1, 3))
-# levelButtons[5].config(command = partial (displayInfo, "\n\n","Homing","", 48,5,10))
-# levelButtons[6].config(command = partial (displayInfo, "\n5\n","\u21C8\n","3", 48,5,10))
-# levelButtons[7].config(command = partial (displayInfo, "\n7\n","\u21CA\n","12", 48,5,10))
-enableButton(restoreButtons[5])
-enableButton(moveButtons[5])
-enableButton(saveButtons[5])
+    saveButtons[level].grid(column=5, row=11-level, sticky=W, padx=5, pady=5,  ipadx=25, ipady=5 )
 
 # make a text box to image the physical display
-display = Text ( root, bg="darkblue", fg="white", font =("Courier", 48), width=10, height=5, takefocus=0)
+display = Text ( root, bg="darkblue", fg="white", font =("Courier", 48), width=14, height=5, takefocus=0)
 display.tag_configure("tag_name", justify='center')
-#display.pack( fill = NONE, expand = False, anchor = S )
 display.grid(column=1, row=0, sticky=E)
 
-#make a frame for a scrollbar and a text box to put the serial output
+# function to update the Display
+def displayInfo(line1, line2, line3, fontSize, height, width):
+    display.config(font =("Courier", fontSize), height=height, width=width)
+    display.delete('1.0', END)
+    display.insert(END,line1)
+    display.insert(END,line2)
+    display.insert(END,line3)
+    display.tag_add("tag_name", "1.0", "end")
+
+# widget for logging what is going on
 logFrame = Frame(root)
-#logFrame.pack( fill = BOTH, expand = True, side=BOTTOM )
 logFrame.grid(column=0, row=1, columnspan=2, sticky=S )
 # make the scrollbar
 scrollbar = Scrollbar(logFrame)
 scrollbar.pack(side=RIGHT, fill=Y)
 # make the text box
-log = Text ( logFrame, width=140, height=10, takefocus=0)
+log = Text ( logFrame, width=150, height=10, takefocus=0)
 log.pack( fill = BOTH, expand = True )
 # attach text box to scrollbar
 log.config(yscrollcommand=scrollbar.set)
 scrollbar.config(command=log.yview)
 
-
-# log.insert(END,"davs du lad os skrive noget ganske forfærdeligt langt så vi kan se, hvordan det wrapper eller ekspanderer\n")
-# log.insert(END,"linie 2\n")
-# log.insert(END,"davs du lad os skrive noget ganske forfærdeligt langt så vi kan se, hvordan det wrapper eller ekspanderer\n")
-# log.insert(END,"linie 4\n")
-
-# displayInfo("",    "2",     "",144,1, 3)
-# displayInfo("\n\n","Homing","", 48,5,10)
-
+#handle messages received from the elevator
 def handleInput(event):
-    #add the line to the TOP of the log
-    logDebug("Rx: "+serBuffer)
+    global CurrentLevel
+    logDebug("Rx: "+event)
+    eList = event.split()
+    if eList[0] == "CALIBRATION":
+        level = int(eList[1])
+        left  = int(eList[2])
+        right = int(eList[3])
+        if level == CurrentLevel:
+            #logDebug("level == CurrentLevel")
+            enableButtons(level)
+            leftSpinboxes[level-1].delete(0,END)
+            leftSpinboxes[level-1].insert(0,str(left))
+            rightSpinboxes[level-1].delete(0,END)
+            rightSpinboxes[level-1].insert(0,str(right))
+    if eList[0] == "STATUS":
+        status = eList[1]
+        if status == "BLOCKED":
+            displayInfo("\n\n","Blocked\n",str(CurrentLevel), 48,5,14)
+        if status == "HOMING":
+            disableButtons(CurrentLevel)
+            homingPhase = eList[2]
+            if homingPhase == "1":
+                displayInfo("\n\n","Homing\n","1", 48,5,14)
+            if homingPhase == "2":
+                displayInfo("\n\n","Homing\n","2", 48,5,14)
+            if homingPhase == "3":
+                displayInfo("\n\n","Homing\n","3", 48,5,14)
+            if homingPhase == "4":
+                displayInfo("\n\n","Homing\n","4", 48,5,14)
+        if status == "MOVING":
+            disableButtons(CurrentLevel)
+            from_ = eList[2]
+            to_   = eList[3]
+            if from_ < to_:
+                displayInfo("\n"+to_+"\n","\u21C8\n",from_, 48,5,14)
+            else:
+                displayInfo("\n"+from_+"\n","\u21CA\n",to_, 48,5,14)
+        if status == "IDLE":
+            newLevel = int(eList[2])
+            #logDebug("newLevel: "+str(newLevel)+" CurrentLevel: "+str(CurrentLevel))
+            if newLevel != CurrentLevel:
+                #logDebug("newLevel != CurrentLevel")
+                disableButtons(CurrentLevel)
+                enableButtons(newLevel)
+            displayInfo("",    str(newLevel),     "",225,1, 3)
+            CurrentLevel = newLevel
+            sendCmd("get calibration "+str(CurrentLevel))
 
 # Set the serial communication up
-# serialPort = "COM4"
-# baudRate = 19200
-# ser = Serial(serialPort , baudRate, timeout=0, writeTimeout=0) #ensure non-blocking
 ser = Serial()
 ser.baudrate = 19200
 ser.timeout=0
 ser.writeTimeout=0
-
-#make our own buffer
-#useful for parsing commands
-#Serial.readline seems unreliable at times too
 serBuffer = ""
 
+#read whatever is availbale on the serial port
 def readSerial():
     while True:
         if not ser.is_open:
@@ -193,11 +215,18 @@ def readSerial():
         root.after(10, readSerial) # check serial again soon
     else:
         root.after(30000, readSerial) # take a break before checking serial again
-
-
 # after initializing serial, an arduino may need a bit of time to reset
 root.after(100, readSerial)
 
+#FOR DEBUGGING: An input field and a button to fake messages that should come from the elevator
+# def rx():
+    # handleInput(eventInput.get())
+# eventInput = Entry(root)
+# eventInput.grid(column=1, row=1, sticky=E)
+# rxButton = Button(root, text ="Rx above", command = rx)
+# rxButton.grid(column=1, row=2, sticky=E)
+
+#send a command to the elevator
 def sendCmd(cmd):
     if ser.is_open:
         logDebug("Tx: "+cmd)
@@ -206,11 +235,11 @@ def sendCmd(cmd):
     else:
         logDebug("Tx: "+cmd+" FAILED")
 
-def readStatus():
-    sendCmd("get status")
-    root.after(60000, readStatus)
+#SHOULD NOT BE NECESSARY: Continously read status from the elevator
+# def readStatus():
+    # sendCmd("get status")
+    # root.after(60000, readStatus)
+#root.after(10000, readStatus)
     
-root.after(10000, readStatus)
-    
-
+#enter TKs main loop to handle UI events
 root.mainloop()
