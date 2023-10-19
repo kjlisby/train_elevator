@@ -21,18 +21,6 @@ void PosLogic::Init (Calibrator *CA, Display *DI) {
 	pinMode(RH_FRONT_SECURITY_PIN, INPUT_PULLUP);
 	Serial.println("DEBUG PL Init Done");
 }
-
-bool PosLogic::Home () {
-	Serial.println("DEBUG PosLog::Home");
-	if (this->Blocked()) {
-		Serial.println("STATUS BLOCKED");
-		return false;
-	}
-	this->MyStatus = STATUS_HOMING_1;
-	this->MyDisplay->Homing();
-	Serial.println(this->GetStatus());
-	return true;
-}
 	
 bool PosLogic::MoveTo (int Level, int AdditionalSteps) {
 	Serial.println("DEBUG PosLogic::MoveTo");
@@ -48,12 +36,19 @@ bool PosLogic::MoveTo (int Level, int AdditionalSteps) {
 		Serial.println(this->GetStatus());
 		return false;
 	}
-	this->MyStatus  = STATUS_MOVING;
 	this->NextLevel = Level;
-	this->LHStepper->moveTo(this->MyCalibrator->GetOffset(true,  Level)+AdditionalSteps);
-	this->RHStepper->moveTo(this->MyCalibrator->GetOffset(false, Level)+AdditionalSteps);
-	this->MyDisplay->NewLevel(Level);
-	Serial.println(this->GetStatus());
+	if (!this->HomingDone) {
+		this->HomingDone = true;
+		this->MyStatus = STATUS_HOMING_1;
+		this->MyDisplay->Homing();
+		Serial.println(this->GetStatus());
+	} else {
+		this->MyStatus  = STATUS_MOVING;
+		this->LHStepper->moveTo(this->MyCalibrator->GetOffset(true,  Level)+AdditionalSteps);
+		this->RHStepper->moveTo(this->MyCalibrator->GetOffset(false, Level)+AdditionalSteps);
+		this->MyDisplay->NewLevel(Level);
+		Serial.println(this->GetStatus());
+	}
 	return true;
 }
 
@@ -71,6 +66,10 @@ bool PosLogic::MoveToSteps (int Level, int StepsLeft, int StepsRight) {
 		Serial.println(this->GetStatus());
 		return false;
 	}
+	if (!this->HomingDone) {
+		Serial.println("STATUS NOT_HOMED");
+		return false;
+	}
 	this->MyStatus  = STATUS_MOVING;
 	this->NextLevel = Level;
 	this->LHStepper->moveTo(StepsLeft);
@@ -81,13 +80,17 @@ bool PosLogic::MoveToSteps (int Level, int StepsLeft, int StepsRight) {
 }
 
 void PosLogic::Lock () {
-	Serial.println("DEBUG PosLogic::Lock");
+	Serial.println("LOCKED YES");
 	this->Locked = true;
 }
 
 void PosLogic::Unlock () {
-	Serial.println("DEBUG PosLogic::Unlock");
+	Serial.println("LOCKED NO");
 	this->Locked = false;
+}
+
+bool PosLogic::isLocked() {
+	return this->Locked;
 }
 	
 String PosLogic::GetStatus () {
@@ -179,8 +182,7 @@ void PosLogic::Loop () {
 				this->RHStepper->setCurrentPosition(0);
 				this->CurrentLevel = 1;
 				this->MyStatus = STATUS_IDLE;
-				this->MyDisplay->AtLevel(this->CurrentLevel);
-				Serial.println(this->GetStatus());
+				this->MoveTo(this->NextLevel,0);
 			}
 			break;
 		case STATUS_MOVING:

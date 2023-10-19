@@ -158,7 +158,7 @@ def handleInput(event):
             disableButtons(CurrentLevel)
             from_ = eList[2]
             to_   = eList[3]
-            if from_ < to_:
+            if int(from_) < int(to_):
                 displayInfo("\n"+to_+"\n","\u21C8\n",from_, 48,5,14)
             else:
                 displayInfo("\n"+from_+"\n","\u21CA\n",to_, 48,5,14)

@@ -49,7 +49,7 @@ class ElevatorIF(jmri.jmrit.automat.AbstractAutomaton) :
     #PRIVATE
     def handleMessage(self, event):
         eList = event.split()
-        if eList[0] == "LOCK":
+        if eList[0] == "LOCKED":
             if eList[1] == "NO":
                 if self.ElevatorState == "UNLOCKING":
                     self.ElevatorState = "IDLE"
