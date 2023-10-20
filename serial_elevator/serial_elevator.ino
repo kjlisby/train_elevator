@@ -31,15 +31,15 @@ void setup(void) {
 	Serial.println("DEBUG PL started");
 	SC = new SerialCLI();
 	SC->Init(PL, CA);
-	// DC = new DccInterface();
-	// DC->Init();
+	DC = new DccInterface();
+	DC->Init();
 }
 
 void loop(void) {
 	if (!PL->isRunning()) {
 		// Doing time-consuming stuff (such as displaying an HTML page) will prohibit smooth movement of the steppers
 		SC->Loop();
-//		DC->Loop();
+		DC->Loop();
 	}
 	PL->Loop();
 }

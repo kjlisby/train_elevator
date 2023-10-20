@@ -3,7 +3,7 @@
 
 #include <NmraDcc.h>
 
-#define DCC_PIN         34
+#define DCC_PIN         27
 #define DECODER_ADDR_1 229
 #define DECODER_ADDR_2 230
 #define DECODER_ADDR_3 231

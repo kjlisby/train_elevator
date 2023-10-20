@@ -4,71 +4,68 @@
 extern PosLogic *PL;
 
 void notifyDccAccTurnoutOutput(uint16_t Addr, uint8_t Direction, uint8_t OutputPower) {
-	Serial.print("DEBUG DCC Address: "); Serial.println(Addr);
-	Serial.print("DEBUG DCC Direction: "); Serial.println(Direction);
-	Serial.print("DEBUG DCC OutputPower: "); Serial.println(OutputPower);
-	Serial.println("DEBUG DCC --------------------");
+	Serial.print("DEBUG DCC Address: "); Serial.print(Addr); Serial.print(" Direction: "); Serial.print(Direction);
 	
 	int CurLev = PL->GetCurrentLevel();
-	Serial.print("Elevator currently at "); Serial.println(CurLev);
-	if (Addr == DECODER_ADDR_1 && Direction == 0) {
+	Serial.print(" Elevator currently at "); Serial.println(CurLev);
+	if (Addr == DECODER_ADDR_1 && Direction == 1) {
 		Serial.println("DEBUG DCC Level 1");
-		if (CurLev != 0 && CurLev != 1) {
+		if (CurLev != -1 && CurLev != 1) {
 			PL->MoveTo(1,0);
 		}
-	} else if (Addr == DECODER_ADDR_1 && Direction == 1) {
+	} else if (Addr == DECODER_ADDR_1 && Direction == 0) {
 		Serial.println("DEBUG DCC Level 2");
-		if (CurLev != 0 && CurLev != 2) {
+		if (CurLev != -1 && CurLev != 2) {
 			PL->MoveTo(2,0);
-		}
-	} else if (Addr == DECODER_ADDR_2 && Direction == 0) {
-		Serial.println("DEBUG DCC Level 3");
-		if (CurLev != 0 && CurLev != 3) {
-			PL->MoveTo(3,0);
 		}
 	} else if (Addr == DECODER_ADDR_2 && Direction == 1) {
-		Serial.println("DEBUG DCC Level 4");
-		if (CurLev != 0 && CurLev != 4) {
-			PL->MoveTo(4,0);
-		}
-	} else if (Addr == DECODER_ADDR_3 && Direction == 0) {
-		Serial.println("DEBUG DCC Level 5");
-		if (CurLev != 0 && CurLev != 5) {
-			PL->MoveTo(5,0);
-		}
-	} else if (Addr == DECODER_ADDR_3 && Direction == 1) {
-		Serial.println("DEBUG DCC Level 6");
-		if (CurLev != 0 && CurLev != 6) {
-			PL->MoveTo(6,0);
-		}
-	} else if (Addr == DECODER_ADDR_4 && Direction == 0) {
-		Serial.println("DEBUG DCC Level 7");
-		if (CurLev != 0 && CurLev != 7) {
-			PL->MoveTo(1,0);
-		}
-	} else if (Addr == DECODER_ADDR_4 && Direction == 1) {
-		Serial.println("DEBUG DCC Level 8");
-		if (CurLev != 0 && CurLev != 8) {
-			PL->MoveTo(2,0);
-		}
-	} else if (Addr == DECODER_ADDR_5 && Direction == 0) {
-		Serial.println("DEBUG DCC Level 9");
-		if (CurLev != 0 && CurLev != 9) {
+		Serial.println("DEBUG DCC Level 3");
+		if (CurLev != -1 && CurLev != 3) {
 			PL->MoveTo(3,0);
 		}
-	} else if (Addr == DECODER_ADDR_5 && Direction == 1) {
-		Serial.println("DEBUG DCC Level 10");
-		if (CurLev != 0 && CurLev != 10) {
+	} else if (Addr == DECODER_ADDR_2 && Direction == 0) {
+		Serial.println("DEBUG DCC Level 4");
+		if (CurLev != -1 && CurLev != 4) {
 			PL->MoveTo(4,0);
 		}
-	} else if (Addr == DECODER_ADDR_6 && Direction == 0) {
-		Serial.println("DEBUG DCC Level 11");
-		if (CurLev != 0 && CurLev != 11) {
+	} else if (Addr == DECODER_ADDR_3 && Direction == 1) {
+		Serial.println("DEBUG DCC Level 5");
+		if (CurLev != -1 && CurLev != 5) {
 			PL->MoveTo(5,0);
 		}
+	} else if (Addr == DECODER_ADDR_3 && Direction == 0) {
+		Serial.println("DEBUG DCC Level 6");
+		if (CurLev != -1 && CurLev != 6) {
+			PL->MoveTo(6,0);
+		}
+	} else if (Addr == DECODER_ADDR_4 && Direction == 1) {
+		Serial.println("DEBUG DCC Level 7");
+		if (CurLev != -1 && CurLev != 7) {
+			PL->MoveTo(7,0);
+		}
+	} else if (Addr == DECODER_ADDR_4 && Direction == 0) {
+		Serial.println("DEBUG DCC Level 8");
+		if (CurLev != -1 && CurLev != 8) {
+			PL->MoveTo(8,0);
+		}
+	} else if (Addr == DECODER_ADDR_5 && Direction == 1) {
+		Serial.println("DEBUG DCC Level 9");
+		if (CurLev != -1 && CurLev != 9) {
+			PL->MoveTo(9,0);
+		}
+	} else if (Addr == DECODER_ADDR_5 && Direction == 0) {
+		Serial.println("DEBUG DCC Level 10");
+		if (CurLev != -1 && CurLev != 10) {
+			PL->MoveTo(10,0);
+		}
 	} else if (Addr == DECODER_ADDR_6 && Direction == 1) {
+		Serial.println("DEBUG DCC Level 11");
+		if (CurLev != -1 && CurLev != 11) {
+			PL->MoveTo(11,0);
+		}
+	} else if (Addr == DECODER_ADDR_6 && Direction == 0) {
 		Serial.println("DEBUG DCC Level 12");
-		if (CurLev != 0 && CurLev != 12) {
+		if (CurLev != -1 && CurLev != 12) {
 			PL->MoveTo(12,0);
 		}
 	}
@@ -84,5 +81,6 @@ void DccInterface::Init () {
 }
 
 void DccInterface::Loop () {
+//  Serial.println("DEBUG DccInterface::Loop");
 	this->MyDcc->process();
 }

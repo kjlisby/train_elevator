@@ -116,15 +116,15 @@ String PosLogic::GetStatus () {
 }
 
 bool PosLogic::Blocked () {
-	Serial.println("DEBUG PosLogic::Blocked");
+//	Serial.println("DEBUG PosLogic::Blocked");
 return false;
 	return (!digitalRead(LH_BACK_SECURITY_PIN) || !digitalRead(LH_FRONT_SECURITY_PIN) || !digitalRead(RH_BACK_SECURITY_PIN) || !digitalRead(RH_FRONT_SECURITY_PIN));
 }
 
 int PosLogic::GetCurrentLevel () {
-	Serial.println("DEBUG PosLogic::GetCurrentLevel");
+//	Serial.println("DEBUG PosLogic::GetCurrentLevel");
 	if (this->Blocked() || this->MyStatus != STATUS_IDLE) {
-		return 0;
+		return -1;
 	}
 	return this->CurrentLevel;
 }
@@ -134,10 +134,11 @@ bool PosLogic::isRunning() {
 }
 
 void PosLogic::Loop () {
-	if not this->Blocked ():
-		#Do not advance if we risk to crush a train
+	if (this->Blocked () == false) {
+    // Do not advance if we risk to crush a train
 		this->LHStepper->run();
 		this->RHStepper->run();
+  }
 	switch (this->MyStatus) {
 		case STATUS_HOMING_1: // Moving downwards searching for end-stop
 			if (!digitalRead(LH_ENDSTOP_PIN) && !digitalRead(LH_ENDSTOP_PIN)) {
