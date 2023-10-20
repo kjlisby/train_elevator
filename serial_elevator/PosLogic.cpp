@@ -134,8 +134,10 @@ bool PosLogic::isRunning() {
 }
 
 void PosLogic::Loop () {
-	this->LHStepper->run();
-	this->RHStepper->run();
+	if not this->Blocked ():
+		#Do not advance if we risk to crush a train
+		this->LHStepper->run();
+		this->RHStepper->run();
 	switch (this->MyStatus) {
 		case STATUS_HOMING_1: // Moving downwards searching for end-stop
 			if (!digitalRead(LH_ENDSTOP_PIN) && !digitalRead(LH_ENDSTOP_PIN)) {
