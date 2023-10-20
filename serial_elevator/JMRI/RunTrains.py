@@ -340,3 +340,5 @@ for Train in TrainsAndTrips.iterkeys():
     print 'start tog',Train
     NextTrain = RunTrain(Train)
     NextTrain.start()
+ElevatorSingleton = ElevatorIF("Elevator")
+ElevatorSingleton.start()
