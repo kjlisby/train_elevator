@@ -1,8 +1,23 @@
 import pyserial
+import Queue
 
 # Interface from JMRI scripting (Jython) code to the train elevator
 
-ElevatorMessages = []
+# RunTrain threads and the Elevator communicates via these threadsafe queues.
+# see https://www.jython.org/jython-old-sites/docs/library/queue.html
+# 1. RunTrain initiates by a message in ElevatorMoveCommands of the format "MOVE <level>"
+# 2. Only when the elevator is idle, it will read and accept this message, and then start the 
+#    elevator moving and locking it.
+# 3. When the elevator is at the specified level, a message of the format "LEVEL <level> is
+#    left in ElevatorMessages
+# 4. RunTrain must check the level in the message. If it is not the expected level, 
+#    it must put the message back in the queue for the correct RunTrain thread to read.
+#    If it is the correct level, the RunTrain thread should move the train out of / into
+#    the elevator and then issue an "UNLOCK" command in ElevatorUnlockCommands.
+# 5. The Elevator thread does not reply to the UNLOCK command
+ElevatorMessages       = Queue.Queue()
+ElevatorMoveCommands   = Queue.Queue()
+ElevatorUnlockCommands = Queue.Queue()
 
 class ElevatorIF(jmri.jmrit.automat.AbstractAutomaton) :
     
@@ -23,7 +38,7 @@ class ElevatorIF(jmri.jmrit.automat.AbstractAutomaton) :
     #PRIVATE
     def UnlockElevator():
         self.sendCmd("set unlock\n")
-        self.ElevatorState = "UNLOCKING"
+        self.ElevatorState = "UNLOCKSENT"
 
     #PRIVATE
     def isElevatorLocked():
@@ -48,24 +63,23 @@ class ElevatorIF(jmri.jmrit.automat.AbstractAutomaton) :
         
     #PRIVATE
     def handleMessage(self, event):
+        global ElevatorMessages
         eList = event.split()
         if eList[0] == "LOCKED":
             if eList[1] == "NO":
-                if self.ElevatorState == "UNLOCKING":
+                if self.ElevatorState == "UNLOCKSENT":
                     self.ElevatorState = "IDLE"
         if eList[0] == "STATUS":
             status = eList[1]
             if status == "IDLE":
                 newLevel = int(eList[2])
                 if newLevel == self.NextLevel and self.ElevatorState == "MOVING":
-                    ElevatorMessages.append("LEVEL "+str(level))
-                    self.UnlockElevator()
-
+                    ElevatorMessages.put("LEVEL "+str(level))
+                    self.ElevatorState = "WAITFORUNLOCK"
 
     #PRIVATE
     #read whatever is availbale on the serial port
     def readSerial():
-        global ElevatorMessages
         while True:
             if not self.ser.is_open:
                 try:
@@ -112,14 +126,30 @@ class ElevatorIF(jmri.jmrit.automat.AbstractAutomaton) :
 
     unlockWait = 1000
     def handle(self):
+        global ElevatorMoveCommands
+        global ElevatorUnlockCommands
         # handle() is called repeatedly until it returns false.
         self.ReadSerial()
-        if self.ElevatorState == "UNLOCKING":
+        if self.ElevatorState == "UNLOCKSENT":
             if self.unlockWait-- <= 0:
                 self.unlockWait = 1000
-                self.UnlockElevator()
+                self.isElevatorLocked()
         if self.ElevatorState == "MOVING":
             if self.unlockWait-- <= 0:
                 self.unlockWait = 1000
                 self.GetElevatorStatus()
+        if self.ElevatorState == "IDLE":
+            if not ElevatorMoveCommands.empty():
+                cmd = ElevatorMoveCommands.get().split()
+                if cmd[0] == "MOVE":
+                    self.MoveElevator(int(cmd[1]))
+                else:
+                    print "Elevator bad MOVE received"
+        if self.ElevatorState == "WAITFORUNLOCK":
+            if not ElevatorUnlockCommands.empty():
+                cmd = ElevatorUnlockCommands.get()
+                if cmd == "UNLOCK":
+                    self.UnlockElevator()
+                else:
+                    print "Elevator bad UNLOCK received"
         return True
