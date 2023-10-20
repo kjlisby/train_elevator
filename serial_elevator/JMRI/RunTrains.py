@@ -3,7 +3,14 @@ import jmri
 import pickle
 import java.util
 import threading
+import os
+import fnmatch
 oblocks = jmri.InstanceManager.getDefault(jmri.jmrit.logix.OBlockManager)
+
+###### ELEVATOR BEGIN
+# "import" elevator handling
+with open("JMRI_Interface.py") as f: exec(f.read())
+###### ELEVATOR END
 
 
 ###################################################################################################
@@ -27,8 +34,6 @@ oblocks = jmri.InstanceManager.getDefault(jmri.jmrit.logix.OBlockManager)
 ###################################################################################################
 
 #First a few methods to traverse the file system
-import os
-import fnmatch
 def yield_files_with_extensions(folder_path, file_match):
     for root, dirs, files in os.walk(folder_path):
         for file in files:
@@ -73,14 +78,40 @@ class RunTrain(jmri.jmrit.automat.AbstractAutomaton) :
 
     global TrainsAndTrips
     global Randomizer
+    
+    ###### ELEVATOR BEGIN
+    def MoveElevator():
+        #Move the elevator to our level
+        global ElevatorMessages
+        global ElevatorMoveCommands
+        ElevatorMoveCommands.put("MOVE "+self.Elevator)
+        while True:
+            #Wait for the elevator to reach our level
+            myReply = ElevatorMessages.get()
+            rList = myReply.split()
+            if rList[0] == 'LEVEL' and rList[1] = self.Elevator:
+                # Elevator at our level
+                self.ElevatorLocked = True
+                break
+            else:
+                # This message was not for this train. Put it back
+                ElevatorMessages.put(myReply)
+        
+    def UnlockElevator():
+        #We have moved our train. Give the elevator to the next train waiting for it
+        global ElevatorUnlockCommands
+        if self.ElevatorLocked:
+            ElevatorUnlockCommands.put('UNLOCK')
+            self.ElevatorLocked = False
+    ###### ELEVATOR END
 
-        def powerOffOn(self):
-            print "powerOffOn ", self.name
-            # Flip the power off and on again - but not if it is already off by purpose
-            if (powermanager.getPower() == jmri.PowerManager.ON):
-                powermanager.setPower(jmri.PowerManager.OFF)
-                self.waitMsec(3000)
-                powermanager.setPower(jmri.PowerManager.ON)
+    def powerOffOn(self):
+        print "powerOffOn ", self.name
+        # Flip the power off and on again - but not if it is already off by purpose
+        if (powermanager.getPower() == jmri.PowerManager.ON):
+            powermanager.setPower(jmri.PowerManager.OFF)
+            self.waitMsec(3000)
+            powermanager.setPower(jmri.PowerManager.ON)
     
     def init(self):
         # init() is called exactly once at the beginning to do
@@ -99,6 +130,13 @@ class RunTrain(jmri.jmrit.automat.AbstractAutomaton) :
         self.oldRunSensorState = False
         self.setPlace(self.status['Block'])
         self.setDisplayStatus(self.status['Direction'])
+
+        ###### ELEVATOR BEGIN
+        self.ElevatorBlocks = ['OB01', 'OB02'] #Or whatever blocks your elevator might have
+        self.ElevatorLocked = False
+        self.Elevator = TrainsAndTrips[self.name]['Elevator']
+        ###### ELEVATOR END
+
         return
         
     def statusFileName(self):
@@ -169,6 +207,13 @@ class RunTrain(jmri.jmrit.automat.AbstractAutomaton) :
         Warrant = Route['Warrant']
         print "runTrainOnce 3 ",self.name
         w = warrants.getWarrant(Warrant)
+
+        ###### ELEVATOR BEGIN
+        if self.Elevator != 'NONE:
+            if w.StartBlock in self.ElevatorBlocks or w.EndBlock in self.ElevatorBlocks:
+                self.MoveElevator()
+        ###### ELEVATOR END
+
         print "runTrainOnce 4 ",self.name
         self.RosterEntry = w.getSpeedUtil().getRosterEntry()
         print "runTrainOnce 5 ",self.name
@@ -203,6 +248,11 @@ class RunTrain(jmri.jmrit.automat.AbstractAutomaton) :
         # Re-acquire the throttle. The Warrant has probably taken it away from us.
         self.Throttle = self.getThrottle(self.RosterEntry)
         exec self.EPE
+
+        ###### ELEVATOR BEGIN
+        self.UnlockElevator()
+        ###### ELEVATOR END
+
         return
 
     def handle(self):
