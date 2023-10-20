@@ -5,7 +5,9 @@ The reason is my very limited space, where I will build up my next layout on she
 
 Hence, I will use wall space for that purpose.
 
-So far, the physical elevator is only a CAD drawing. However, the electronics exists, albeit only as a mock-up.
+So far, the physical elevator is only a CAD drawing: ![](4108BBDF-2466-443A-B227-604E663074D2.jpeg)
+
+However, the electronics exists, albeit only as a mock-up.
 
 ## Hardware
 
@@ -18,7 +20,7 @@ The hardware consist of:
   - 20 volt power supply to drive the stepper motors
   - 5 volt power supply for the control system
   - Two micro switches to sense the end-stop position of each side of the elevator
-  - Optical sensor for ensuring there is no train "sticking out" when moving the elevator
+  - Optical sensors for ensuring there is no train "sticking out" when moving the elevator
 
 And it is put together as follows (with all sensors shown as switches). Note also that so far, I don't think I will need the "enable" wire to the stepper motors. Removing power from the steppers would only mean that the ESP32 is no longer knowing the exact location of the elevator:
 ![](Diagram.jpg)
