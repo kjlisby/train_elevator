@@ -108,7 +108,7 @@ def displayInfo(line1, line2, line3, fontSize, height, width):
 
 # widget for logging what is going on
 logFrame = Frame(root)
-logFrame.grid(column=0, row=1, columnspan=2, sticky=S )
+logFrame.grid(column=0, row=1, columnspan=2, sticky="news" )
 # make the scrollbar
 scrollbar = Scrollbar(logFrame)
 scrollbar.pack(side=RIGHT, fill=Y)
@@ -118,6 +118,7 @@ log.pack( fill = BOTH, expand = True )
 # attach text box to scrollbar
 log.config(yscrollcommand=scrollbar.set)
 scrollbar.config(command=log.yview)
+root.rowconfigure(1, weight=1)
 
 #handle messages received from the elevator
 def handleInput(event):
@@ -226,14 +227,6 @@ def readSerial():
 # after initializing serial, an arduino may need a bit of time to reset
 root.after(100, readSerial)
 
-#FOR DEBUGGING: An input field and a button to fake messages that should come from the elevator
-# def rx():
-    # handleInput(eventInput.get())
-# eventInput = Entry(root)
-# eventInput.grid(column=1, row=1, sticky=E)
-# rxButton = Button(root, text ="Rx above", command = rx)
-# rxButton.grid(column=1, row=2, sticky=E)
-
 #send a command to the elevator
 def sendCmd(cmd):
     if ser.is_open:
@@ -242,6 +235,20 @@ def sendCmd(cmd):
         ser.write(cmd.encode("utf-8"))
     else:
         logDebug("Tx: "+cmd+" FAILED")
+
+#FOR DEBUGGING: An input field and a button to fake messages that should come from the elevator
+# def rx():
+    # handleInput(eventInput.get())
+# eventInput = Entry(root)
+# eventInput.grid(column=1, row=1, sticky=E)
+# rxButton = Button(root, text ="Rx above", command = rx)
+# rxButton.grid(column=1, row=2, sticky=E)
+
+#Also for debugging: buttons to lock and unlock.
+lockButton = Button(root, text ="Lock", command = partial (sendCmd, "set lock YES"))
+lockButton.grid(column=1, row=2, sticky=W)
+unlockButton = Button(root, text ="Unlock", command = partial (sendCmd, "set lock NO"))
+unlockButton.grid(column=1, row=2, sticky=E)
 
 #SHOULD NOT BE NECESSARY: Continously read status from the elevator
 # def readStatus():
