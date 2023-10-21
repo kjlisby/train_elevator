@@ -5,7 +5,7 @@ The reason is my very limited space, where I will build up my next layout on she
 
 Hence, I will use wall space for that purpose.
 
-So far, the physical elevator is only a CAD drawing: ![](4108BBDF-2466-443A-B227-604E663074D2.jpeg)
+So far, the physical elevator is only a CAD drawing: ![](mekanik synlig.jpg)
 
 However, the electronics exists, albeit only as a mock-up.
 
