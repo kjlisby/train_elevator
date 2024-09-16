@@ -24,8 +24,10 @@ The hardware consist of:
   - Relay modules to provide power to only the tracks of the current level
 
 And it is put together as follows. Note that I will not need the "enable" wire to the stepper motors. Removing power from the steppers would only mean that the ESP32 is no longer knowing the exact location of the elevator.
+
 Version 1:
 ![](Diagram.jpg)
+
 Version 2:
 ![](Diagram_v2.jpg)
 
