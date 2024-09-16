@@ -22,6 +22,7 @@ The hardware consist of:
   - Two micro switches to sense the end-stop position of each side of the elevator
   - Optical sensors for ensuring there is no train "sticking out" when moving the elevator
   - Relay modules to provide power to only the tracks of the current level
+  - MCP23017 I/O port expansion module to provide output ports for the relays
 
 And it is put together as follows. Note that I will not need the "enable" wire to the stepper motors. Removing power from the steppers would only mean that the ESP32 is no longer knowing the exact location of the elevator.
 
