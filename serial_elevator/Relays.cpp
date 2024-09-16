@@ -1,6 +1,7 @@
 // The Relays class is giving power only to the track that is currently at portal level
 
 #include "Relays.h"
+#include <Arduino.h>
 
 void Relays::Init () {
   Wire.begin(); // wake up I2C bus
@@ -17,13 +18,17 @@ void Relays::Init () {
 }
 
 void Relays::AtLevel (int Level) {
+  Serial.println("DEBUG Relays::AtLevel");
+  Serial.println(Level);
   unsigned int PortA = 0;
   unsigned int PortB = 0;
-  if (Level > 0 && Level <= 8) {
+  if (Level > 0 && Level <= 6) {
     PortA = 1 << (Level-1);
-  } else if (Level > 8) {
-    PortB = 1 << (Level-9);
+  } else if (Level > 6) {
+    PortB = 1 << (Level-7);
   }
+  Serial.println(PortA);
+  Serial.println(PortB);
   Wire.beginTransmission(0x20);
   Wire.write(0x12); // GPIOA
   Wire.write(PortA); // port A
