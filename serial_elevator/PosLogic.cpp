@@ -1,8 +1,9 @@
 #include "PosLogic.h"
 
-void PosLogic::Init (Calibrator *CA, Display *DI) {
+void PosLogic::Init (Calibrator *CA, Display *DI, Relays *RE) {
 	this->MyCalibrator = CA;
 	this->MyDisplay = DI;
+  this->MyRelays = RE;
 	this->LHStepper = new AccelStepper(AccelStepper::DRIVER, LH_STEPPER_STEP_PIN, LH_STEPPER_DIR_PIN);
 	// 500 rotation/min == 100.000 steps/min == 1667 steps/second
 	this->LHStepper->setMaxSpeed(1500.0);
@@ -24,6 +25,10 @@ void PosLogic::Init (Calibrator *CA, Display *DI) {
 	
 bool PosLogic::MoveTo (int Level, int AdditionalSteps) {
 	Serial.println("DEBUG PosLogic::MoveTo");
+  if (Level < 1 || Level > 12) {
+    Serial.println("Illegal level");
+    return false;
+  }
 	if (this->Blocked()) {
 		Serial.println("STATUS BLOCKED");
 		return false;
@@ -47,6 +52,7 @@ bool PosLogic::MoveTo (int Level, int AdditionalSteps) {
 		this->LHStepper->moveTo(this->MyCalibrator->GetOffset(true,  Level)+AdditionalSteps);
 		this->RHStepper->moveTo(this->MyCalibrator->GetOffset(false, Level)+AdditionalSteps);
 		this->MyDisplay->NewLevel(Level);
+    this->MyRelays->AtLevel(0);
 		Serial.println(this->GetStatus());
 	}
 	return true;
@@ -193,6 +199,7 @@ void PosLogic::Loop () {
 				this->CurrentLevel = this->NextLevel;
 				this->MyStatus = STATUS_IDLE;
 				this->MyDisplay->AtLevel(this->CurrentLevel);
+				this->MyRelays->AtLevel(this->CurrentLevel);
 				Serial.println(this->GetStatus());
 			}
 			break;

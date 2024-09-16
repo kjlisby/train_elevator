@@ -4,6 +4,7 @@
 #include <AccelStepper.h>
 #include "Calibrator.h"
 #include "Display.h"
+#include "Relays.h"
 
 #define LH_STEPPER_DIR_PIN 25
 #define LH_STEPPER_STEP_PIN 26
@@ -25,7 +26,7 @@
 
 class PosLogic {
 	public:
-		void   Init (Calibrator *CA, Display *DI);
+		void   Init (Calibrator *CA, Display *DI, Relays *RE);
 		void   Lock ();
 		void   Unlock ();
 		bool   MoveTo (int Level, int AdditionalSteps);
@@ -41,6 +42,7 @@ class PosLogic {
 		AccelStepper *RHStepper;
 		Calibrator   *MyCalibrator;
 		Display      *MyDisplay;
+    Relays       *MyRelays;
 		int          MyStatus = STATUS_IDLE;
 		int          CurrentLevel = 0;
 		int          NextLevel    = 0;

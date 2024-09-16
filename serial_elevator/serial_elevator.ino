@@ -3,6 +3,7 @@
 #include "Display.h"
 #include "PosLogic.h"
 #include "DccInterface.h"
+#include "Relays.h"
 
 
 #define I2C_SDA_PIN    21
@@ -11,6 +12,7 @@
 SerialCLI     *SC;
 Calibrator    *CA;
 Display       *DI;
+Relays        *RE;
 PosLogic      *PL;
 DccInterface  *DC;
 
@@ -26,8 +28,11 @@ void setup(void) {
 	DI = new Display();
 	DI->Init();
 	Serial.println("DEBUG DI started");
+	RE = new Relays();
+	RE->Init();
+	Serial.println("DEBUG RE started");
 	PL = new PosLogic();
-	PL->Init(CA, DI);
+	PL->Init(CA, DI, RE);
 	Serial.println("DEBUG PL started");
 	SC = new SerialCLI();
 	SC->Init(PL, CA);
