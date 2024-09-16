@@ -1,5 +1,5 @@
 # Arduino controlled train elevator
-At the time of writing this, I am planning to build an elevator for my scale H0 model train layout. 
+At the time of writing this, I am building an elevator for my scale H0 model train layout. 
 
 The reason is my very limited space, where I will build up my next layout on shelves in a U-shape with no room for a hidden yard to park trains.
 
