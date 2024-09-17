@@ -20,12 +20,12 @@ void Relays::Init () {
 void Relays::AtLevel (int Level) {
   Serial.println("DEBUG Relays::AtLevel");
   Serial.println(Level);
-  unsigned int PortA = 0;
-  unsigned int PortB = 0;
+  unsigned int PortA = 0xFF;
+  unsigned int PortB = 0xFF;
   if (Level > 0 && Level <= 6) {
-    PortA = 1 << (Level-1);
+    PortA -= 1 << (Level-1);
   } else if (Level > 6) {
-    PortB = 1 << (Level-7);
+    PortB -= 1 << (Level-7);
   }
   Serial.println(PortA);
   Serial.println(PortB);
