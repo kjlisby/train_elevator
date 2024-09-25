@@ -10,6 +10,12 @@
 #define DECODER_ADDR_4 232
 #define DECODER_ADDR_5 233
 #define DECODER_ADDR_6 234
+#define DECODER_ADDR_7 235
+#define DECODER_ADDR_8 236
+#define DECODER_ADDR_9 237
+#define DECODER_ADDR_10 238
+#define DECODER_ADDR_11 239
+#define DECODER_ADDR_12 240
 
 class DccInterface {
 	public:
