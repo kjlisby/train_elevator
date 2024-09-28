@@ -10,8 +10,8 @@
 */
 
 void SerialCLI::Init(PosLogic *PL, Calibrator *CA) {
-	this->PL = PL;
-	this->CA = CA;
+	this->myPL = PL;
+	this->myCA = CA;
 //	Serial2.begin(9600, SERIAL_8N1, RXD2, TXD2);
 	Serial.setTimeout(1);
 }
@@ -42,11 +42,11 @@ void SerialCLI::HandleCommand(String  request) {
 
 	if (cmdarray[0].equals("get")) {
 		if (cmdarray[1].equals("status")) {
-			Serial.println(PL->GetStatus());
+			Serial.println(this->myPL->GetStatus());
 		} else if (cmdarray[1].equals("calibration")) {
-			Serial.print("CALIBRATION "); Serial.print(cmdarray[2]); Serial.print(" "); Serial.print(CA->GetOffset(true,cmdarray[2].toInt())); Serial.print(" "); Serial.println(CA->GetOffset(false,cmdarray[2].toInt()));
+			Serial.print("CALIBRATION "); Serial.print(cmdarray[2]); Serial.print(" "); Serial.print(this->myCA->GetOffset(true,cmdarray[2].toInt())); Serial.print(" "); Serial.println(this->myCA->GetOffset(false,cmdarray[2].toInt()));
 		} else if (cmdarray[1].equals("lock")) {
-			if (PL->isLocked()) {
+			if (this->myPL->isLocked()) {
 				Serial.println("LOCKED YES");
 			} else {
 				Serial.println("LOCKED NO");
@@ -56,20 +56,20 @@ void SerialCLI::HandleCommand(String  request) {
 		}
 	} else if (cmdarray[0].equals("set")) {
 		if (cmdarray[1].equals("calibration")) {
-			CA->SetOffset(cmdarray[2].toInt(), cmdarray[3].toInt(), cmdarray[4].toInt());
-			CA->Save();
+			this->myCA->SetOffset(cmdarray[2].toInt(), cmdarray[3].toInt(), cmdarray[4].toInt());
+			this->myCA->Save();
 			Serial.print("CALIBRATION "); Serial.print(cmdarray[2]); Serial.print(" "); Serial.print(cmdarray[3]); Serial.print(" "); Serial.println(cmdarray[4]);
 		} else if (cmdarray[1].equals("lock")) {
 			if (cmdarray[2].equals("YES")) {
-				PL->Lock();
+				this->myPL->Lock();
 			} else {
-				PL->Unlock();
+				this->myPL->Unlock();
 			}
 		} else if (cmdarray[1].equals("level")) {
-			PL->MoveTo(cmdarray[2].toInt(), 0);
+			this->myPL->MoveTo(cmdarray[2].toInt(), 0);
 		} else if (cmdarray[1].equals("levelfromcalibration")) {
-			PL->MoveToSteps(cmdarray[2].toInt(), cmdarray[3].toInt(), cmdarray[4].toInt());
-			Serial.println(PL->GetStatus());
+			this->myPL->MoveToSteps(cmdarray[2].toInt(), cmdarray[3].toInt(), cmdarray[4].toInt());
+			Serial.println(this->myPL->GetStatus());
 		} else {
 			Serial.println("DEBUG Unknown HTLM element for set command");
 		}

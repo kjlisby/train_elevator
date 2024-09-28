@@ -1,26 +1,36 @@
 #include "PosLogic.h"
 
-void PosLogic::Init (Calibrator *CA, Display *DI, Relays *RE) {
-	this->MyCalibrator = CA;
-	this->MyDisplay = DI;
+void PosLogic::Init (Calibrator *CA, Display *DI, Relays *RE, IRsensor *FLIR, IRsensor *RLIR, IRsensor *FRIR, IRsensor *RRIR) {
+  this->MyCalibrator = CA;
+  this->MyDisplay = DI;
   this->MyRelays = RE;
-	this->LHStepper = new AccelStepper(AccelStepper::DRIVER, LH_STEPPER_STEP_PIN, LH_STEPPER_DIR_PIN);
-	// 500 rotation/min == 100.000 steps/min == 1667 steps/second
-	this->LHStepper->setMaxSpeed(1500.0);
-	// acceleration is in steps per second per second i.e. to accelerate to max speed of 1500 steps/s in 3 seconds it needs to be 500
-	this->LHStepper->setAcceleration(500.0);
-	this->RHStepper = new AccelStepper(AccelStepper::DRIVER, RH_STEPPER_STEP_PIN, RH_STEPPER_DIR_PIN);
-	// 500 rotation/min == 100.000 steps/min == 1667 steps/second
-	this->RHStepper->setMaxSpeed(1500.0);
-	// acceleration is in steps per second per second i.e. to accelerate to max speed of 1500 steps/s in 3 seconds it needs to be 500
-	this->RHStepper->setAcceleration(500.0);
-	pinMode(LH_ENDSTOP_PIN, INPUT_PULLUP);
-	pinMode(RH_ENDSTOP_PIN, INPUT_PULLUP);
-	pinMode(LH_BACK_SECURITY_PIN,  INPUT_PULLUP);
-	pinMode(LH_FRONT_SECURITY_PIN, INPUT_PULLUP);
-	pinMode(RH_BACK_SECURITY_PIN,  INPUT_PULLUP);
-	pinMode(RH_FRONT_SECURITY_PIN, INPUT_PULLUP);
-	Serial.println("DEBUG PL Init Done");
+  this->FrontLeft_IR  = FLIR;
+  this->RearLeft_IR   = RLIR;
+  this->FrontRight_IR = FRIR;
+  this->RearRight_IR  = RRIR;
+  pinMode(LH_ENDSTOP_PIN, INPUT_PULLUP);
+  pinMode(RH_ENDSTOP_PIN, INPUT_PULLUP);
+  
+  this->LHStepper = new AccelStepper(AccelStepper::DRIVER, LH_STEPPER_STEP_PIN, LH_STEPPER_DIR_PIN);
+  // 500 rotation/min == 100.000 steps/min == 1667 steps/second
+  this->LHStepper->setMaxSpeed(1500.0);
+  // acceleration is in steps per second per second i.e. to accelerate to max speed of 1500 steps/s in 3 seconds it needs to be 500
+  this->LHStepper->setAcceleration(500.0);
+  this->LHStepper->setPinsInverted (true,false,false);
+
+  this->RHStepper = new AccelStepper(AccelStepper::DRIVER, RH_STEPPER_STEP_PIN, RH_STEPPER_DIR_PIN);
+  // 500 rotation/min == 100.000 steps/min == 1667 steps/second
+  this->RHStepper->setMaxSpeed(1500.0);
+  // acceleration is in steps per second per second i.e. to accelerate to max speed of 1500 steps/s in 3 seconds it needs to be 500
+  this->RHStepper->setAcceleration(500.0);
+
+  Serial.println("DEBUG PL Init Done");
+}
+
+bool PosLogic::isBlocked () {
+//  Serial.println("DEBUG PosLogic::isBlocked");
+  return (this->FrontLeft_IR->TrainSeen()  || this->RearLeft_IR->TrainSeen() ||
+          this->FrontRight_IR->TrainSeen() || this->RearRight_IR->TrainSeen());
 }
 	
 bool PosLogic::MoveTo (int Level, int AdditionalSteps) {
@@ -29,10 +39,12 @@ bool PosLogic::MoveTo (int Level, int AdditionalSteps) {
     Serial.println("Illegal level");
     return false;
   }
-	if (this->Blocked()) {
+  Serial.println("DEBUG PosLogic::MoveTo checking blocked");
+	if (this->isBlocked()) {
 		Serial.println("STATUS BLOCKED");
 		return false;
 	}
+  Serial.println("DEBUG PosLogic::MoveTo checking locked");
 	if (this->Locked) {
 		Serial.println("STATUS LOCKED");
 		return false;
@@ -60,7 +72,7 @@ bool PosLogic::MoveTo (int Level, int AdditionalSteps) {
 
 bool PosLogic::MoveToSteps (int Level, int StepsLeft, int StepsRight) {
 	Serial.println("DEBUG PosLogic::MoveToSteps");
-	if (this->Blocked()) {
+	if (this->isBlocked()) {
 		Serial.println("STATUS BLOCKED");
 		return false;
 	}
@@ -101,7 +113,7 @@ bool PosLogic::isLocked() {
 	
 String PosLogic::GetStatus () {
 	Serial.println("DEBUG PosLogic::GetStatus");
-	if (this->Blocked()) {
+	if (this->isBlocked()) {
 		return "STATUS BLOCKED";
 	}
 	switch (this->MyStatus) {
@@ -121,15 +133,9 @@ String PosLogic::GetStatus () {
 	return "STATUS UNKNOWN";
 }
 
-bool PosLogic::Blocked () {
-//	Serial.println("DEBUG PosLogic::Blocked");
-return false;
-	return (!digitalRead(LH_BACK_SECURITY_PIN) || !digitalRead(LH_FRONT_SECURITY_PIN) || !digitalRead(RH_BACK_SECURITY_PIN) || !digitalRead(RH_FRONT_SECURITY_PIN));
-}
-
 int PosLogic::GetCurrentLevel () {
 //	Serial.println("DEBUG PosLogic::GetCurrentLevel");
-	if (this->Blocked() || this->MyStatus != STATUS_IDLE) {
+	if (this->isBlocked() || this->MyStatus != STATUS_IDLE) {
 		return -1;
 	}
 	return this->CurrentLevel;
@@ -140,7 +146,7 @@ bool PosLogic::isRunning() {
 }
 
 void PosLogic::Loop () {
-	if (this->Blocked () == false) {
+	if (this->isBlocked () == false) {
     // Do not advance if we risk to crush a train
 		this->LHStepper->run();
 		this->RHStepper->run();

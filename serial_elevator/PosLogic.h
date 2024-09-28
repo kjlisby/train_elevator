@@ -5,6 +5,7 @@
 #include "Calibrator.h"
 #include "Display.h"
 #include "Relays.h"
+#include "IRsensor.h"
 
 #define LH_STEPPER_DIR_PIN 25
 #define LH_STEPPER_STEP_PIN 26
@@ -12,10 +13,6 @@
 #define RH_STEPPER_STEP_PIN 33
 #define LH_ENDSTOP_PIN 23
 #define RH_ENDSTOP_PIN 19
-#define LH_BACK_SECURITY_PIN 18
-#define LH_FRONT_SECURITY_PIN 4
-#define RH_BACK_SECURITY_PIN 16
-#define RH_FRONT_SECURITY_PIN 17
 
 #define STATUS_IDLE     0
 #define STATUS_HOMING_1 1
@@ -26,7 +23,7 @@
 
 class PosLogic {
 	public:
-		void   Init (Calibrator *CA, Display *DI, Relays *RE);
+		void   Init (Calibrator *CA, Display *DI, Relays *RE, IRsensor *FLIR, IRsensor *RLIR, IRsensor *FRIR, IRsensor *RRIR);
 		void   Lock ();
 		void   Unlock ();
 		bool   MoveTo (int Level, int AdditionalSteps);
@@ -34,6 +31,7 @@ class PosLogic {
 		String GetStatus ();
 		int    GetCurrentLevel ();
 		bool   isRunning();
+		bool   isBlocked();
 		bool   isLocked();
 		void   Loop ();
 
@@ -43,12 +41,15 @@ class PosLogic {
 		Calibrator   *MyCalibrator;
 		Display      *MyDisplay;
     Relays       *MyRelays;
+    IRsensor     *FrontLeft_IR;
+    IRsensor     *RearLeft_IR;
+    IRsensor     *FrontRight_IR;
+    IRsensor     *RearRight_IR;
 		int          MyStatus = STATUS_IDLE;
 		int          CurrentLevel = 0;
 		int          NextLevel    = 0;
 		bool         Locked       = false;
 		bool         HomingDone   = false;
-		bool         Blocked();
 };
 
 #endif

@@ -15,8 +15,8 @@ class SerialCLI {
 
 	private:
 		void HandleCommand(String request);
-		PosLogic   *PL;
-		Calibrator *CA;
+		PosLogic   *myPL;
+		Calibrator *myCA;
 		char cmdBuffer[200];
 		int readPos = 0;
 };
