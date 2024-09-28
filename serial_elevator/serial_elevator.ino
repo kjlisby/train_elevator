@@ -57,16 +57,16 @@ int val;
 int lastState = 0;
 int loopcounter = 0;
 void loop(void) {
-	if (!PL->isRunning()) {
-		// Doing time-consuming stuff (such as displaying an HTML page) will prohibit smooth movement of the steppers
-		SC->Loop();
-		DC->Loop();
+  if (!PL->isRunning()) {
+    // Doing time-consuming stuff (such as displaying an HTML page) will prohibit smooth movement of the steppers
+    SC->Loop();
+    DC->Loop();
     IR1->Loop();
     IR2->Loop();
     IR3->Loop();
     IR4->Loop();
-	}
-	PL->Loop();
+  }
+  PL->Loop();
 
   if (loopcounter++ > 50000) {
     loopcounter = 0;

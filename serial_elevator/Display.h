@@ -13,17 +13,17 @@
 #define OLED_RESET     -1 // Reset pin # (or -1 if sharing Arduino reset pin)
 
 class Display {
-	public:
-		void Init     ();
-		void NewLevel (int Level);
-		void AtLevel  (int Level);
-		void Homing   ();
+  public:
+    void Init     ();
+    void NewLevel (int Level);
+    void AtLevel  (int Level);
+    void Homing   ();
 
-	private:
-		Adafruit_SSD1306 *MyDisplay;
-		int CurrentLevel = 1;
-		int NextLevel    = 1;
-		void MovingUp ();
-		void MovingDown ();
+  private:
+    Adafruit_SSD1306 *MyDisplay;
+    int CurrentLevel = 1;
+    int NextLevel    = 1;
+    void MovingUp ();
+    void MovingDown ();
 };
 #endif

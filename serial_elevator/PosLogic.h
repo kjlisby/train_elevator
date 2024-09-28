@@ -22,34 +22,34 @@
 #define STATUS_MOVING   5
 
 class PosLogic {
-	public:
-		void   Init (Calibrator *CA, Display *DI, Relays *RE, IRsensor *FLIR, IRsensor *RLIR, IRsensor *FRIR, IRsensor *RRIR);
-		void   Lock ();
-		void   Unlock ();
-		bool   MoveTo (int Level, int AdditionalSteps);
-		bool   MoveToSteps (int Level, int StepsLeft, int StepsRight);
-		String GetStatus ();
-		int    GetCurrentLevel ();
-		bool   isRunning();
-		bool   isBlocked();
-		bool   isLocked();
-		void   Loop ();
+  public:
+    void   Init (Calibrator *CA, Display *DI, Relays *RE, IRsensor *FLIR, IRsensor *RLIR, IRsensor *FRIR, IRsensor *RRIR);
+    void   Lock ();
+    void   Unlock ();
+    bool   MoveTo (int Level, int AdditionalSteps);
+    bool   MoveToSteps (int Level, int StepsLeft, int StepsRight);
+    String GetStatus ();
+    int    GetCurrentLevel ();
+    bool   isRunning();
+    bool   isBlocked();
+    bool   isLocked();
+    void   Loop ();
 
-	private:
-		AccelStepper *LHStepper;
-		AccelStepper *RHStepper;
-		Calibrator   *MyCalibrator;
-		Display      *MyDisplay;
+  private:
+    AccelStepper *LHStepper;
+    AccelStepper *RHStepper;
+    Calibrator   *MyCalibrator;
+    Display      *MyDisplay;
     Relays       *MyRelays;
     IRsensor     *FrontLeft_IR;
     IRsensor     *RearLeft_IR;
     IRsensor     *FrontRight_IR;
     IRsensor     *RearRight_IR;
-		int          MyStatus = STATUS_IDLE;
-		int          CurrentLevel = 0;
-		int          NextLevel    = 0;
-		bool         Locked       = false;
-		bool         HomingDone   = false;
+    int          MyStatus = STATUS_IDLE;
+    int          CurrentLevel = 0;
+    int          NextLevel    = 0;
+    bool         Locked       = false;
+    bool         HomingDone   = false;
 };
 
 #endif

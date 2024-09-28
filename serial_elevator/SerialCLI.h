@@ -9,16 +9,16 @@
 
 
 class SerialCLI {
-	public:
-		void Init(PosLogic *PL, Calibrator *CA);
-		void Loop();
+  public:
+    void Init(PosLogic *PL, Calibrator *CA);
+    void Loop();
 
-	private:
-		void HandleCommand(String request);
-		PosLogic   *myPL;
-		Calibrator *myCA;
-		char cmdBuffer[200];
-		int readPos = 0;
+  private:
+    void HandleCommand(String request);
+    PosLogic   *myPL;
+    Calibrator *myCA;
+    char cmdBuffer[200];
+    int readPos = 0;
 };
 
 #endif

@@ -18,11 +18,11 @@
 #define DECODER_ADDR_12 240
 
 class DccInterface {
-	public:
-		void Init ();
-		void Loop ();
-	private:
-		NmraDcc *MyDcc;
+  public:
+    void Init ();
+    void Loop ();
+  private:
+    NmraDcc *MyDcc;
 };
 
 #endif
