@@ -23,6 +23,8 @@ The hardware consist of:
   - Optical sensors for ensuring there is no train "sticking out" when moving the elevator
   - Relay modules (12 relays needed, even though ony 8 are shown below) to provide power to only the tracks of the current level
   - MCP23017 I/O port expansion module to provide output ports for the relays
+  - IR LEDs and IR photodiodes for detection of trains in the portals
+  - IR receiver for receiving inputs from my (Samsung) TV remote control
 
 And it is put together as follows. Note that I will not need the "enable" wire to the stepper motors. Removing power from the steppers would only mean that the ESP32 is no longer knowing the exact location of the elevator.
 

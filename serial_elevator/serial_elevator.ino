@@ -5,6 +5,7 @@
 #include "DccInterface.h"
 #include "Relays.h"
 #include "IRsensor.h"
+#include "TVRemote.h"
 
 
 #define I2C_SDA_PIN    21
@@ -20,6 +21,7 @@ IRsensor      *IR1;
 IRsensor      *IR2;
 IRsensor      *IR3;
 IRsensor      *IR4;
+TVRemote      *TVR;
 
 
 void setup(void) {
@@ -51,6 +53,8 @@ void setup(void) {
   SC->Init(PL, CA);
   DC = new DccInterface();
   DC->Init();
+  TVR = new TVRemote();
+  TVR->Init();
 }
 
 int val;
@@ -65,8 +69,11 @@ void loop(void) {
     IR2->Loop();
     IR3->Loop();
     IR4->Loop();
+    TVR->Loop();
   }
   PL->Loop();
+
+
 
   if (loopcounter++ > 50000) {
     loopcounter = 0;
