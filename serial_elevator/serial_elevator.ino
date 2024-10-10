@@ -75,8 +75,7 @@ void loop(void) {
 
   if (loopcounter++ > 50000) {
     loopcounter = 0;
-    val = analogRead(36);
-    Serial.println(" "); Serial.print("val-1 "); Serial.print(val); Serial.print("val-2 "); Serial.print(analogRead(39));
+    Serial.println(" "); Serial.print("val-1 "); Serial.print(analogRead(36)); Serial.print("val-2 "); Serial.print(analogRead(39));
                          Serial.print("val-3 "); Serial.print(analogRead(34)); Serial.print("val-4 "); Serial.print(analogRead(35));
     if (IR1->TrainSeen() || IR2->TrainSeen() || IR3->TrainSeen() || IR4->TrainSeen()) {
       Serial.println(" TRAIN SEEN");
