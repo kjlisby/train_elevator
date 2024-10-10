@@ -23,6 +23,7 @@ void TVRemote::Loop () {
       return;
     }
     this->anyButtonPushedMillis = millis();
+    IrReceiver.printIRSendUsage(&Serial);
     if (IrReceiver.decodedIRData.address == 0x07 && IrReceiver.decodedIRData.command == 0x04) {
       Serial.println("TV remote 1 pressed");
       if (this->button1_PushedMillis > 0) {
