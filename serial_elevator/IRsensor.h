@@ -9,7 +9,8 @@ class IRsensor {
     bool   TrainSeen ();
     void   Loop();
   private:
-    unsigned long trainDetectionMillis;
+    unsigned long trainDetectionMillis = 0;
+    unsigned long loopCounter = 0;
     uint8_t IR_pin;
 };
 

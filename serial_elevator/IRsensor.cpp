@@ -10,12 +10,16 @@ bool IRsensor::TrainSeen () {
 }
 
 void IRsensor::Loop () {
-  if (analogRead(this->IR_pin) < 3000) {
+  if (analogRead(this->IR_pin) < 2000) {
     if (millis() - this->trainDetectionMillis > 20000) {
       this->trainDetectionMillis = 0;
     }
+    this->loopCounter = 0;
   } else {
-    this->trainDetectionMillis = millis();
+    if (this->loopCounter++ > 100) {
+      this->trainDetectionMillis = millis();
+      this->loopCounter = 0;
+    }
   }
 }
 

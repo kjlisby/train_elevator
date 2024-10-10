@@ -73,14 +73,34 @@ void loop(void) {
 
 
 
-  if (loopcounter++ > 50000) {
+  if (loopcounter++ > 2500) {
     loopcounter = 0;
-    Serial.println(" "); Serial.print("val-1 "); Serial.print(analogRead(36)); Serial.print("val-2 "); Serial.print(analogRead(39));
-                         Serial.print("val-3 "); Serial.print(analogRead(34)); Serial.print("val-4 "); Serial.print(analogRead(35));
-    if (IR1->TrainSeen() || IR2->TrainSeen() || IR3->TrainSeen() || IR4->TrainSeen()) {
-      Serial.println(" TRAIN SEEN");
+    Serial.println(" "); Serial.print("val-1 "); Serial.print(analogRead(36));
+    if (IR1->TrainSeen()) {
+      Serial.println(" TRAIN SEEN 1");
     } else {
-      Serial.println(" NO TRAIN");
+      Serial.println(" NO TRAIN 1");
     }
+
+//    Serial.println(" "); Serial.print("val-2 "); Serial.print(analogRead(39));
+    // if (IR2->TrainSeen()) {
+    //   Serial.println(" TRAIN SEEN 2");
+    // } else {
+    //   Serial.println(" NO TRAIN 2");
+    // }
+
+//    Serial.println(" "); Serial.print("val-3 "); Serial.print(analogRead(34));
+    // if (IR3->TrainSeen()) {
+    //   Serial.println(" TRAIN SEEN 3");
+    // } else {
+    //   Serial.println(" NO TRAIN 3");
+    // }
+
+//    Serial.println(" "); Serial.print("val-4 "); Serial.print(analogRead(35));
+    // if (IR4->TrainSeen()) {
+    //   Serial.println(" TRAIN SEEN 4");
+    // } else {
+    //   Serial.println(" NO TRAIN 4");
+    // }
   }
 }
