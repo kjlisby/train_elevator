@@ -5,7 +5,7 @@ The reason is my very limited space, where I will build up my next layout on she
 
 Hence, I will use wall space for that purpose.
 
-The physical elevator lokks as follows on a CAD drawing. Only one car is shown. But there are two mechanically tied together, so that when one of them goes up, the other goes down and so that they outbalance each other: ![](mekanik%20synlig.jpg)
+The physical elevator looks as follows on a CAD drawing. Only one car is shown. But there are two mechanically tied together, so that when one of them goes up, the other goes down and so that they outbalance each other: ![](mekanik%20synlig.jpg)
 
 So far, the electronics exists only as a mock-up.
 
