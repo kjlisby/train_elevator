@@ -13,14 +13,14 @@ void PosLogic::Init (Calibrator *CA, Display *DI, Relays *RE, IRsensor *FLIR, IR
   
   this->LHStepper = new AccelStepper(AccelStepper::DRIVER, LH_STEPPER_STEP_PIN, LH_STEPPER_DIR_PIN);
   // 500 rotation/min == 100.000 steps/min == 1667 steps/second
-  this->LHStepper->setMaxSpeed(200.0);
+  this->LHStepper->setMaxSpeed(600.0);
   // acceleration is in steps per second per second i.e. to accelerate to max speed of 1500 steps/s in 3 seconds it needs to be 500
   this->LHStepper->setAcceleration(50000.0);
   this->LHStepper->setPinsInverted (true,false,false);
 
   this->RHStepper = new AccelStepper(AccelStepper::DRIVER, RH_STEPPER_STEP_PIN, RH_STEPPER_DIR_PIN);
   // 500 rotation/min == 100.000 steps/min == 1667 steps/second
-  this->RHStepper->setMaxSpeed(200.0);
+  this->RHStepper->setMaxSpeed(600.0);
   // acceleration is in steps per second per second i.e. to accelerate to max speed of 1500 steps/s in 3 seconds it needs to be 500
   this->RHStepper->setAcceleration(50000.0);
 
