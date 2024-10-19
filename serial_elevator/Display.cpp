@@ -87,11 +87,12 @@ void Display::AtLevel (int Level) {
   this->CurrentLevel = Level;
 }
 
-void Display::Homing () {
+void Display::Homing (int Phase) {
   this->MyDisplay->clearDisplay();
   this->MyDisplay->setTextSize(2); // Draw 3X-scale text
   this->MyDisplay->setTextColor(WHITE);
   this->MyDisplay->setCursor(30, 30);
-  this->MyDisplay->print(F("HOMING"));
+  this->MyDisplay->print(F("HOMING "));
+  this->MyDisplay->print(Phase);
   this->MyDisplay->display();
 }

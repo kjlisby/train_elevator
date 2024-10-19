@@ -45,6 +45,8 @@ void SerialCLI::HandleCommand(String  request) {
       Serial.println(this->myPL->GetStatus());
     } else if (cmdarray[1].equals("calibration")) {
       Serial.print("CALIBRATION "); Serial.print(cmdarray[2]); Serial.print(" "); Serial.print(this->myCA->GetOffset(true,cmdarray[2].toInt())); Serial.print(" "); Serial.println(this->myCA->GetOffset(false,cmdarray[2].toInt()));
+    } else if (cmdarray[1].equals("position")) {
+      Serial.println(this->myPL->GetStepperPositions());
     } else if (cmdarray[1].equals("lock")) {
       if (this->myPL->isLocked()) {
         Serial.println("LOCKED YES");
@@ -54,6 +56,33 @@ void SerialCLI::HandleCommand(String  request) {
     } else {
       Serial.println("DEBUG Unknown HTLM element for get command");
     }
+  } else if (cmdarray[0].equals("move")) {
+    Serial.print("MOVE ");
+    if (cmdarray[1].equals("right")) {
+      Serial.print("RIGHT ");
+      int movement = cmdarray[2].toInt();
+      if (cmdarray[2][0]=='+' || cmdarray[2][0]=='-') {
+        Serial.print("RELATIVE ");
+        //MoveOneStepper (bool RIGHT, bool RELATIVE, int Steps)
+        this->myPL->MoveOneStepper(true, true, movement);
+      } else {
+        Serial.print("ABSOLUTE ");
+        this->myPL->MoveOneStepper(true, false, movement);
+      }
+    }
+    if (cmdarray[1].equals("left")) {
+      Serial.print("LEFT ");
+      int movement = cmdarray[2].toInt();
+      if (cmdarray[2][0]=='+' || cmdarray[2][0]=='-') {
+        Serial.print("RELATIVE ");
+        //MoveOneStepper (bool RIGHT, bool RELATIVE, int Steps)
+        this->myPL->MoveOneStepper(false, true, movement);
+      } else {
+        Serial.print("ABSOLUTE ");
+        this->myPL->MoveOneStepper(false, false, movement);
+      }
+    }
+    Serial.println(cmdarray[2]);
   } else if (cmdarray[0].equals("set")) {
     if (cmdarray[1].equals("calibration")) {
       this->myCA->SetOffset(cmdarray[2].toInt(), cmdarray[3].toInt(), cmdarray[4].toInt());

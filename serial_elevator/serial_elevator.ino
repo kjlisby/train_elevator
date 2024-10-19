@@ -57,7 +57,7 @@ void setup(void) {
   TVR->Init();
 }
 
-int loopcounter = 0;
+//int loopcounter = 0;
 void loop(void) {
   if (!PL->isRunning()) {
     // Doing time-consuming stuff (such as displaying an HTML page) will prohibit smooth movement of the steppers
@@ -69,10 +69,11 @@ void loop(void) {
     IR4->Loop();
     TVR->Loop();
   }
+//  SC->Loop();
   PL->Loop();
 
 
-
+/*
   if (loopcounter++ > 2500) {
     loopcounter = 0;
     Serial.println(" "); Serial.print("val-1 "); Serial.print(analogRead(36));
@@ -103,4 +104,5 @@ void loop(void) {
     //   Serial.println(" NO TRAIN 4");
     // }
   }
+*/
 }

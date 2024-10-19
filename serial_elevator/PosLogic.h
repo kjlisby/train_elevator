@@ -28,8 +28,10 @@ class PosLogic {
     void   Unlock ();
     bool   MoveTo (int Level, int AdditionalSteps);
     bool   MoveToSteps (int Level, int StepsLeft, int StepsRight);
+    bool   MoveOneStepper (bool RIGHT, bool RELATIVE, int Steps);
     String GetStatus ();
     int    GetCurrentLevel ();
+    String GetStepperPositions ();
     bool   isRunning();
     bool   isBlocked();
     bool   isLocked();

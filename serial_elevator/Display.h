@@ -17,7 +17,7 @@ class Display {
     void Init     ();
     void NewLevel (int Level);
     void AtLevel  (int Level);
-    void Homing   ();
+    void Homing   (int Phase);
 
   private:
     Adafruit_SSD1306 *MyDisplay;

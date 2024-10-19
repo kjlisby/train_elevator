@@ -13,16 +13,16 @@ void PosLogic::Init (Calibrator *CA, Display *DI, Relays *RE, IRsensor *FLIR, IR
   
   this->LHStepper = new AccelStepper(AccelStepper::DRIVER, LH_STEPPER_STEP_PIN, LH_STEPPER_DIR_PIN);
   // 500 rotation/min == 100.000 steps/min == 1667 steps/second
-  this->LHStepper->setMaxSpeed(1500.0);
+  this->LHStepper->setMaxSpeed(200.0);
   // acceleration is in steps per second per second i.e. to accelerate to max speed of 1500 steps/s in 3 seconds it needs to be 500
-  this->LHStepper->setAcceleration(500.0);
+  this->LHStepper->setAcceleration(50000.0);
   this->LHStepper->setPinsInverted (true,false,false);
 
   this->RHStepper = new AccelStepper(AccelStepper::DRIVER, RH_STEPPER_STEP_PIN, RH_STEPPER_DIR_PIN);
   // 500 rotation/min == 100.000 steps/min == 1667 steps/second
-  this->RHStepper->setMaxSpeed(1500.0);
+  this->RHStepper->setMaxSpeed(200.0);
   // acceleration is in steps per second per second i.e. to accelerate to max speed of 1500 steps/s in 3 seconds it needs to be 500
-  this->RHStepper->setAcceleration(500.0);
+  this->RHStepper->setAcceleration(50000.0);
 
   Serial.println("DEBUG PL Init Done");
 }
@@ -31,6 +31,25 @@ bool PosLogic::isBlocked () {
 //  Serial.println("DEBUG PosLogic::isBlocked");
   return (this->FrontLeft_IR->TrainSeen()  || this->RearLeft_IR->TrainSeen() ||
           this->FrontRight_IR->TrainSeen() || this->RearRight_IR->TrainSeen());
+}
+
+bool PosLogic::MoveOneStepper (bool RIGHT, bool RELATIVE, int Steps) {
+  Serial.print("MoveOneStepper "); Serial.print(String(RIGHT)); Serial.print(" "); Serial.print(String(RELATIVE)); Serial.print(" "); Serial.println(String(Steps));
+  if (RIGHT) {
+    if (RELATIVE) {
+      this->RHStepper->move(Steps);
+    } else {
+      this->RHStepper->moveTo(Steps);
+    }
+  } else {
+    if (RELATIVE) {
+      this->LHStepper->move(Steps);
+    } else {
+      this->LHStepper->moveTo(Steps);
+    }
+  }
+  Serial.println("End of MoveOneStepper");
+  return true;
 }
   
 bool PosLogic::MoveTo (int Level, int AdditionalSteps) {
@@ -57,7 +76,7 @@ bool PosLogic::MoveTo (int Level, int AdditionalSteps) {
   if (!this->HomingDone) {
     this->HomingDone = true;
     this->MyStatus = STATUS_HOMING_1;
-    this->MyDisplay->Homing();
+    this->MyDisplay->Homing(1);
     Serial.println(this->GetStatus());
   } else {
     this->MyStatus  = STATUS_MOVING;
@@ -141,6 +160,34 @@ int PosLogic::GetCurrentLevel () {
   return this->CurrentLevel;
 }
 
+String PosLogic::GetStepperPositions () {
+  String L_Status;
+  String R_Status;
+  String L_EndStop;
+  String R_EndStop;
+  if (this->LHStepper->isRunning()) {
+    L_Status = "RUNNING";
+  } else {
+    L_Status = "STOPPED";
+  }
+  if (this->RHStepper->isRunning()) {
+    R_Status = "RUNNING";
+  } else {
+    R_Status = "STOPPED";
+  }
+  if (!digitalRead(LH_ENDSTOP_PIN)) {
+    L_EndStop = " ENDSTOP SWITCH ACTIVE ";
+  } else {
+    L_EndStop = " not at end-stop ";
+  }
+  if (!digitalRead(RH_ENDSTOP_PIN)) {
+    R_EndStop = " ENDSTOP SWITCH ACTIVE ";
+  } else {
+    R_EndStop = " not at end-stop ";
+  }
+  return "STEPPER POSITION Left: "+L_Status+" at "+String(this->LHStepper->currentPosition())+L_EndStop+"  Right: "+R_Status+" at "+String(this->RHStepper->currentPosition())+R_EndStop;
+}
+
 bool PosLogic::isRunning() {
   return this->LHStepper->isRunning() || this->RHStepper->isRunning();
 }
@@ -153,27 +200,31 @@ void PosLogic::Loop () {
   }
   switch (this->MyStatus) {
     case STATUS_HOMING_1: // Moving downwards searching for end-stop
-      if (!digitalRead(LH_ENDSTOP_PIN) && !digitalRead(LH_ENDSTOP_PIN)) {
+      if (!digitalRead(LH_ENDSTOP_PIN) && !digitalRead(RH_ENDSTOP_PIN)) {
         this->MyStatus = STATUS_HOMING_2;
+        this->MyDisplay->Homing(2);
         Serial.println(this->GetStatus());
-        this->LHStepper->move(20);
-        this->RHStepper->move(20);
+//        this->LHStepper->move(20); No need this is just duplicating the behavior of STATUS_HOMING_2
+//        this->RHStepper->move(20); No need this is just duplicating the behavior of STATUS_HOMING_2
       } else {
-        this->LHStepper->move(-1000);
-        this->RHStepper->move(-1000);
+        this->LHStepper->move(-500);
+        this->RHStepper->move(-500);
       }
       break;
-    case STATUS_HOMING_2: // Moving upwards (each side separately) until end-stop is exactly not activated
-      if (!this->LHStepper->isRunning() && !this->LHStepper->isRunning()) {
+    case STATUS_HOMING_2: // Moving upwards (each side separately) until end-stop is exactly not activated.
+      if (!this->LHStepper->isRunning() && !this->RHStepper->isRunning()) {
         if (!digitalRead(LH_ENDSTOP_PIN)) {
           this->LHStepper->move(20);
         }
         if (!digitalRead(RH_ENDSTOP_PIN)) {
           this->RHStepper->move(20);
         }
-        if (!this->LHStepper->isRunning() && !this->LHStepper->isRunning()) {
-          this->MoveTo(1,1000);
+        if (!this->LHStepper->isRunning() && !this->RHStepper->isRunning()) {
+          this->LHStepper->setCurrentPosition(0);
+          this->RHStepper->setCurrentPosition(0);
+//          this->MoveTo(1,500); The original purpose of STATUS_HOMING_3 was to move a bit beyond level 1. But why bother?
           this->MyStatus = STATUS_HOMING_3;
+          this->MyDisplay->Homing(3);
           Serial.println(this->GetStatus());
         }
       } else {
@@ -184,24 +235,23 @@ void PosLogic::Loop () {
           this->RHStepper->stop();
         }
       }
-    case STATUS_HOMING_3: // Moving upwards until e few millimeters aboove level 1
-      if (!this->LHStepper->isRunning() && !this->LHStepper->isRunning()) {
-        this->MoveTo(1,0);
+    case STATUS_HOMING_3: // Moving upwards until e few millimeters above level 1
+      if (!this->LHStepper->isRunning() && !this->RHStepper->isRunning()) {
+//        this->MoveTo(1,0); The original purpose of STATUS_HOMING_4 was to move to level 1. But why bother?
         this->MyStatus = STATUS_HOMING_4;
+        this->MyDisplay->Homing(4);
         Serial.println(this->GetStatus());
       }
       break;
-    case STATUS_HOMING_4: // Moving to level 1 and then resetting stepper positions to zero
-      if (!this->LHStepper->isRunning() && !this->LHStepper->isRunning()) {
-        this->LHStepper->setCurrentPosition(0);
-        this->RHStepper->setCurrentPosition(0);
+    case STATUS_HOMING_4: // Moving to level 1
+      if (!this->LHStepper->isRunning() && !this->RHStepper->isRunning()) {
         this->CurrentLevel = 1;
         this->MyStatus = STATUS_IDLE;
         this->MoveTo(this->NextLevel,0);
       }
       break;
     case STATUS_MOVING:
-      if (!this->LHStepper->isRunning() && !this->LHStepper->isRunning()) {
+      if (!this->LHStepper->isRunning() && !this->RHStepper->isRunning()) {
         this->CurrentLevel = this->NextLevel;
         this->MyStatus = STATUS_IDLE;
         this->MyDisplay->AtLevel(this->CurrentLevel);
