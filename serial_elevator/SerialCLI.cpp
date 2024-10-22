@@ -58,7 +58,7 @@ void SerialCLI::HandleCommand(String  request) {
     }
   } else if (cmdarray[0].equals("move")) {
     Serial.print("MOVE ");
-    if (cmdarray[1].equals("right")) {
+    if (cmdarray[1].equals("right") || cmdarray[1].equals("both")) {
       Serial.print("RIGHT ");
       int movement = cmdarray[2].toInt();
       if (cmdarray[2][0]=='+' || cmdarray[2][0]=='-') {
@@ -70,7 +70,7 @@ void SerialCLI::HandleCommand(String  request) {
         this->myPL->MoveOneStepper(true, false, movement);
       }
     }
-    if (cmdarray[1].equals("left")) {
+    if (cmdarray[1].equals("left") || cmdarray[1].equals("both")) {
       Serial.print("LEFT ");
       int movement = cmdarray[2].toInt();
       if (cmdarray[2][0]=='+' || cmdarray[2][0]=='-') {
