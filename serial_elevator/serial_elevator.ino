@@ -61,15 +61,14 @@ void setup(void) {
 void loop(void) {
   if (!PL->isRunning()) {
     // Doing time-consuming stuff (such as displaying an HTML page) will prohibit smooth movement of the steppers
-    SC->Loop();
     DC->Loop();
-    IR1->Loop();
-    IR2->Loop();
-    IR3->Loop();
-    IR4->Loop();
     TVR->Loop();
   }
-//  SC->Loop();
+  SC->Loop();
+  IR1->Loop();
+  IR2->Loop();
+  IR3->Loop();
+  IR4->Loop();
   PL->Loop();
 
 
