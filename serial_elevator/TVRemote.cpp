@@ -8,17 +8,22 @@ void TVRemote::Init () {
   IrReceiver.begin(18);
 }
 
-void TVRemote::Loop () {
+void TVRemote::Loop (bool ThrowKeysAway) {
+  bool AtLeastaSecond = millis()-this->anyButtonPushedMillis >= 1000;
   this->newLevel = 0;
   if (!IrReceiver.decode()) {
     if (this->button1_PushedMillis > 0) {
-      if (millis()-this->button1_PushedMillis > 3000) {
+      if (millis()-this->button1_PushedMillis > 2000) {
         this->newLevel = 1;
         this->button1_PushedMillis = 0;
       }
     }
   } else {
-    if (millis()-this->anyButtonPushedMillis < 250) {
+    if (ThrowKeysAway) {
+      IrReceiver.resume(); // Enable receiving of the next value
+      return;
+    }
+    if (millis()-this->anyButtonPushedMillis < 500) {
       IrReceiver.resume(); // Enable receiving of the next value
       return;
     }
@@ -74,13 +79,13 @@ void TVRemote::Loop () {
         this->newLevel = 10;
       }
       this->button1_PushedMillis = 0;
-    } else if (IrReceiver.decodedIRData.address == 0x07 && (IrReceiver.decodedIRData.command == 0x12) || (IrReceiver.decodedIRData.command == 0x07)) {
+    } else if (AtLeastaSecond && (IrReceiver.decodedIRData.address == 0x07 && (IrReceiver.decodedIRData.command == 0x12) || (IrReceiver.decodedIRData.command == 0x07))) {
       Serial.println("TV remote UP pressed");
       if (PL->GetCurrentLevel() < 12) {
         this->newLevel = PL->GetCurrentLevel() + 1;
       }
       this->button1_PushedMillis = 0;
-    } else if (IrReceiver.decodedIRData.address == 0x07 && (IrReceiver.decodedIRData.command == 0x10) || (IrReceiver.decodedIRData.command == 0x0B)) {
+    } else if (AtLeastaSecond && (IrReceiver.decodedIRData.address == 0x07 && (IrReceiver.decodedIRData.command == 0x10) || (IrReceiver.decodedIRData.command == 0x0B))) {
       Serial.println("TV remote DOWN pressed");
       if (PL->GetCurrentLevel() > 1) {
         this->newLevel = PL->GetCurrentLevel() - 1;

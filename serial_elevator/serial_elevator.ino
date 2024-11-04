@@ -62,7 +62,9 @@ void loop(void) {
   if (!PL->isRunning()) {
     // Doing time-consuming stuff (such as displaying an HTML page) will prohibit smooth movement of the steppers
     DC->Loop();
-    TVR->Loop();
+    TVR->Loop(false);
+  } else {
+    TVR->Loop(true); // throw away keypresses on TVremote while steppers are running
   }
   SC->Loop();
   IR1->Loop();
