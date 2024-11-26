@@ -18,6 +18,7 @@ class Display {
     void NewLevel (int Level);
     void AtLevel  (int Level);
     void Homing   (int Phase);
+    void TVRemote (String Message);
 
   private:
     Adafruit_SSD1306 *MyDisplay;

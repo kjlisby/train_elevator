@@ -96,3 +96,11 @@ void Display::Homing (int Phase) {
   this->MyDisplay->print(Phase);
   this->MyDisplay->display();
 }
+
+void Display::TVRemote (String Message) {
+  this->MyDisplay->setTextSize(6); // Draw 5X-scale text
+  this->MyDisplay->setTextColor(WHITE);
+  this->MyDisplay->setCursor(0, 0);
+  this->MyDisplay->print(Message);
+  this->MyDisplay->display();
+}
