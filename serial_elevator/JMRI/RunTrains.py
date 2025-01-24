@@ -5,11 +5,137 @@ import java.util
 import threading
 import os
 import fnmatch
+import purejavacomm
 oblocks = jmri.InstanceManager.getDefault(jmri.jmrit.logix.OBlockManager)
 
 ###### ELEVATOR BEGIN
-# "import" elevator handling
-with open("JMRI_Interface.py") as f: exec(f.read())
+class ElevatorIF(jmri.jmrit.automat.AbstractAutomaton) :
+# This class interfaces from JMRI scripting (Jython) code to the train elevator Arduino FW.
+# RunTrain threads is using a singleton of this class using only the entry-point MoveElevator.
+# This is thread-safe only because we are sure that only one RunTrain thread at a time is using 
+# the elevator, because the elevator in JMRI is just another blco, which is reserved by the RunTrain 
+# thread along with all other blocks in the Warrant that the RunTrain thread is executing.
+    
+    # constructor starts up the serial port
+    def __init__(self, portname) :
+        
+        # find the port info and open the port
+        print "opening ",portname
+        self.portID = purejavacomm.CommPortIdentifier.getPortIdentifier(portname)
+        self.port = self.portID.open("JMRI", 50)
+        
+        # set options on port
+        baudrate = 19200
+        self.port.setSerialPortParams(baudrate, purejavacomm.SerialPort.DATABITS_8, 
+                                    purejavacomm.SerialPort.STOPBITS_1, purejavacomm.SerialPort.PARITY_NONE)
+        
+        # get I/O connections for later
+        self.inputStream = self.port.getInputStream()
+        self.outputStream = self.port.getOutputStream()
+        
+        print "Port opened OK"
+        return
+    
+    def init(self):
+        print "start af ElevatorIF init"
+        # init() is called exactly once at the beginning to do any necessary configuration.
+        self.ElevatorState = "IDLE"
+        self.ElevatorLevel = 0
+        self.serBuffer = ""
+        self.unlockWait = 1000
+        self.ElevatorStateDisplayVariable = memories.provideMemory('ElevatorDisplayVariable')
+        self.ElevatorStateDisplayVariable.setValue("?")
+        print "slutning af ElevatorIF init"
+        return
+
+    #PUBLIC
+    def MoveElevator(self, level):
+        self.sendCmd("set level "+str(level))
+        self.ElevatorState = "MOVING"
+        self.ElevatorStateDisplayVariable.setValue(str(self.ElevatorLevel)+"->"+str(level))
+        #wait for answer
+        counter = 0
+        while self.ElevatorState != "IDLE" or self.ElevatorLevel != level:
+            self.waitMsec(1000)
+            counter += 1
+            if counter > 20:
+                counter = 0
+                print "WAITED 20 SECONDS IN MoveElevator"
+                self.GetElevatorStatus()
+        self.ElevatorStateDisplayVariable.setValue(str(level))
+        return True
+
+    #PRIVATE
+    def GetElevatorStatus(self):
+        self.sendCmd("get status\n")
+        #wait for answer
+        
+    #PRIVATE
+    def handleMessage(self, event):
+        global ElevatorMessages
+        print "start af handleMessage "+event+"  ElevatorState = "+self.ElevatorState+" "+str(self.ElevatorLevel)
+        if len(event) == 0:
+            print "handleMesssage empty"
+            return
+        eList = event.split()
+        #print "handleMessage 1"
+        if eList[0] == "STATUS":
+            #print "handleMessage 6"
+            status = eList[1]
+            #print "handleMessage 7"
+            if status == "IDLE":
+                #print "handleMessage 8"
+                newLevel = int(eList[2])
+                #print "handleMessage 9"
+                self.ElevatorState = "IDLE"
+                self.ElevatorLevel = newLevel
+        #print "slut af handleMessage"
+        return
+
+    #PRIVATE
+    #read whatever is availbale on the serial port
+    def readSerial(self):
+        while True:
+            ###print "readSerial 1"
+            if self.inputStream.available() == 0:
+                break;
+            
+            #print "readSerial 2"
+            c = self.inputStream.read() # attempt to read a character from serial port
+
+            #print "readSerial 3"
+            # check if character is a delimeter
+            if c == 13:
+                continue  # don't want returns. chuck it
+
+            #print "readSerial 4"
+            if c == 10:
+                #print "readSerial 5"
+                self.handleMessage(self.serBuffer)
+                self.serBuffer = "" # empty the buffer
+            else:
+                #print "readSerial 6 "+chr(c).decode("utf-8")
+                try:
+                    self.serBuffer += chr(c).decode("utf-8")  # add to the buffer
+                except:
+                    print "EXCEPTION"
+                    continue
+
+    #PRIVATE
+    #send a command to the elevator
+    def sendCmd(self, cmd):
+        print "sending cmd "+cmd
+        cmd+="\n"
+        self.outputStream.write(cmd.encode("utf-8"))
+        self.outputStream.flush()
+        #print "sendCmd done"
+        return True
+
+    def handle(self):
+        #print "handle start"
+        # handle() is called repeatedly until it returns false.
+        self.readSerial()
+        return True
 ###### ELEVATOR END
 
 
@@ -78,32 +204,6 @@ class RunTrain(jmri.jmrit.automat.AbstractAutomaton) :
 
     global TrainsAndTrips
     global Randomizer
-    
-    ###### ELEVATOR BEGIN
-    def MoveElevator():
-        #Move the elevator to our level
-        global ElevatorMessages
-        global ElevatorMoveCommands
-        ElevatorMoveCommands.put("MOVE "+self.Elevator)
-        while True:
-            #Wait for the elevator to reach our level
-            myReply = ElevatorMessages.get()
-            rList = myReply.split()
-            if rList[0] == 'LEVEL' and rList[1] = self.Elevator:
-                # Elevator at our level
-                self.ElevatorLocked = True
-                break
-            else:
-                # This message was not for this train. Put it back
-                ElevatorMessages.put(myReply)
-        
-    def UnlockElevator():
-        #We have moved our train. Give the elevator to the next train waiting for it
-        global ElevatorUnlockCommands
-        if self.ElevatorLocked:
-            ElevatorUnlockCommands.put('UNLOCK')
-            self.ElevatorLocked = False
-    ###### ELEVATOR END
 
     def powerOffOn(self):
         print "powerOffOn ", self.name
@@ -133,7 +233,6 @@ class RunTrain(jmri.jmrit.automat.AbstractAutomaton) :
 
         ###### ELEVATOR BEGIN
         self.ElevatorBlocks = ['OB01', 'OB02'] #Or whatever blocks your elevator might have
-        self.ElevatorLocked = False
         self.Elevator = TrainsAndTrips[self.name]['Elevator']
         ###### ELEVATOR END
 
@@ -207,13 +306,6 @@ class RunTrain(jmri.jmrit.automat.AbstractAutomaton) :
         Warrant = Route['Warrant']
         print "runTrainOnce 3 ",self.name
         w = warrants.getWarrant(Warrant)
-
-        ###### ELEVATOR BEGIN
-        if self.Elevator != 'NONE:
-            if w.StartBlock in self.ElevatorBlocks or w.EndBlock in self.ElevatorBlocks:
-                self.MoveElevator()
-        ###### ELEVATOR END
-
         print "runTrainOnce 4 ",self.name
         self.RosterEntry = w.getSpeedUtil().getRosterEntry()
         print "runTrainOnce 5 ",self.name
@@ -227,6 +319,12 @@ class RunTrain(jmri.jmrit.automat.AbstractAutomaton) :
             print "ROUTE STOLEN ", self.name
             self.waitMsec(100)
         self.setDisplayStatus('Running')
+
+        ###### ELEVATOR BEGIN
+        if (self.Elevator != 'NONE') and (w.StartBlock in self.ElevatorBlocks or w.EndBlock in self.ElevatorBlocks):
+            ElevatorSingleton.MoveElevator(self.Elevator)
+        ###### ELEVATOR END
+
         w.runWarrant(self.MODE_RUN)
         self.waitWarrantRunState(w, self.MODE_RUN)
         print "running ",self.name
@@ -248,11 +346,6 @@ class RunTrain(jmri.jmrit.automat.AbstractAutomaton) :
         # Re-acquire the throttle. The Warrant has probably taken it away from us.
         self.Throttle = self.getThrottle(self.RosterEntry)
         exec self.EPE
-
-        ###### ELEVATOR BEGIN
-        self.UnlockElevator()
-        ###### ELEVATOR END
-
         return
 
     def handle(self):
@@ -340,5 +433,21 @@ for Train in TrainsAndTrips.iterkeys():
     print 'start tog',Train
     NextTrain = RunTrain(Train)
     NextTrain.start()
-ElevatorSingleton = ElevatorIF("Elevator")
+ElevatorSingleton = ElevatorIF("COM3")
 ElevatorSingleton.start()
+
+################## TEST TEST TEST
+class MoveElevatorInThread(jmri.jmrit.automat.AbstractAutomaton) :
+# This class is only for testing the Elevator interface without blocking the UI thread
+    def init(self):
+        return
+        
+    def handle(self):
+        ElevatorSingleton.MoveElevator(int(self.name))
+        print "SLUTNING AF MoveElevatorInThread XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+        return False
+
+#a = MoveElevatorInThread("1")
+#a.start()
+#print "SLUT HOVEDPROGRAM"
+################## TEST TEST TEST
