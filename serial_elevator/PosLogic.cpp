@@ -27,6 +27,17 @@ void PosLogic::Init (Calibrator *CA, Display *DI, Relays *RE, IRsensor *FLIR, IR
   Serial.println("DEBUG PL Init Done");
 }
 
+void PosLogic::Reset () {
+  if (this->MyStatus != STATUS_IDLE) {
+    Serial.println("Reset refused - not IDLE");
+    return;
+  }
+  Serial.println("Reset");
+  this->HomingDone = false;
+  this->CurrentLevel = 0;
+  this->MyDisplay->AtLevel(0);
+}
+
 bool PosLogic::isBlocked () {
 //  Serial.println("DEBUG PosLogic::isBlocked");
   return (this->FrontLeft_IR->TrainSeen()  || this->RearLeft_IR->TrainSeen() ||

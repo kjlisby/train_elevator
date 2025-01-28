@@ -24,6 +24,7 @@
 class PosLogic {
   public:
     void   Init (Calibrator *CA, Display *DI, Relays *RE, IRsensor *FLIR, IRsensor *RLIR, IRsensor *FRIR, IRsensor *RRIR);
+    void   Reset ();
     void   Lock ();
     void   Unlock ();
     bool   MoveTo (int Level, int AdditionalSteps);

@@ -56,6 +56,8 @@ void SerialCLI::HandleCommand(String  request) {
     } else {
       Serial.println("DEBUG Unknown HTLM element for get command");
     }
+  } else if (cmdarray[0].equals("reset")) {
+    this->myPL->Reset();
   } else if (cmdarray[0].equals("move")) {
     Serial.print("MOVE ");
     if (cmdarray[1].equals("right") || cmdarray[1].equals("both")) {
