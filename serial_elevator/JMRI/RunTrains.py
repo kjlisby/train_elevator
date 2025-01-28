@@ -52,7 +52,6 @@ class ElevatorIF(jmri.jmrit.automat.AbstractAutomaton) :
     def MoveElevator(self, level):
         self.sendCmd("set level "+str(level))
         self.ElevatorState = "MOVING"
-        self.ElevatorStateDisplayVariable.setValue(str(self.ElevatorLevel)+"->"+str(level))
         #wait for answer
         counter = 0
         while self.ElevatorState != "IDLE" or self.ElevatorLevel != level:
@@ -62,7 +61,6 @@ class ElevatorIF(jmri.jmrit.automat.AbstractAutomaton) :
                 counter = 0
                 print "WAITED 20 SECONDS IN MoveElevator"
                 self.GetElevatorStatus()
-        self.ElevatorStateDisplayVariable.setValue(str(level))
         return True
 
     #PRIVATE
@@ -89,6 +87,9 @@ class ElevatorIF(jmri.jmrit.automat.AbstractAutomaton) :
                 #print "handleMessage 9"
                 self.ElevatorState = "IDLE"
                 self.ElevatorLevel = newLevel
+                self.ElevatorStateDisplayVariable.setValue(str(self.ElevatorLevel))
+            if status == "MOVING":
+                self.ElevatorStateDisplayVariable.setValue(eList[2]+"->"+eList[3])
         #print "slut af handleMessage"
         return
 
