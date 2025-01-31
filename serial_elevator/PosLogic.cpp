@@ -1,5 +1,24 @@
 #include "PosLogic.h"
 
+// number of microsteps per step. This is normally a setting on the stepper driver. more micro-steps means more work
+// for the ESP32, but may lead to less noise from steppers
+#define MICRO_STEPS 1
+
+// normally a cheap stepper motor has 200 steps per revolution
+#define STEPS_PER_REVOLUTION 200.0
+
+// the elevator should not move too fast
+#define MAX_REVOLUTIONS_PER_SECOND 3
+
+// Maximum speed (unit: micro-steps / second)
+#define MAX_SPEED MICRO_STEPS * STEPS_PER_REVOLUTION * MAX_REVOLUTIONS_PER_SECOND
+
+// Acceleration (unit: micro-steps / second per second)
+#define ACCELERATION MICRO_STEPS * 2000.0
+
+// Maximum speed during homing (i.e. seeking for exact zero position)
+#define HOMING_SPEED MICRO_STEPS * STEPS_PER_REVOLUTION / 10
+
 void PosLogic::Init (Calibrator *CA, Display *DI, Relays *RE, IRsensor *FLIR, IRsensor *RLIR, IRsensor *FRIR, IRsensor *RRIR) {
   this->MyCalibrator = CA;
   this->MyDisplay = DI;
@@ -13,16 +32,16 @@ void PosLogic::Init (Calibrator *CA, Display *DI, Relays *RE, IRsensor *FLIR, IR
   
   this->LHStepper = new AccelStepper(AccelStepper::DRIVER, LH_STEPPER_STEP_PIN, LH_STEPPER_DIR_PIN);
   // 500 rotation/min == 100.000 steps/min == 1667 steps/second
-  this->LHStepper->setMaxSpeed(600.0);
+  this->LHStepper->setMaxSpeed(MAX_SPEED);
   // acceleration is in steps per second per second i.e. to accelerate to max speed of 1500 steps/s in 3 seconds it needs to be 500
-  this->LHStepper->setAcceleration(50000.0);
+  this->LHStepper->setAcceleration(ACCELERATION);
   this->LHStepper->setPinsInverted (true,false,false);
 
   this->RHStepper = new AccelStepper(AccelStepper::DRIVER, RH_STEPPER_STEP_PIN, RH_STEPPER_DIR_PIN);
   // 500 rotation/min == 100.000 steps/min == 1667 steps/second
-  this->RHStepper->setMaxSpeed(600.0);
+  this->RHStepper->setMaxSpeed(MAX_SPEED);
   // acceleration is in steps per second per second i.e. to accelerate to max speed of 1500 steps/s in 3 seconds it needs to be 500
-  this->RHStepper->setAcceleration(50000.0);
+  this->RHStepper->setAcceleration(ACCELERATION);
 
   Serial.println("DEBUG PL Init Done");
 }
@@ -48,15 +67,15 @@ bool PosLogic::MoveOneStepper (bool RIGHT, bool RELATIVE, int Steps) {
   Serial.print("MoveOneStepper "); Serial.print(String(RIGHT)); Serial.print(" "); Serial.print(String(RELATIVE)); Serial.print(" "); Serial.println(String(Steps));
   if (RIGHT) {
     if (RELATIVE) {
-      this->RHStepper->move(Steps);
+      this->RHStepper->move(Steps * MICRO_STEPS);
     } else {
-      this->RHStepper->moveTo(Steps);
+      this->RHStepper->moveTo(Steps * MICRO_STEPS);
     }
   } else {
     if (RELATIVE) {
-      this->LHStepper->move(Steps);
+      this->LHStepper->move(Steps * MICRO_STEPS);
     } else {
-      this->LHStepper->moveTo(Steps);
+      this->LHStepper->moveTo(Steps * MICRO_STEPS);
     }
   }
   Serial.println("End of MoveOneStepper");
@@ -91,8 +110,8 @@ bool PosLogic::MoveTo (int Level, int AdditionalSteps) {
     Serial.println(this->GetStatus());
   } else {
     this->MyStatus  = STATUS_MOVING;
-    this->LHStepper->moveTo(this->MyCalibrator->GetOffset(true,  Level)+AdditionalSteps);
-    this->RHStepper->moveTo(this->MyCalibrator->GetOffset(false, Level)+AdditionalSteps);
+    this->LHStepper->moveTo((this->MyCalibrator->GetOffset(true,  Level)+AdditionalSteps) * MICRO_STEPS);
+    this->RHStepper->moveTo((this->MyCalibrator->GetOffset(false, Level)+AdditionalSteps) * MICRO_STEPS);
     this->MyDisplay->NewLevel(Level);
     this->MyRelays->AtLevel(0);
     Serial.println(this->GetStatus());
@@ -120,8 +139,8 @@ bool PosLogic::MoveToSteps (int Level, int StepsLeft, int StepsRight) {
   }
   this->MyStatus  = STATUS_MOVING;
   this->NextLevel = Level;
-  this->LHStepper->moveTo(StepsLeft);
-  this->RHStepper->moveTo(StepsRight);
+  this->LHStepper->moveTo(StepsLeft * MICRO_STEPS);
+  this->RHStepper->moveTo(StepsRight * MICRO_STEPS);
   this->MyDisplay->NewLevel(Level);
   Serial.println(this->GetStatus());
   return true;
@@ -213,22 +232,24 @@ void PosLogic::Loop () {
     case STATUS_HOMING_1: // Moving downwards searching for end-stop
       if (!digitalRead(LH_ENDSTOP_PIN) && !digitalRead(RH_ENDSTOP_PIN)) {
         this->MyStatus = STATUS_HOMING_2;
+        this->LHStepper->setMaxSpeed(HOMING_SPEED);
+        this->RHStepper->setMaxSpeed(HOMING_SPEED);
         this->MyDisplay->Homing(2);
         Serial.println(this->GetStatus());
-//        this->LHStepper->move(20); No need this is just duplicating the behavior of STATUS_HOMING_2
-//        this->RHStepper->move(20); No need this is just duplicating the behavior of STATUS_HOMING_2
+//        this->LHStepper->move(500 * MICRO_STEPS); No need this is just duplicating the behavior of STATUS_HOMING_2
+//        this->RHStepper->move(500 * MICRO_STEPS); No need this is just duplicating the behavior of STATUS_HOMING_2
       } else {
-        this->LHStepper->move(-500);
-        this->RHStepper->move(-500);
+        this->LHStepper->move(-500 * MICRO_STEPS);
+        this->RHStepper->move(-500 * MICRO_STEPS);
       }
       break;
     case STATUS_HOMING_2: // Moving upwards (each side separately) until end-stop is exactly not activated.
       if (!this->LHStepper->isRunning() && !this->RHStepper->isRunning()) {
         if (!digitalRead(LH_ENDSTOP_PIN)) {
-          this->LHStepper->move(20);
+          this->LHStepper->move(500 * MICRO_STEPS);
         }
         if (!digitalRead(RH_ENDSTOP_PIN)) {
-          this->RHStepper->move(20);
+          this->RHStepper->move(500 * MICRO_STEPS);
         }
         if (!this->LHStepper->isRunning() && !this->RHStepper->isRunning()) {
           this->LHStepper->setCurrentPosition(0);
@@ -258,6 +279,8 @@ void PosLogic::Loop () {
       if (!this->LHStepper->isRunning() && !this->RHStepper->isRunning()) {
         this->CurrentLevel = 1;
         this->MyStatus = STATUS_IDLE;
+        this->LHStepper->setMaxSpeed(MAX_SPEED);
+        this->RHStepper->setMaxSpeed(MAX_SPEED);
         this->MoveTo(this->NextLevel,0);
       }
       break;

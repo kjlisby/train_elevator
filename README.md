@@ -36,4 +36,10 @@ Version 2:
 
 I was at first almost done with the WIFI version, which uses a Web browser as UI. But because of weak WIFI connection, I abandoned that idea and instead began the Serial version, which simply connects via the USB port of the ESP32 to a PC and communicates directly with either JMRI (Java Model Railroad Interface) or the Python based UI. Or for that matter, the serial monitor in the Arduino IDE can be used as a command-line. Note that the SD card is not used by the serial version. So I have removed that.
 
+Arduino Libraries used (for serial elevator version):
+- AccelStepper by Mike McCauley
+- Adafruit SSD1306 by Adafruit (with dependencies)
+- NmraDcc by Axel Sheperd
+- IRremote by shirriff
+
 See more at http://lisby.dk/wordpress/?p=2779 (so far only in Danish).
