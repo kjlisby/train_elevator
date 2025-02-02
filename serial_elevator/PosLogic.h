@@ -23,7 +23,7 @@
 
 class PosLogic {
   public:
-    void   Init (Calibrator *CA, Display *DI, Relays *RE, IRsensor *FLIR, IRsensor *RLIR, IRsensor *FRIR, IRsensor *RRIR);
+    void   Init (Calibrator *CA, Display *DI, Relays *RE, IRsensor *RLIR, IRsensor *FLIR, IRsensor *FRIR, IRsensor *RRIR);
     void   Reset ();
     void   Lock ();
     void   Unlock ();
@@ -52,6 +52,7 @@ class PosLogic {
     int          CurrentLevel = 0;
     int          NextLevel    = 0;
     bool         Locked       = false;
+    bool         Blocked      = false;
     bool         HomingDone   = false;
 };
 

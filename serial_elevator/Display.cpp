@@ -103,4 +103,11 @@ void Display::TVRemote (String Message) {
   this->MyDisplay->setCursor(0, 0);
   this->MyDisplay->print(Message);
   this->MyDisplay->display();
+
+}void Display::TVRemoteClear (String Message) {
+  this->MyDisplay->setTextSize(6); // Draw 5X-scale text
+  this->MyDisplay->setTextColor(BLACK);
+  this->MyDisplay->setCursor(0, 0);
+  this->MyDisplay->print(Message);
+  this->MyDisplay->display();
 }

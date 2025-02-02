@@ -1,8 +1,9 @@
 #include "PosLogic.h"
+#include <ESP.h>
 
 // number of microsteps per step. This is normally a setting on the stepper driver. more micro-steps means more work
 // for the ESP32, but may lead to less noise from steppers
-#define MICRO_STEPS 1
+#define MICRO_STEPS 8
 
 // normally a cheap stepper motor has 200 steps per revolution
 #define STEPS_PER_REVOLUTION 200.0
@@ -17,9 +18,9 @@
 #define ACCELERATION MICRO_STEPS * 2000.0
 
 // Maximum speed during homing (i.e. seeking for exact zero position)
-#define HOMING_SPEED MICRO_STEPS * STEPS_PER_REVOLUTION / 10
+#define HOMING_SPEED MICRO_STEPS * STEPS_PER_REVOLUTION * 1
 
-void PosLogic::Init (Calibrator *CA, Display *DI, Relays *RE, IRsensor *FLIR, IRsensor *RLIR, IRsensor *FRIR, IRsensor *RRIR) {
+void PosLogic::Init (Calibrator *CA, Display *DI, Relays *RE, IRsensor *RLIR, IRsensor *FLIR, IRsensor *FRIR, IRsensor *RRIR) {
   this->MyCalibrator = CA;
   this->MyDisplay = DI;
   this->MyRelays = RE;
@@ -29,6 +30,10 @@ void PosLogic::Init (Calibrator *CA, Display *DI, Relays *RE, IRsensor *FLIR, IR
   this->RearRight_IR  = RRIR;
   pinMode(LH_ENDSTOP_PIN, INPUT_PULLUP);
   pinMode(RH_ENDSTOP_PIN, INPUT_PULLUP);
+  // trying to make pullup work on GPIO19 - but only HW pullup seems to work.
+  // gpio_pulldown_dis(GPIO_NUM_19);
+  // gpio_pullup_en(GPIO_NUM_19);
+  // gpio_set_pull_mode(GPIO_NUM_19, GPIO_PULLUP_ONLY);
   
   this->LHStepper = new AccelStepper(AccelStepper::DRIVER, LH_STEPPER_STEP_PIN, LH_STEPPER_DIR_PIN);
   // 500 rotation/min == 100.000 steps/min == 1667 steps/second
@@ -88,11 +93,11 @@ bool PosLogic::MoveTo (int Level, int AdditionalSteps) {
     Serial.println("Illegal level");
     return false;
   }
-  Serial.println("DEBUG PosLogic::MoveTo checking blocked");
-  if (this->isBlocked()) {
-    Serial.println("STATUS BLOCKED");
-    return false;
-  }
+  // Serial.println("DEBUG PosLogic::MoveTo checking blocked");
+  // if (this->isBlocked()) {
+  //   Serial.println("STATUS BLOCKED");
+  //   return false;
+  // }
   Serial.println("DEBUG PosLogic::MoveTo checking locked");
   if (this->Locked) {
     Serial.println("STATUS LOCKED");
@@ -224,9 +229,20 @@ bool PosLogic::isRunning() {
 
 void PosLogic::Loop () {
   if (this->isBlocked () == false) {
+    if (this->Blocked) {
+      this->Blocked = false;
+      this->MyDisplay->TVRemoteClear("B");
+      Serial.println("............NO LONGER BLOCKED.................");
+    }
     // Do not advance if we risk to crush a train
     this->LHStepper->run();
     this->RHStepper->run();
+  } else {
+    if (!this->Blocked) {
+      this->Blocked = true;
+      this->MyDisplay->TVRemote("B");
+      Serial.println("............BLOCKED.................");
+    }
   }
   switch (this->MyStatus) {
     case STATUS_HOMING_1: // Moving downwards searching for end-stop
