@@ -7,7 +7,9 @@ Hence, I will use wall space for that purpose.
 
 The physical elevator looks as follows on a CAD drawing. Only one car is shown. But there are two mechanically tied together, so that when one of them goes up, the other goes down and so that they outbalance each other: ![](mekanik%20synlig.jpg)
 
-Primo 2025, the elevator is functioning: ![](IMG_1994.MOV)
+Primo 2025, the elevator is functioning: 
+
+https://github.com/kjlisby/train_elevator/blob/main/IMG_1994.MOV
 
 ## Hardware
 
