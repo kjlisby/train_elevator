@@ -22,10 +22,9 @@ The hardware consist of:
   - 20 volt power supply to drive the stepper motors
   - 5 volt power supply for the control system (not needed after switch to serial version, where the 5V comes from the USB connection from my PC)
   - Two micro switches to sense the end-stop position of each side of the elevator
-  - Optical sensors for ensuring there is no train "sticking out" when moving the elevator
-  - Relay modules (12 relays needed, even though ony 8 are shown below) to provide power to only the tracks of the current level
+  - Optical sensors (IR LEDs and IR photodiodes) for ensuring there is no train "sticking out" when moving the elevator
+  - Relay modules (12 relays needed, even though only 8 are shown below) to provide power to only the tracks of the current level
   - MCP23017 I/O port expansion module to provide output ports for the relays
-  - IR LEDs and IR photodiodes for detection of trains in the portals
   - IR receiver for receiving inputs from my (Samsung) TV remote control
 
 And it is put together as follows. Note that I will not need the "enable" wire to the stepper motors. Removing power from the steppers would only mean that the ESP32 is no longer knowing the exact location of the elevator.
@@ -36,7 +35,7 @@ Version 1:
 Version 2:
 ![](Diagram_v2.jpg)
 
-I was at first almost done with the WIFI version, which uses a Web browser as UI. But because of weak WIFI connection, I abandoned that idea and instead began the Serial version, which simply connects via the USB port of the ESP32 to a PC and communicates directly with either JMRI (Java Model Railroad Interface) or the Python based UI. Or for that matter, the serial monitor in the Arduino IDE can be used as a command-line. Note that the SD card is not used by the serial version. So I have removed that.
+I was at first almost done with the WIFI version, which uses a Web browser as UI. But because of weak WIFI connection, I abandoned that idea and instead began the serial version, which simply connects via the USB port of the ESP32 to a PC and communicates directly with either JMRI (Java Model Railroad Interface) or the Python based UI. Or for that matter, the serial monitor in the Arduino IDE can be used as a command-line. Note that the SD card is not used by the serial version. So I have removed that.
 
 Arduino Libraries used (for serial elevator version):
 - AccelStepper by Mike McCauley
