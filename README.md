@@ -9,7 +9,7 @@ The physical elevator looks as follows on a CAD drawing. Only one car is shown. 
 
 Primo 2025, the elevator is functioning: 
 
-https://github.com/kjlisby/train_elevator/blob/main/IMG_1994.MOV
+https://github.com/user-attachments/assets/1858c7c4-1a3d-495b-b5ac-6b174f491ff5
 
 ## Hardware
 
